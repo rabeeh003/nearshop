@@ -2,10 +2,12 @@ import Carousel from 'react-bootstrap/Carousel';
 import styled from 'styled-components';
 import ImGG from 'file:///home/rabeeh/Pictures/flip.webp';
 import ImGG2 from 'file:///home/rabeeh/Pictures/flip2.webp';
+import Container from 'react-bootstrap/esm/Container';
 
 
 function DarkVariantExample() {
     return (
+        <Container>
         <Banner>
         <Carousel data-bs-theme="dark">
             <Carousel.Item>
@@ -37,12 +39,12 @@ function DarkVariantExample() {
             </Carousel.Item>
         </Carousel>
         </Banner>
+        </Container>
     );
 }
 const Banner = styled.div`
-    width: 95%;
-    margin: 2.5%;
-    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 20px;
 `
 const BanImgDiv = styled.div`
     min-height: 20vh;

@@ -36,6 +36,7 @@ function Bottumbar() {
 
 const BtNav = styled.div`
     position: fixed;
+    z-index: 15;
     bottom: 0;
     width: 100%;
     color: gray;
