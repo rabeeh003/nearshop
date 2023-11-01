@@ -1,12 +1,9 @@
 import React from 'react'
-import { useState } from 'react';
 import styled from 'styled-components';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+import {Card,Button} from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 
 import Tomato from 'file:///home/rabeeh/Pictures/tomato.png'
@@ -67,7 +64,7 @@ function OfferCard() {
     const [modalShow, setModalShow] = React.useState(false);
 
     return (
-        <Container >
+        <Container fluid>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }}>
                 <span className='h3'>Offer</span>
                 {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color:'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
@@ -113,11 +110,12 @@ const CardImage = styled.div`
 `
 const OfCard = styled.div`
     width: 150px;
-    margin-right: 20px;
+    margin:0 20px;
 `
 const ScrollableRow = styled.div`
   display: flex;
   overflow-x: auto;
+  cursor: pointer;
   white-space: nowrap;
   padding-bottom: 20px;
   scrollbar-width: none;
@@ -127,14 +125,4 @@ const ScrollableRow = styled.div`
     height: 0;
   }
 `
-const QuarterCircle = styled.div`
-  width: 0;
-  height: 0;
-  border-left: 50px solid transparent; /* Adjust the size to create the triangle */
-  border-bottom: 50px solid green; /* Set the color and height of the triangle */
-  border-radius: 10px;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-`;
 export default OfferCard

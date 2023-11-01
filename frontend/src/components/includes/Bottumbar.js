@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
 function Bottumbar() {
@@ -30,6 +29,7 @@ function Bottumbar() {
                 <NavItem title='cart' href="#features"><i class="fa-solid fa-cart-shopping"></i></NavItem>
                 <NavItem title='cart' onClick={handleShow} href="#features"><i class="fa-solid fa-user"></i></NavItem>
             </BtNav>
+            <div style={{ height: "50px" }}></div>
         </>
     )
 }

@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/esm/Container';
 
 function DarkVariantExample() {
     return (
-        <Container>
+        <Container fluid>
         <Banner>
         <Carousel data-bs-theme="dark">
             <Carousel.Item>
