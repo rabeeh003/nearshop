@@ -29,7 +29,7 @@ function Bottumbar() {
                 <NavItem title='cart' href="#features"><i class="fa-solid fa-cart-shopping"></i></NavItem>
                 <NavItem title='cart' onClick={handleShow} href="#features"><i class="fa-solid fa-user"></i></NavItem>
             </BtNav>
-            <div style={{ height: "50px" }}></div>
+            <div style={{ height: "70px" }}></div>
         </>
     )
 }

@@ -1,27 +1,26 @@
 import React from 'react'
-import Col from 'react-bootstrap/esm/Col'
-import Container from 'react-bootstrap/esm/Container'
-import styled from 'styled-components'
-import { Card } from 'react-bootstrap';
+import { Card, Button, Container, Col } from 'react-bootstrap';
+import styled from 'styled-components';
 
-import c1 from 'file:///home/rabeeh/Pictures/c1.png'
+import icon from 'file:///home/rabeeh/Pictures/superlogo.jpg'
 
-function Category() {
+function ShopCard() {
     return (
         <Container fluid className='user-select-none'>
-            <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingBottom: "10px" }}>
-                <span className='h3'>Category</span>
-                <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color:'white' }}><i class="fa-solid fa-arrow-right"></i></span>
+            <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }} className='mt-2'>
+                <span className='h3'>Near Shops</span>
+                {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <ScrollableRow>
-                {Array.from({ length: 7 }).map((_, idx) => (
-                    <Col className='d-flex justify-content-center' key={idx}>
-                        <OfCard >
+                {Array.from({ length: 10 }).map((_, idx) => (
+                    <Col key={idx}>
+                        <OfCard>
                             <CardImage>
-                                <Card.Img variant="top" src={c1} />
+                                <Card.Img variant="top" className='object-fit-fill rounded-circle' src={icon} />
                             </CardImage>
                             <Card.Body>
-                                <Card.Title>Grocery</Card.Title>
+                                <Card.Title>Shop Name</Card.Title>
+                                <Button variant="success" className='mt-2' style={{ width: '100%' }}>Vist</Button>
                             </Card.Body>
                         </OfCard>
                     </Col>
@@ -30,19 +29,20 @@ function Category() {
         </Container>
     )
 }
-
 const CardImage = styled.div`
-    height: 100px;
-    width: 100px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
     margin-bottom: 10px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 `
 const OfCard = styled.div`
     width: 150px;
-    padding-left: 20px;
+    margin:0 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -50,12 +50,9 @@ const OfCard = styled.div`
 `
 const ScrollableRow = styled.div`
     display: flex;
-    justify-content: space-around;
-    align-items: center;
     overflow-x: auto;
     white-space: nowrap;
-    padding-bottom: 10px;
-    padding-left: 10px;
+    padding-bottom: 20px;
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
     transition: scrollbar-color .3s;
@@ -75,4 +72,4 @@ const ScrollableRow = styled.div`
     	background-color: green;
     }
 `
-export default Category
+export default ShopCard

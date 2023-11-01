@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import {Card,Button} from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
@@ -11,6 +11,7 @@ import Tomato from 'file:///home/rabeeh/Pictures/tomato.png'
 function MyVerticallyCenteredModal(props) {
     return (
         <Modal
+            className='user-select-none'
             {...props}
             size="md"
             aria-labelledby="contained-modal-title-vcenter"
@@ -64,13 +65,13 @@ function OfferCard() {
     const [modalShow, setModalShow] = React.useState(false);
 
     return (
-        <Container fluid>
+        <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }}>
                 <span className='h3'>Offer</span>
                 {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color:'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <ScrollableRow>
-                {Array.from({ length: 20 }).map((_, idx) => (
+                {Array.from({ length: 10 }).map((_, idx) => (
                     <Col key={idx}>
                         <OfCard onClick={() => setModalShow(true)}>
                             <CardImage>
@@ -113,16 +114,28 @@ const OfCard = styled.div`
     margin:0 20px;
 `
 const ScrollableRow = styled.div`
-  display: flex;
-  overflow-x: auto;
-  cursor: pointer;
-  white-space: nowrap;
-  padding-bottom: 20px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
+    display: flex;
+    overflow-x: auto;
+    cursor: pointer;
+    white-space: nowrap;
+    padding-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color .3s;
+    -ms-overflow-style: none;
+    &:hover {
+        scrollbar-color: black transparent;
+    }
+    &:not(:hover)::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    &::-webkit-scrollbar-thumb{
+	    border-radius: 10px;
+    	background-color: green;
+    }
 `
 export default OfferCard

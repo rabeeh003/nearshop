@@ -19,7 +19,7 @@ function NavBar() {
     }
     return (
         <>
-            <Navbar className="bg-body-tertiary fixed-top">
+            <Navbar className="bg-body-tertiary fixed-top user-select-none">
                 <Container fluid>
                     <div>
                         <Navbar.Brand href="#home">Shoping Cart</Navbar.Brand>
