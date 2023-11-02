@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { Link } from 'react-router-dom';
 
 function NavBar() {
     const [fullscreen, setFullscreen] = useState(true);
@@ -31,12 +32,12 @@ function NavBar() {
                             </Nav>
                             <IconsDiv>
                                 <Nav>
-                                    <Nav.Link title='Home' href="#home"> <i class="fa-solid fa-house"></i></Nav.Link>
-                                    <Nav.Link title='catagory' href="#features"><i class="fa-solid fa-border-all"></i></Nav.Link>
-                                    <Nav.Link title='cart' href="#features"><i class="fa-solid fa-cart-shopping"></i></Nav.Link>
+                                    <Link title='Home' className='nav-link' to="/"> <i class="fa-solid fa-house"></i></Link>
+                                    <Link title='Category' className='nav-link' to="/category"><i class="fa-solid fa-border-all"></i></Link>
+                                    <Link title='Cart' className='nav-link' to="/"><i class="fa-solid fa-cart-shopping"></i></Link>
                                 </Nav>
                             </IconsDiv>
-                            <Nav><Nav.Link title='bell' href="#features"><i class="fa-solid fa-bell"></i></Nav.Link></Nav>
+                            <Nav><Link title='Nottification' className='nav-link'><i class="fa-solid fa-bell"></i></Link></Nav>
                             <Navbar.Text>
                                 <DropdownButton
                                     align="end"

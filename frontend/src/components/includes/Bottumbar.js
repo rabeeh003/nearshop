@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useState } from 'react';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import { Link } from 'react-router-dom';
 
 function Bottumbar() {
     const [show, setShow] = useState(false);
@@ -24,10 +25,10 @@ function Bottumbar() {
                 </Offcanvas.Body>
             </Offcanvas>
             <BtNav>
-                <NavItem title='Home' href="#home"> <i class="fa-solid fa-house"></i></NavItem>
-                <NavItem title='catagory' href="#features"><i class="fa-solid fa-border-all"></i></NavItem>
-                <NavItem title='cart' href="#features"><i class="fa-solid fa-cart-shopping"></i></NavItem>
-                <NavItem title='cart' onClick={handleShow} href="#features"><i class="fa-solid fa-user"></i></NavItem>
+                <Link title='Home' to="/" className='nav-link'> <i class="fa-solid fa-house"></i></Link>
+                <Link title='catagory' to="/category" className='nav-link'><i class="fa-solid fa-border-all"></i></Link>
+                <Link title='cart' to="" className='nav-link'><i class="fa-solid fa-cart-shopping"></i></Link>
+                <Link title='cart' onClick={handleShow} to="" className='nav-link'><i class="fa-solid fa-user"></i></Link>
             </BtNav>
             <div style={{ height: "70px" }}></div>
         </>

@@ -5,25 +5,28 @@ import styled from 'styled-components'
 import { Card } from 'react-bootstrap';
 
 import c1 from 'file:///home/rabeeh/Pictures/c1.png'
+import { Link } from 'react-router-dom';
 
-function Category() {
+function CategoryCard() {
     return (
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingBottom: "10px" }}>
                 <span className='h3'>Category</span>
-                <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color:'white' }}><i class="fa-solid fa-arrow-right"></i></span>
+                <Link to='/category' style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></Link>
             </Col>
             <ScrollableRow>
                 {Array.from({ length: 7 }).map((_, idx) => (
                     <Col className='d-flex justify-content-center' key={idx}>
-                        <OfCard >
-                            <CardImage>
-                                <Card.Img variant="top" src={c1} />
-                            </CardImage>
-                            <Card.Body>
-                                <Card.Title>Grocery</Card.Title>
-                            </Card.Body>
-                        </OfCard>
+                        <Link to='/category' className='text-decoration-none text-reset'>
+                            <OfCard >
+                                <CardImage>
+                                    <Card.Img variant="top" src={c1} />
+                                </CardImage>
+                                <Card.Body>
+                                    <Card.Title className='text-reset'>Grocery</Card.Title>
+                                </Card.Body>
+                            </OfCard>
+                        </Link>
                     </Col>
                 ))}
             </ScrollableRow>
@@ -50,8 +53,6 @@ const OfCard = styled.div`
 `
 const ScrollableRow = styled.div`
     display: flex;
-    justify-content: space-around;
-    align-items: center;
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 10px;
@@ -75,4 +76,4 @@ const ScrollableRow = styled.div`
     	background-color: green;
     }
 `
-export default Category
+export default CategoryCard

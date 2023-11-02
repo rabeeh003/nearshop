@@ -1,11 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Home from '../src/components/screens/Home'
-
+import Category from './components/screens/Category';
+import NavBar from './components/includes/Navbar';
+import Bottumbar from './components/includes/Bottumbar';
+import NotFont from './components/screens/NotFont';
 function App() {
   return (
     <>
-      <Home/>
+    <Router>
+      <NavBar/>
+      <Routes>
+        <Route path='/' element={<Home/>} />
+        <Route path='/category' element={<Category/>}/>
+        <Route path='*' element={<NotFont/>}/>
+      </Routes>
+      <Bottumbar/>
+    </Router>
     </>
   );
 }
