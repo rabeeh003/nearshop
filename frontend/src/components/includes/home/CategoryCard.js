@@ -11,7 +11,7 @@ function CategoryCard() {
     return (
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingBottom: "10px" }}>
-                <span className='h3'>Category</span>
+                <span className='h5'><b>Category</b></span>
                 <Link to='/category' style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></Link>
             </Col>
             <ScrollableRow>

@@ -6,22 +6,26 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 
+const BoxShadow = {
+    boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+}
+
 function CartPage() {
     return (
-        <Page>
+        <Page className='user-select-nones'>
             <Accordion defaultActiveKey={['0']} alwaysOpen>
             {Array.from({ length: 4 }).map((_, idx) => (
-                <Accordion.Item eventKey={idx}>
+                <Accordion.Item eventKey={idx} style={BoxShadow} className='mb-4 rounded'>
                     <Accordion.Header>
                         <div className='d-flex flex-column w-100'>
                             <Row className=''>
                                 <Col style={{ minWidth: 'fit-content' }} className="d-flex align-items-center">
                                     <ProIcon src='' />
-                                    <ShopName className='h3'>Name</ShopName>
+                                    <ShopName className='h5 m-2 m-sm-4'>Name</ShopName>
                                 </Col>
-                                <Col className='d-flex  justify-content-end m-3'>
+                                <Col className='d-flex  justify-content-end m-3 align-items-center'>
                                     <Link to={'/'} className='text-reset text-decoration-none'>
-                                        <ActioinBt className='btn btn-primary m-2'>Order Now</ActioinBt>
+                                        <ActioinBt className='btn btn-primary'>Order</ActioinBt>
                                     </Link>
                                     {/* <Link to={'/'} className='btn btn-danger text-reset text-decoration-none m-2'>
                                     <ActioinBt>Cancel</ActioinBt>
@@ -67,7 +71,7 @@ function CartPage() {
                                     </div><i class=""></i>
                                 </Col>
                                 <Col xs={1} className='d-flex align-items-center justify-content-end'>
-                                    <ItemBtn className='fa-regular fa-circle-xmark' ></ItemBtn>
+                                    <ItemBtn className='btn fa-regular fa-circle-xmark' ></ItemBtn>
                                 </Col>
                             </Row>
                         </Items>
@@ -88,33 +92,38 @@ function CartPage() {
 
 const Page = styled.div`
     padding: 10px 20px;
+    max-width: 90vw;
+    margin: auto;
+    align-items: center;
+    @media screen and (max-width: 578px) {
+        max-width: 98vw;
+    }
 `
 const ProIcon = styled.img`
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin: 4px;
     @media screen and (max-width: 578px) {
         height: 30px;
         width: 30px;
     }
 `
 const ShopName = styled.span`
+    font-weight: 600;
     @media screen and (max-width: 578px) {
         font-size: 18px;
-        font-weight: 600;
     }
 `
 const ActioinBt = styled.span`
     color: white;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 600;
     @media screen and (max-width: 578px) {
-        font-size: 10px;
-        font-weight: 600;
+        font-size: 9px;
     }
 `
 const CartDet = styled.span`
-    font-size: 18px;
+    font-size: 15px;
     @media screen and (max-width: 578px) {
         font-size: 12px;
     }

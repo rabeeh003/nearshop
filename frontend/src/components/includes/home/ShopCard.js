@@ -8,7 +8,7 @@ function ShopCard() {
     return (
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }} className='mt-2'>
-                <span className='h3'>Near Shops</span>
+                <span className='h5'><b>Near Shops</b></span>
                 {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <ScrollableRow>
@@ -19,8 +19,8 @@ function ShopCard() {
                                 <Card.Img variant="top" className='object-fit-fill rounded-circle' src={icon} />
                             </CardImage>
                             <Card.Body>
-                                <Card.Title>Shop Name</Card.Title>
-                                <Button variant="success" className='mt-2' style={{ width: '100%' }}>Vist</Button>
+                                <Card.Title style={{fontSize:"15px"}}>Shop Name</Card.Title>
+                                <Button variant="success" className='mt-2' style={{ width: '100%',fontSize:"12px" }}>Vist</Button>
                             </Card.Body>
                         </OfCard>
                     </Col>
@@ -32,8 +32,8 @@ function ShopCard() {
 const CardImage = styled.div`
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 50%;
-    height: 150px;
-    width: 150px;
+    height: 100px;
+    width: 100px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;

@@ -10,7 +10,7 @@ function CategoryCard() {
     return (
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingBottom: "10px" }}>
-                <span className='h3'>Category</span>
+                <span className='h5'>Category</span>
             </Col>
             <ScrollableRow >
                 {Array.from({ length: 7 }).map((_, idx) => (
@@ -20,7 +20,7 @@ function CategoryCard() {
                                 <Card.Img variant="top" src={c1} />
                             </CardImage>
                             <Card.Body>
-                                <Card.Title>Grocery</Card.Title>
+                                <Card.Title style={{fontSize:"16px",fontWeight:600}}>Grocery</Card.Title>
                             </Card.Body>
                         </OfCard>
                     </Col>

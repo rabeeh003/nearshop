@@ -21,14 +21,14 @@ function NavBar() {
     return (
         <>
             <Navbar className="bg-body-tertiary fixed-top user-select-none">
-                <Container fluid>
+                <Container fluid className='d-flex justify-content-around'>
                     <div>
-                        <Navbar.Brand href="#home">Shoping Cart</Navbar.Brand>
+                        <Navbar.Brand><b>Superkart</b></Navbar.Brand>
                     </div>
                     <div>
                         <Navbar.Collapse className="justify-content-end">
                             <Nav>
-                                <Nav.Link onClick={() => handleShow(true)} variant=""><i class="fa-solid fa-magnifying-glass"></i></Nav.Link>
+                                <Nav.Link onClick={() => handleShow(true)} style={{fontSize:"20px"}} variant=""><i class="fa-solid fa-magnifying-glass"></i></Nav.Link>
                             </Nav>
                             <IconsDiv>
                                 <Nav>
@@ -37,7 +37,7 @@ function NavBar() {
                                     <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping"></i></Link>
                                 </Nav>
                             </IconsDiv>
-                            <Nav><Link title='Nottification' className='nav-link'><i class="fa-solid fa-bell"></i></Link></Nav>
+                            <Nav><Link title='Nottification' className='nav-link' style={{fontSize:"20px"}}><i class="fa-solid fa-bell"></i></Link></Nav>
                             <Navbar.Text>
                                 <DropdownButton
                                     align="end"
@@ -94,6 +94,7 @@ function NavBar() {
 }
 
 const IconsDiv = styled.div`
+    font-size:20px;
     @media screen and (max-width: 578px) {
         display: none;
     }

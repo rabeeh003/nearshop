@@ -67,7 +67,7 @@ function OfferCard() {
     return (
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }}>
-                <span className='h3'>Offer</span>
+                <span className='h5'><b>Offer</b></span>
                 {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color:'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <ScrollableRow>
@@ -79,12 +79,12 @@ function OfferCard() {
                                 <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i> Shop Name</Badge>
                                 <Card.Img variant="top" src={Tomato} />
                             </CardImage>
-                            <Card.Body>
-                                <Card.Title>Card Title</Card.Title>
-                                <Card.Text>
+                            <Card.Body >
+                                <Card.Title style={{fontSize:'15px'}}>Card Title</Card.Title>
+                                <Card.Text style={{fontSize:'15px'}}>
                                     Price: <b>₹ 39</b>
                                 </Card.Text>
-                                <Button variant="success" style={{ width: '100%' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                <Button variant="success" style={{ width: '100%', fontSize:'15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
                             </Card.Body>
                         </OfCard>
                     </Col>
@@ -101,8 +101,8 @@ function OfferCard() {
 const CardImage = styled.div`
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 10px;
-    height: 150px;
-    width: 150px;
+    height: 120px;
+    width: 120px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
@@ -110,7 +110,6 @@ const CardImage = styled.div`
     position: relative;
 `
 const OfCard = styled.div`
-    width: 150px;
     margin:0 20px;
 `
 const ScrollableRow = styled.div`
