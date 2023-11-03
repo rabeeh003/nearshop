@@ -5,6 +5,8 @@ import Category from './components/screens/Category';
 import NavBar from './components/includes/Navbar';
 import Bottumbar from './components/includes/Bottumbar';
 import NotFont from './components/screens/NotFont';
+import CartPage from './components/screens/CartPage';
+
 function App() {
   return (
     <>
@@ -13,6 +15,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/category' element={<Category/>}/>
+        <Route path='/cart' element={<CartPage/>}/>
         <Route path='*' element={<NotFont/>}/>
       </Routes>
       <Bottumbar/>

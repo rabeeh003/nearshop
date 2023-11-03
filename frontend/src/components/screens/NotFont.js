@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import not from "../../assets/images/404.gif"
+import { Link } from 'react-router-dom';
 
 const PageWrapper = styled.div`
   font-family: Arial, sans-serif;
@@ -9,11 +11,6 @@ const PageWrapper = styled.div`
 
 const Title = styled.h1`
   color: #333;
-`
-
-const Description = styled.p`
-  font-size: 18px;
-  color: #666;
 `
 
 const Button = styled.button`
@@ -26,13 +23,15 @@ const Button = styled.button`
 `
 
 function NotFont() {
-    return (
-        <PageWrapper>
-            <Title>Not font Page</Title>
-            <Description>This is a simple front page created using styled-components in React.</Description>
-            <Button>Get Started</Button>
-        </PageWrapper>
-    )
+  return (
+    <PageWrapper>
+      <img src={not} alt='not-font'></img>
+      <Title>Not font Page</Title>
+      <Link to={'/'}>
+        <Button>Go to Home page</Button>
+      </Link>
+    </PageWrapper>
+  )
 }
 
 export default NotFont

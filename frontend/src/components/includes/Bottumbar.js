@@ -27,7 +27,7 @@ function Bottumbar() {
             <BtNav>
                 <Link title='Home' to="/" className='nav-link'> <i class="fa-solid fa-house"></i></Link>
                 <Link title='catagory' to="/category" className='nav-link'><i class="fa-solid fa-border-all"></i></Link>
-                <Link title='cart' to="" className='nav-link'><i class="fa-solid fa-cart-shopping"></i></Link>
+                <Link title='cart' to="/cart" className='nav-link'><i class="fa-solid fa-cart-shopping"></i></Link>
                 <Link title='cart' onClick={handleShow} to="" className='nav-link'><i class="fa-solid fa-user"></i></Link>
             </BtNav>
             <div style={{ height: "70px" }}></div>
@@ -52,7 +52,6 @@ const BtNav = styled.div`
         background-color: #f2f2f0;
     }
 `
-const NavItem = styled.span``
 const OfIcon = styled.div``
 const OfItem = styled.div`
     display: block;

@@ -34,7 +34,7 @@ function NavBar() {
                                 <Nav>
                                     <Link title='Home' className='nav-link' to="/"> <i class="fa-solid fa-house"></i></Link>
                                     <Link title='Category' className='nav-link' to="/category"><i class="fa-solid fa-border-all"></i></Link>
-                                    <Link title='Cart' className='nav-link' to="/"><i class="fa-solid fa-cart-shopping"></i></Link>
+                                    <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping"></i></Link>
                                 </Nav>
                             </IconsDiv>
                             <Nav><Link title='Nottification' className='nav-link'><i class="fa-solid fa-bell"></i></Link></Nav>
