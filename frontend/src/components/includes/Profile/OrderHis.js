@@ -3,8 +3,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import Form from 'react-bootstrap/Form';
+
 
 const BoxShadow = {
     boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
@@ -83,14 +82,7 @@ const ShopName = styled.span`
         font-size: 18px;
     }
 `
-const ActioinBt = styled.span`
-    color: white;
-    font-size: 10px;
-    font-weight: 600;
-    @media screen and (max-width: 578px) {
-        font-size: 9px;
-    }
-`
+
 const CartDet = styled.span`
     font-size: 15px;
     @media screen and (max-width: 578px) {
@@ -120,9 +112,6 @@ const ItemText = styled.span`
         font-size: 15px;
         font-weight: 500;
     }
-`
-const ItemBtn = styled.span`
-    font-size: 25px;
 `
 
 export default OrderHis

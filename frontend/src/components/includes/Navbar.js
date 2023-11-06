@@ -67,7 +67,6 @@ function NavBar() {
                                             <DropItem className='btn' eventKey="1"><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
                                         </Link>
                                         <Dropdown.Divider />
-
                                         <Link to={''}>
                                             <DropItem className='btn' eventKey="1"><i class="fa-solid fa-right-from-bracket pe-2"></i>Logout</DropItem>
                                         </Link>

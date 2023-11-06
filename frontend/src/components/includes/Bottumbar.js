@@ -18,9 +18,15 @@ function Bottumbar() {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <OfIcon>
-                        <OfItem title='catagory' href="#features"><i class="fa-solid fa-user pe-2"></i>Profile</OfItem>
-                        <OfItem title='cart' href="#features"><i class="fa-solid fa-gear pe-2"></i>Settings</OfItem>
-                        <OfItem title='cart' onClick={handleShow} href="#features"><i class="fa-solid fa-right-from-bracket pe-2"></i>Logout</OfItem>
+                        <Link to="user" onClick={handleClose} className='nav-link'>
+                            <OfItem title='Profile'><i class="fa-solid fa-user pe-2"></i>Profile</OfItem>
+                        </Link>
+                        <Link to="/settings" onClick={handleClose} className='nav-link'>
+                            <OfItem title='cart' href="#features"><i class="fa-solid fa-gear pe-2"></i>Settings</OfItem>
+                        </Link>
+                        <Link to="" onClick={handleClose} className='nav-link'>
+                            <OfItem title='cart' onClick={handleShow} href="#features"><i class="fa-solid fa-right-from-bracket pe-2"></i>Logout</OfItem>
+                        </Link>
                     </OfIcon>
                 </Offcanvas.Body>
             </Offcanvas>

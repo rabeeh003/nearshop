@@ -25,7 +25,7 @@ const Button = styled.button`
 function NotFont() {
   return (
     <PageWrapper>
-      <img src={not} alt='not-font'></img>
+      <img src={not} style={{width:'95vw'}} alt='not-font'></img>
       <Title>Not font Page</Title>
       <Link to={'/'}>
         <Button>Go to Home page</Button>

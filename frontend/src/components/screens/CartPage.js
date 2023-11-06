@@ -24,7 +24,7 @@ function CartPage() {
                                     <ShopName className='h5 m-2 m-sm-4'>Name</ShopName>
                                 </Col>
                                 <Col className='d-flex  justify-content-end m-3 align-items-center'>
-                                    <Link to={'/'} className='text-reset text-decoration-none'>
+                                    <Link to={'order'} className='text-reset text-decoration-none'>
                                         <ActioinBt className='btn btn-primary'>Order</ActioinBt>
                                     </Link>
                                     {/* <Link to={'/'} className='btn btn-danger text-reset text-decoration-none m-2'>
