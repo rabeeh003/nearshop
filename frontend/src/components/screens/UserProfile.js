@@ -1,8 +1,11 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
-import { Link, Form } from 'react-router-dom';
 import styled from 'styled-components';
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
 
 import OrderHis from '../includes/Profile/OrderHis';
 import LocationsTwoType from '../includes/Profile/LocationsTwoType';
@@ -12,6 +15,10 @@ const BoxShadow = {
 }
 
 function UserProfile() {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     return (
         <Useer>
             <HeadHeight className='Row d-flex'>
@@ -20,9 +27,9 @@ function UserProfile() {
                     <span>9080706050</span>
                 </Col>
                 <Col className='d-flex align-items-center'>
-                    <Link to={''} >
+                    <span onClick={handleShow} >
                         Edit
-                    </Link>
+                    </span>
                 </Col>
             </HeadHeight>
             <Accordion >
@@ -80,6 +87,63 @@ function UserProfile() {
                     </Accordion.Body>
                 </Accordion.Item>
             </Accordion>
+            {/* Model code hear */}
+            <Modal
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+                            <Form.Label column sm="2">
+                                Name
+                            </Form.Label>
+                            <Col sm="10">
+                                <Form.Control defaultValue="UserName" />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                            <Form.Label column sm="2">
+                                Number
+                            </Form.Label>
+                            <Col sm="10">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="9876543210"
+                                    aria-label="Disabled input example"
+                                    readOnly
+                                />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                            <Form.Label column sm="2">
+
+                            </Form.Label>
+                            <Col sm="10">
+                                <Form.Control
+                                    type="number"
+                                    defaultValue="1234567890"
+                                />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                            <Form.Label>Address</Form.Label>
+                            <Form.Control as="textarea" rows={3} defaultValue="State, Jilla, Panjayath/Muncipality, Place Name, House name, Pin"/>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button variant="success">Save</Button>
+                </Modal.Footer>
+            </Modal>
         </Useer>
     );
 }
@@ -108,8 +172,5 @@ const ListItem = styled.li`
     align-items: center;
     justify-content: space-around;
 `
-// for Order History
-
-
 
 export default UserProfile

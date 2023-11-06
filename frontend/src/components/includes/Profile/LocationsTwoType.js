@@ -27,7 +27,7 @@ function LocationsTwoType() {
                             <i class="fa-solid fa-trash"></i>
                         </ListItem>
                         <ListItem>
-                            <span className='btn btn-primary'><i class="fa-solid fa-plus"></i>Add New</span>
+                            <span className='btn btn-success'><i class="fa-solid fa-plus"></i>Add New</span>
                         </ListItem>
                     </ListDiv>
                 </Accordion.Body>
@@ -44,7 +44,7 @@ function LocationsTwoType() {
                             <i class="fa-solid fa-trash"></i>
                         </ListItem>
                         <ListItem>
-                            <span className='btn btn-primary'><i class="fa-solid fa-plus"></i>Add New</span>
+                            <span className='btn btn-success'><i class="fa-solid fa-plus"></i>Add New</span>
                         </ListItem>
                     </ListDiv>
                 </Accordion.Body>
