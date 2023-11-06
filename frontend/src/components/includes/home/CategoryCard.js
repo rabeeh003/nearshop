@@ -53,6 +53,7 @@ const OfCard = styled.div`
 `
 const ScrollableRow = styled.div`
     display: flex;
+    justify-content: space-between;
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 10px;
@@ -74,6 +75,9 @@ const ScrollableRow = styled.div`
     &::-webkit-scrollbar-thumb{
 	    border-radius: 10px;
     	background-color: green;
+    }
+    @media screen and (max-width: 578px) {
+        justify-content: flex-start;
     }
 `
 export default CategoryCard

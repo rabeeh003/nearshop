@@ -3,6 +3,7 @@ import { Card, Button, Container, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 
 import icon from 'file:///home/rabeeh/Pictures/superlogo.jpg'
+import { Link } from 'react-router-dom';
 
 function ShopCard() {
     return (
@@ -14,6 +15,7 @@ function ShopCard() {
             <ScrollableRow>
                 {Array.from({ length: 10 }).map((_, idx) => (
                     <Col key={idx}>
+                        <Link to={'shopid'} className='nav-link'>
                         <OfCard>
                             <CardImage>
                                 <Card.Img variant="top" className='object-fit-fill rounded-circle' src={icon} />
@@ -23,6 +25,7 @@ function ShopCard() {
                                 <Button variant="success" className='mt-2' style={{ width: '100%',fontSize:"12px" }}>Vist</Button>
                             </Card.Body>
                         </OfCard>
+                        </Link>
                     </Col>
                 ))}
             </ScrollableRow>

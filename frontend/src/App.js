@@ -8,6 +8,7 @@ import NotFont from './components/screens/NotFont';
 import CartPage from './components/screens/CartPage';
 import UserProfile from './components/screens/UserProfile';
 import CheckOut from './components/screens/CheckOut';
+import ShopPage from './components/screens/ShopPage';
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
             <Route path='order' element={<CheckOut />} />
           </Route>
           <Route path='user' element={<UserProfile />} />
-
+          <Route path='shopid' element={<ShopPage/>} />
           <Route path='*' element={<NotFont />} />
         </Routes>
         <Bottumbar />
