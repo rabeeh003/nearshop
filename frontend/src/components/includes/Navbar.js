@@ -28,7 +28,7 @@ function NavBar() {
                     <div>
                         <Navbar.Collapse className="justify-content-end">
                             <Nav>
-                                <Nav.Link onClick={() => handleShow(true)} style={{fontSize:"20px"}} variant=""><i class="fa-solid fa-magnifying-glass"></i></Nav.Link>
+                                <Nav.Link onClick={() => handleShow(true)} style={{ fontSize: "20px" }} variant=""><i class="fa-solid fa-magnifying-glass"></i></Nav.Link>
                             </Nav>
                             <IconsDiv>
                                 <Nav>
@@ -37,7 +37,7 @@ function NavBar() {
                                     <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping"></i></Link>
                                 </Nav>
                             </IconsDiv>
-                            <Nav><Link title='Nottification' className='nav-link' style={{fontSize:"20px"}}><i class="fa-solid fa-bell"></i></Link></Nav>
+                            <Nav><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell"></i></Link></Nav>
                             <Navbar.Text>
                                 <DropdownButton
                                     align="end"
@@ -60,17 +60,24 @@ function NavBar() {
                                         id="dropdown-menu-align-end"
                                         variant=""
                                     >
-                                        <Dropdown.Item eventKey="1"><i class="fa-solid fa-user pe-2"></i>Profile</Dropdown.Item>
-                                        <Dropdown.Item eventKey="2"><i class="fa-solid fa-gear pe-2"></i>Settings</Dropdown.Item>
+                                        <Link to={'/user'}>
+                                            <DropItem className='btn' eventKey="1"><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
+                                        </Link>
+                                        <Link to={''}>
+                                            <DropItem className='btn' eventKey="1"><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
+                                        </Link>
                                         <Dropdown.Divider />
-                                        <Dropdown.Item eventKey="3"> <i className="fa-solid fa-right-from-bracket pe-2"></i>Logout</Dropdown.Item>
+
+                                        <Link to={''}>
+                                            <DropItem className='btn' eventKey="1"><i class="fa-solid fa-right-from-bracket pe-2"></i>Logout</DropItem>
+                                        </Link>
                                     </DropdownButton>
                                 </Navbar.Text>
                             </IconsDiv>
                         </Navbar.Collapse>
                     </div>
                 </Container>
-            </Navbar>
+            </Navbar >
             <div style={{ height: "80px" }}></div>
             {/* this Model used for search */}
             <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
@@ -98,5 +105,10 @@ const IconsDiv = styled.div`
     @media screen and (max-width: 578px) {
         display: none;
     }
+`
+
+const DropItem = styled.span`
+    width: 100%;
+    text-align: start;
 `
 export default NavBar
