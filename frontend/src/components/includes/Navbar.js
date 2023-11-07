@@ -11,6 +11,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
 
+
+
+
 function NavBar() {
     const [fullscreen, setFullscreen] = useState(true);
     const [show, setShow] = useState(false);
@@ -20,36 +23,37 @@ function NavBar() {
     }
     return (
         <>
-            <Navbar className="bg-body-tertiary fixed-top user-select-none">
+            <Navbar className="bg-green fixed-top user-select-none">
                 <Container fluid className='d-flex justify-content-around'>
                     <div>
-                        <Navbar.Brand><b>Superkart</b></Navbar.Brand>
+                        <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
                     </div>
                     <div>
                         <Navbar.Collapse className="justify-content-end">
                             <Nav>
-                                <Nav.Link onClick={() => handleShow(true)} style={{ fontSize: "20px" }} variant=""><i class="fa-solid fa-magnifying-glass"></i></Nav.Link>
+                                <Nav.Link onClick={() => handleShow(true)} style={{ fontSize: "20px" }} variant=""><i class="clr-white fa-solid fa-magnifying-glass"></i></Nav.Link>
                             </Nav>
                             <IconsDiv>
                                 <Nav>
-                                    <Link title='Home' className='nav-link' to="/"> <i class="fa-solid fa-house"></i></Link>
-                                    <Link title='Category' className='nav-link' to="/category"><i class="fa-solid fa-border-all"></i></Link>
-                                    <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping"></i></Link>
+                                    <Link title='Home' className='nav-link' to="/"> <i class="fa-solid fa-house clr-white"></i></Link>
+                                    <Link title='Category' className='nav-link' to="/category"><i class="fa-solid fa-border-all clr-white"></i></Link>
+                                    <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
-                            <Nav><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell"></i></Link></Nav>
+                            <Nav><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav>
                             <Navbar.Text>
                                 <DropdownButton
                                     align="end"
                                     title="Location"
                                     id="dropdown-menu-align-end"
-                                    variant=""
+                                    variant="light"
+                                    className='me-2'
                                 >
 
-                                    <Dropdown.Item eventKey="1"><i class="fa-solid fa-map-location-dot pe-2"></i>Location 1</Dropdown.Item>
-                                    <Dropdown.Item eventKey="2"><i class="fa-solid fa-map-location-dot pe-2"></i>Location 2</Dropdown.Item>
+                                    <Dropdown.Item eventKey="1"><i class="fa-solid fa-map-location-dot pe-2 clr-white"></i>Location 1</Dropdown.Item>
+                                    <Dropdown.Item eventKey="2"><i class="fa-solid fa-map-location-dot pe-2 clr-white"></i>Location 2</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item eventKey="3"> <i className="fa-solid fa-plus pe-2"></i>Add New</Dropdown.Item>
+                                    <Dropdown.Item eventKey="3"> <i className="fa-solid fa-plus pe-2 clr-white"></i>Add New</Dropdown.Item>
                                 </DropdownButton>
                             </Navbar.Text>
                             <IconsDiv>
@@ -58,7 +62,7 @@ function NavBar() {
                                         align="end"
                                         title="Account"
                                         id="dropdown-menu-align-end"
-                                        variant=""
+                                        variant="light"
                                     >
                                         <Link to={'/user'}>
                                             <DropItem className='btn' eventKey="1"><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
@@ -70,7 +74,7 @@ function NavBar() {
                                         <Link to={'login'}>
                                             <DropItem className='btn' eventKey="1">Login</DropItem>
                                         </Link>
-                                        <Link to={''}>
+                                        <Link to={'signup'}>
                                             <DropItem className='btn' eventKey="1">Signup</DropItem>
                                         </Link>
                                         <Link to={''}>
@@ -86,8 +90,22 @@ function NavBar() {
             <div style={{ height: "80px" }}></div>
             {/* this Model used for search */}
             <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Search</Modal.Title>
+                <Modal.Header closeButton className='bg-green' variant="light">
+                    <span className='fw-500 fs-4 clr-white'>Search</span>
+                    <Navbar.Text className='ms-5'>
+                        <DropdownButton
+                            align="end"
+                            title="Location"
+                            id="dropdown-menu-align-end"
+                            variant="light"
+                        >
+
+                            <Dropdown.Item eventKey="1"><i class="fa-solid fa-map-location-dot pe-2"></i>Location 1</Dropdown.Item>
+                            <Dropdown.Item eventKey="2"><i class="fa-solid fa-map-location-dot pe-2"></i>Location 2</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item eventKey="3"> <i className="fa-solid fa-plus pe-2"></i>Add New</Dropdown.Item>
+                        </DropdownButton>
+                    </Navbar.Text>
                 </Modal.Header>
                 <Modal.Body>
                     <Form className="d-flex">

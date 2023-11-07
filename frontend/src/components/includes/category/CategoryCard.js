@@ -44,7 +44,8 @@ const CardImage = styled.div`
     }
 `
 const OfCard = styled.div`
-    width: 150px;
+    min-width: 100px;
+    max-width: 150px;
     padding-left: 0px;
     display: flex;
     flex-direction: column;

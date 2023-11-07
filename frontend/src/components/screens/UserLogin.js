@@ -100,6 +100,7 @@ function UserLogin() {
               <Form.Control type="number" maxLength='8' placeholder="" />
             </FloatingLabel>
             <Button onClick={setShow}> Get OTP </Button>
+            
           </Col>
         </Row>
       </Container>
@@ -128,7 +129,7 @@ const Card = styled.div`
   background-color: #fff;
   margin-bottom: 5px;
   margin-top: 5px;
-  box-shadow: 0 12px 15px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const CardBody = styled.div`

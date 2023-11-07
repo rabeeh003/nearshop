@@ -44,7 +44,8 @@ const CardImage = styled.div`
     cursor: pointer;
 `
 const OfCard = styled.div`
-    width: 150px;
+    min-width: 100px;
+    max-width: 150px;
     margin:0 20px;
     display: flex;
     flex-direction: column;

@@ -12,7 +12,7 @@ function CategoryCard() {
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingBottom: "10px" }}>
                 <span className='h5'><b>Category</b></span>
-                <Link to='/category' style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></Link>
+                <Link to='/category' className='bg-green' style={{ display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></Link>
             </Col>
             <ScrollableRow>
                 {Array.from({ length: 7 }).map((_, idx) => (
@@ -42,9 +42,14 @@ const CardImage = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    @media screen and (max-width: 778px) {
+        height: 70px;
+        width: 70px;
+    }
 `
 const OfCard = styled.div`
-    width: 150px;
+    min-width: 100px;
+    max-width: 150px;
     padding-left: 20px;
     display: flex;
     flex-direction: column;
