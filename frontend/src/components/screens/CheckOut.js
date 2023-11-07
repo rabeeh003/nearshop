@@ -1,19 +1,39 @@
 import React, { useState } from 'react'
 import { Row, Col, Dropdown, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
+import Modal from 'react-bootstrap/Modal';
 
+// Add Location Model
+function AddLocation(props) {
+    return (
+        <Modal
+            className='user-select-none'
+            {...props}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <i class="fa-solid fa-map"></i> Add Location
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                Map Hear
+            </Modal.Body>
+        </Modal>
+    );
+}
+
+// CheckOut page code started
 const BoxShadow = {
     boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
     padding: '10px'
 }
 
 function CheckOut() {
-    const [selectedItem, setSelectedItem] = useState(null);
-
-    const handleSelect = (item) => {
-        setSelectedItem(item);
-    };
-    const items = ['Option 1', 'Option 2', 'Option 3'];
+    const [showNoti, setShowNoti] = React.useState(false);
+    
     return (
         <Page>
             <Row>
@@ -61,39 +81,20 @@ function CheckOut() {
                     <div className='text-center ' style={{ width: '100%', height: '20vh', fontSize: '50px', fontWeight: '500' }}>
                         ₹ 150
                     </div>
-                    <Dropdown style={{ width: '100%' }} onSelect={handleSelect}>
-                        <Dropdown.Toggle style={{ height: '50px' }} className='w-100 m-2' variant="success" id="dropdown-basic">
-                            <i class="fa-solid fa-location-dot me-3"></i>
-                            {selectedItem || 'Select Location'}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className='w-100 me-3' >
-                            {items.map((item, index) => (
-                                <Dropdown.Item key={index} eventKey={item}>
-                                    {item}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Dropdown style={{ width: '100%' }} onSelect={handleSelect}>
-                        <Dropdown.Toggle style={{ height: '50px' }} className='w-100 m-2' variant="success" id="dropdown-basic">
-                            <i class="fa-solid fa-credit-card m-3"></i>
-                            {selectedItem || 'Select Payment Method'}
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu className='w-100 m-2' >
-                            {items.map((item, index) => (
-                                <Dropdown.Item key={index} eventKey={item}>
-                                    {item}
-                                </Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <Form.Select aria-label="Payment Type">
-                        <option>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </Form.Select>
+                    <div className='m-auto' style={{maxWidth:"500px"}}>
+                        <Form.Select aria-label="Delivery Location" className='mb-2'>
+                            <option hidden>Chose Location</option>
+                            <option value="1">Home</option>
+                            <option value="2">Office</option>
+                            <option onClick={''}>Add New</option>
+                        </Form.Select>
+                        <Form.Select aria-label="Payment Type">
+                            <option hidden>Select Payment Type</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </Form.Select>
+                    </div>
                     <div className='text-center' style={{ width: '100%', fontSize: '50px', fontWeight: '500' }}>
                         <Button variant='success' className='py-2 px-5'> Pay</Button>
                     </div>

@@ -11,10 +11,54 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
 
+// Notification Model
+function NotifiactionModel(props) {
+    return (
+        <Modal
+            className='user-select-none'
+            {...props}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <i class="fa-solid fa-bell"></i> Notifications
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                emty !
+            </Modal.Body>
+        </Modal>
+    );
+}
 
+// Add Location Model
+function AddLocation(props) {
+    return (
+        <Modal
+            className='user-select-none'
+            {...props}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <i class="fa-solid fa-map"></i> Add Location
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                Map Hear
+            </Modal.Body>
+        </Modal>
+    );
+}
 
-
+// Navbar Code start
 function NavBar() {
+    const [showNoti, setShowNoti] = React.useState(false);
+    const [addLocation, setAddLocation] = React.useState(false);
     const [fullscreen, setFullscreen] = useState(true);
     const [show, setShow] = useState(false);
     function handleShow(breakpoint) {
@@ -40,7 +84,7 @@ function NavBar() {
                                     <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
-                            <Nav><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav>
+                            <Nav onClick={() => setShowNoti(true)}><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav>
                             <Navbar.Text>
                                 <DropdownButton
                                     align="end"
@@ -50,10 +94,10 @@ function NavBar() {
                                     className='me-2'
                                 >
 
-                                    <Dropdown.Item eventKey="1"><i class="fa-solid fa-map-location-dot pe-2 clr-white"></i>Location 1</Dropdown.Item>
-                                    <Dropdown.Item eventKey="2"><i class="fa-solid fa-map-location-dot pe-2 clr-white"></i>Location 2</Dropdown.Item>
+                                    <Dropdown.Item eventKey="1"><i class="fa-solid fa-map-location-dot pe-2 "></i>Location 1</Dropdown.Item>
+                                    <Dropdown.Item eventKey="2"><i class="fa-solid fa-map-location-dot pe-2 "></i>Location 2</Dropdown.Item>
                                     <Dropdown.Divider />
-                                    <Dropdown.Item eventKey="3"> <i className="fa-solid fa-plus pe-2 clr-white"></i>Add New</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setAddLocation(true)} eventKey="3"> <i className="fa-solid fa-plus pe-2 "></i>Add New</Dropdown.Item>
                                 </DropdownButton>
                             </Navbar.Text>
                             <IconsDiv>
@@ -119,6 +163,8 @@ function NavBar() {
                     </Form>
                 </Modal.Body>
             </Modal>
+            <NotifiactionModel show={showNoti} onHide={() => setShowNoti(false)} />
+            <AddLocation show={addLocation} onHide={() => setAddLocation(false)} />
         </>
     )
 }
