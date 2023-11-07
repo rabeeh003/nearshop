@@ -9,6 +9,7 @@ import CartPage from './components/screens/CartPage';
 import UserProfile from './components/screens/UserProfile';
 import CheckOut from './components/screens/CheckOut';
 import ShopPage from './components/screens/ShopPage';
+import UserLogin from './components/screens/UserLogin';
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
           </Route>
           <Route path='user' element={<UserProfile />} />
           <Route path='shopid' element={<ShopPage/>} />
+          <Route path='login' element={<UserLogin/>} />
+          <Route path='signup' element={<ShopPage/>} />
+
           <Route path='*' element={<NotFont />} />
         </Routes>
         <Bottumbar />

@@ -1,11 +1,100 @@
 import React from 'react'
-import { Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row, Form } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Card, Button } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 import Tomato from 'file:///home/rabeeh/Pictures/tomato.png'
+
+// Reviews about shop
+
+function ReviewModel(props) {
+    return (
+        <Modal
+            className='user-select-none'
+            {...props}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <i class="fa-solid fa-comments"></i> Reviews
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Rev>
+                    <RevHead>
+                        <span>Customer name</span>
+                        <div>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                        </div>
+                    </RevHead>
+                    <RevBody>
+                        <Textarea style={{ fontSize: "12px", width: "100%" }} className='form-control' rows='3'>
+                            Tomato is a widely cultivated and consumed fruit, often treated as a vegetable in cooking. Known for its vibrant red color, it belongs to the Solanaceae family. Tomatoes are versatile in culinary applications, used in salads, sauces, and countless dishes, offering a sweet and tangy flavor with various health benefits.
+                        </Textarea>
+                    </RevBody>
+                </Rev>
+                {/* <FloatingLabel controlId="floatingTextarea2" label="Comments">
+                    <Form.Control
+                        as="textarea"
+                        placeholder="Leave a comment here"
+                        style={{ minHeight: '50px' }}
+                    />
+                </FloatingLabel> */}
+            </Modal.Body>
+        </Modal>
+    );
+}
+
+const Rev = styled.div`
+    padding: 10px 5px;
+    background: #dbdbdb;
+    border-radius: 20px;
+    margin-bottom:10px;
+`
+const RevHead = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin: 5px;
+`
+const RevBody = styled.div``
+
+
+// location Model start
+
+function LocationModel(props) {
+    return (
+        <Modal
+            className='user-select-none'
+            {...props}
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <i class="fa-solid fa-location"></i> Location
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+
+            </Modal.Body>
+            <Modal.Footer>
+
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
+// Product details Model
 
 function MyVerticallyCenteredModal(props) {
     return (
@@ -60,8 +149,22 @@ const Textarea = styled.textarea`
   }
 `
 
+// Shop page code start
+
 function ShopPage() {
     const [modalShow, setModalShow] = React.useState(false);
+    const [locShow, setLocShow] = React.useState(false);
+    const [reviewShow, setReview] = React.useState(false);
+
+    const copyToClipboard = () => {
+        const copyText = 'Hello, world!';
+
+        navigator.clipboard.writeText(copyText).then(() => {
+            alert('Copied to clipboard: ' + copyText);
+        }).catch((error) => {
+            console.error('Failed to copy: ', error);
+        });
+    };
     return (
         <Page className='user-select-none'>
             <Container fluid >
@@ -75,9 +178,9 @@ function ShopPage() {
                         <ShopDis>Super Market</ShopDis>
                         <ShopLoc>salalah</ShopLoc>
                         <ShopLinks>
-                            <i class="fa-solid fa-share-from-square p-3"></i>
-                            <i class="fa-solid fa-map-location-dot p-3"></i>
-                            <i class="fa-solid fa-comments p-3"></i>
+                            <i class="fa-solid fa-share-from-square p-3" onClick={copyToClipboard}></i>
+                            <i class="fa-solid fa-map-location-dot p-3" onClick={setLocShow}></i>
+                            <i class="fa-solid fa-comments p-3" onClick={setReview}></i>
                         </ShopLinks>
                     </Col>
                 </Row>
@@ -95,7 +198,7 @@ function ShopPage() {
                 </Row>
                 <Row className="g-4 pt-3" >
                     {Array.from({ length: 27 }).map((_, idx) => (
-                        <Col xs={6} sm={4} md={3} lg={2} xxl={2}  key={idx}>
+                        <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={idx} className='d-flex' style={{ justifyContent: 'center' }}>
                             <OfCard onClick={() => setModalShow(true)}>
                                 <CardImage>
                                     <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge>
@@ -113,6 +216,18 @@ function ShopPage() {
                         </Col>
                     ))}
                 </Row>
+                <MyVerticallyCenteredModal
+                    show={modalShow}
+                    onHide={() => setModalShow(false)}
+                />
+                <LocationModel
+                    show={locShow}
+                    onHide={() => setLocShow(false)}
+                />
+                <ReviewModel
+                    show={reviewShow}
+                    onHide={() => setReview(false)}
+                />
             </Container>
         </Page>
     )
