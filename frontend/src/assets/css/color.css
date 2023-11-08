@@ -9,4 +9,7 @@
 .bg-admin{
   background-color: #0dcaf0;
 }
-  
+
+.bg-gray{
+  background-color: rgb(220, 220, 220);
+}
