@@ -38,7 +38,6 @@ function Bottumbar() {
                 <Link title='cart' to="/cart" className='nav-link'><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
                 <Link title='cart' onClick={handleShow} to="" className='nav-link'><i class="fa-solid fa-user clr-white"></i></Link>
             </BtNav>
-            <div style={{ height: "70px" }}></div>
         </>
     )
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 
-import LogGif from '../../assets/images/signup.gif'
+import LogGif from '../../../assets/images/signup.gif'
 
 
 const Card = styled.div`

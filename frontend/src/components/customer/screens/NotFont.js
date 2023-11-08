@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import not from "../../assets/images/404.gif"
+import not from "../../../assets/images/404.gif"
 import { Link } from 'react-router-dom';
 
 const PageWrapper = styled.div`

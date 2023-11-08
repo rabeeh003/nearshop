@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Col, Container, Form, Button } from 'react-bootstrap'
-import LogGif from '../../assets/images/login.gif'
+import LogGif from '../../../assets/images/login.gif'
 import styled from 'styled-components'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { useState, useRef } from 'react';

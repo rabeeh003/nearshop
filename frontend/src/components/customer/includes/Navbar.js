@@ -131,7 +131,6 @@ function NavBar() {
                     </div>
                 </Container>
             </Navbar >
-            <div style={{ height: "80px" }}></div>
             {/* this Model used for search */}
             <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
                 <Modal.Header closeButton className='bg-green' variant="light">
