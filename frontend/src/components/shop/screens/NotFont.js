@@ -35,8 +35,8 @@ function NotFont() {
     <PageWrapper>
       <Gif src={not} alt='not-font'></Gif>
       <Title>Not font Page</Title>
-      <Link to={'/'}>
-        <Button className='bg-green'>Go to Home page</Button>
+      <Link to={'/shop'}>
+        <Button className='bg-admin'>Go to Home page</Button>
       </Link>
     </PageWrapper>
     </Container>
