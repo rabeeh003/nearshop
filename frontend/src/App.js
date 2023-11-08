@@ -15,6 +15,7 @@ import ShopHome from './components/shop/screens/ShopHome';
 import CNavs from './components/customer/CNavs';
 import SNavs from './components/shop/SNavs';
 import Billing from './components/shop/screens/Billing';
+import AddProdect from './components/shop/screens/AddProdect';
 function App() {
   return (
     <>
@@ -36,6 +37,7 @@ function App() {
           <Route path='shop' element={<SNavs />} >
             <Route index element={<ShopHome />} />
             <Route path='billing' element={<Billing/>} />
+            <Route path='addprodect' element={<AddProdect/>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>

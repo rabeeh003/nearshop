@@ -50,10 +50,10 @@ function NavBar() {
                             <IconsDiv>
                                 <Nav>
                                     <Link title='Home' className='nav-link' to="/shop"> <i class="fa-solid fa-house clr-white"></i></Link>
-                                    <Link title='Billing' className='nav-link' to="/shop"><i class="fa-solid fa-file-invoice clr-white"></i></Link>
+                                    <Link title='Billing' className='nav-link' to="billing"><i class="fa-solid fa-file-invoice clr-white"></i></Link>
                                     <Link title='Order' className='nav-link' to="/shop"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
                                     <Link title='Analize' className='nav-link' to="/shop"><i class="fa-solid fa-chart-pie clr-white"></i></Link>
-                                    <Link title='AddProdect' className='nav-link' to="/shop"><i class="fa-regular fa-square-plus clr-white"></i></Link>
+                                    <Link title='AddProdect' className='nav-link' to="addprodect"><i class="fa-regular fa-square-plus clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
                             <Nav onClick={() => setShowNoti(true)}><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav>
