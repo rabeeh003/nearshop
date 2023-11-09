@@ -52,7 +52,7 @@ function NavBar() {
                                     <Link title='Home' className='nav-link' to="/shop"> <i class="fa-solid fa-house clr-white"></i></Link>
                                     <Link title='Billing' className='nav-link' to="billing"><i class="fa-solid fa-file-invoice clr-white"></i></Link>
                                     <Link title='Order' className='nav-link' to="/shop"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
-                                    <Link title='Analize' className='nav-link' to="/shop"><i class="fa-solid fa-chart-pie clr-white"></i></Link>
+                                    <Link title='Analize' className='nav-link' to="chart"><i class="fa-solid fa-chart-pie clr-white"></i></Link>
                                     <Link title='AddProdect' className='nav-link' to="addprodect"><i class="fa-regular fa-square-plus clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
@@ -92,7 +92,7 @@ function NavBar() {
                             <Link to="/shop" onClick={handleClose} className='nav-link'>
                                 <OfItem title='Profile' className='clr-white'><i class="clr-white fa-solid fa-user pe-2"></i>Profile</OfItem>
                             </Link>
-                            <Link to="/shop" onClick={handleClose} className='nav-link'>
+                            <Link to="chart" onClick={handleClose} className='nav-link'>
                                 <OfItem title='Chart' className='clr-white' href="#features"><i class="clr-white fa-solid fa-chart-pie pe-2"></i>Chart</OfItem>
                             </Link>
                             <Link to="/shop" onClick={handleClose} className='nav-link'>

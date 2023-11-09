@@ -16,7 +16,7 @@ function ShopHome() {
       <Container fluid>
         <Row className=''>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'editprodect'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'chart'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh1} />
               </ImageDiv>

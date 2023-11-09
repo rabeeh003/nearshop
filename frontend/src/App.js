@@ -18,6 +18,7 @@ import Billing from './components/shop/screens/Billing';
 import AddProdect from './components/shop/screens/AddProdect';
 import EditProdect from './components/shop/screens/EditProdect';
 import OfferPage from './components/shop/screens/OfferPage';
+import Chart from './components/shop/screens/Chart';
 function App() {
   return (
     <>
@@ -42,6 +43,7 @@ function App() {
             <Route path='addprodect' element={<AddProdect/>} />
             <Route path='editprodect' element={<EditProdect/>} />
             <Route path='offer' element={<OfferPage/>} />
+            <Route path='chart' element={<Chart/>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>
