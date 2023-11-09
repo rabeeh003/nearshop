@@ -14,9 +14,9 @@ function ShopHome() {
   return (
     <Page>
       <Container fluid>
-        <Row className=''>
+        <Row style={{height:"90vh"}} className='d-flex g-5 justify-content-center align-items-center'>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'chart'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'chart'} style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh1} />
               </ImageDiv>
@@ -24,7 +24,7 @@ function ShopHome() {
             </Link>
           </Col>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'billing'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'billing'} style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh2} />
               </ImageDiv>
@@ -32,7 +32,7 @@ function ShopHome() {
             </Link>
           </Col>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'editprodect'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'editprodect'}  style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh3} />
               </ImageDiv>
@@ -40,7 +40,7 @@ function ShopHome() {
             </Link>
           </Col>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'addprodect'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'addprodect'} style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh4} />
               </ImageDiv>
@@ -48,7 +48,7 @@ function ShopHome() {
             </Link>
           </Col>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'editprodect'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'editprodect'}  style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh5} />
               </ImageDiv>
@@ -56,13 +56,15 @@ function ShopHome() {
             </Link>
           </Col>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'offer'} className='m-0 p-0 d-flex w-100 flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'offer'}  style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh6} />
               </ImageDiv>
               <Name>Offer</Name>
             </Link>
           </Col>
+        <div style={{ height: "40px" }}></div>
+
         </Row>
       </Container>
     </Page>
@@ -73,7 +75,7 @@ const Page = styled.div`
   max-width: 90vw;
   margin: auto;
   @media screen and (max-width: 578px) {
-    max-width: 98vw;
+    max-width: 100vw;
   }
 `
 

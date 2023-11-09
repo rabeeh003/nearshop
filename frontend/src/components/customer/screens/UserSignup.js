@@ -2,21 +2,20 @@ import React from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 
+
 import LogGif from '../../../assets/images/signup.gif'
+import { Link } from 'react-router-dom';
 
 
 const Card = styled.div`
   padding: 30px 40px;
-  margin-top: 60px;
-  margin-bottom: 60px;
-  border: none !important;
+  
   box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2);
 `;
 
 const GifImage = styled.img`
   width: 100%;
-  
-`  
+`
 
 const FormContainer = styled.form`
   margin: 0;
@@ -52,14 +51,13 @@ const FormInput = styled.input`
 const UserSignup = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission here
-    };
 
+    };
     return (
         <Container fluid>
             <div className="px-1 py-5 mx-auto">
-                <div className="row d-flex justify-content-center">
-                    <div className="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+                <Row className="d-flex justify-content-center">
+                    <Col className="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                         <Card>
                             <h4 className="text-center h4 mb-4">Signup</h4>
                             <FormContainer onSubmit={handleSubmit}>
@@ -90,14 +88,16 @@ const UserSignup = () => {
                                             <FormInput type="text" id="ans" name="ans" placeholder="Enter your Address" />
                                         </FormGroup>
                                         <div className="row d-column">
-                                            <Button type='submit' className='btn'> Get OTP </Button>
+                                            <Link to={'/otp_verification'} className='text-center'>
+                                                <Button variant='success' type='submit' className='btn'> Get OTP </Button>
+                                            </Link>
                                         </div>
                                     </Col>
                                 </Row>
                             </FormContainer>
                         </Card>
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             </div>
         </Container>
     );

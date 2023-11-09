@@ -19,6 +19,13 @@ import AddProdect from './components/shop/screens/AddProdect';
 import EditProdect from './components/shop/screens/EditProdect';
 import OfferPage from './components/shop/screens/OfferPage';
 import Chart from './components/shop/screens/Chart';
+import ShopLogin from './components/shop/screens/ShopLogin';
+import OwnerSignup from './components/shop/screens/OwnerSignup';
+import OtpPage from './components/shop/screens/OtpPage';
+import COtpPage from './components/customer/screens/OtpPage';
+import ShopCreate from './components/shop/screens/ShopCreate';
+import EditShopInfo from './components/shop/screens/EditShopInfo';
+
 function App() {
   return (
     <>
@@ -35,6 +42,7 @@ function App() {
             <Route path='shopid' element={<ShopPage />} />
             <Route path='login' element={<UserLogin />} />
             <Route path='signup' element={<UserSignup />} />
+            <Route path='otp_verification' element={<COtpPage/>} />
             <Route path='*' element={<NotFont />} />
           </Route>
           <Route path='shop' element={<SNavs />} >
@@ -44,6 +52,11 @@ function App() {
             <Route path='editprodect' element={<EditProdect/>} />
             <Route path='offer' element={<OfferPage/>} />
             <Route path='chart' element={<Chart/>} />
+            <Route path='login' element={<ShopLogin/>} />
+            <Route path='signup' element={<OwnerSignup/>} />
+            <Route path='otp_verification' element={<OtpPage/>} />
+            <Route path='start_shop' element={<ShopCreate/>} />
+            <Route path='edit_shop_info' element={<EditShopInfo/>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>
