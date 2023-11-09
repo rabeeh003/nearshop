@@ -16,6 +16,8 @@ import CNavs from './components/customer/CNavs';
 import SNavs from './components/shop/SNavs';
 import Billing from './components/shop/screens/Billing';
 import AddProdect from './components/shop/screens/AddProdect';
+import EditProdect from './components/shop/screens/EditProdect';
+import OfferPage from './components/shop/screens/OfferPage';
 function App() {
   return (
     <>
@@ -38,6 +40,8 @@ function App() {
             <Route index element={<ShopHome />} />
             <Route path='billing' element={<Billing/>} />
             <Route path='addprodect' element={<AddProdect/>} />
+            <Route path='editprodect' element={<EditProdect/>} />
+            <Route path='offer' element={<OfferPage/>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>

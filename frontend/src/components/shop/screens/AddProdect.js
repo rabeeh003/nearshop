@@ -17,7 +17,7 @@ function AddProdect() {
                         <Col className='my-1'>
                             <FloatingLabel
                                 controlId="floatingInput"
-                                label="Costumer Name"
+                                label="Product Name"
                             >
                                 <Form.Control type="text" />
                             </FloatingLabel>
@@ -35,7 +35,7 @@ function AddProdect() {
                         <Col xs={6}>
                             <FloatingLabel
                                 controlId="floatingInput"
-                                label="Wite Type"
+                                label="Wight Type"
                             >
                                 <Form.Control type="text" defaultValue='KG' disabled />
                             </FloatingLabel>
