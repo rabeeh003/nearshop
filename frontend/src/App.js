@@ -25,6 +25,8 @@ import OtpPage from './components/shop/screens/OtpPage';
 import COtpPage from './components/customer/screens/OtpPage';
 import ShopCreate from './components/shop/screens/ShopCreate';
 import EditShopInfo from './components/shop/screens/EditShopInfo';
+import OGCPage from './components/shop/screens/OGCPage';
+import OrderPage from './components/shop/screens/OrderPage';
 
 function App() {
   return (
@@ -55,8 +57,10 @@ function App() {
             <Route path='login' element={<ShopLogin/>} />
             <Route path='signup' element={<OwnerSignup/>} />
             <Route path='otp_verification' element={<OtpPage/>} />
+            <Route path='ogc_verification' element={<OGCPage/>} />
             <Route path='start_shop' element={<ShopCreate/>} />
             <Route path='edit_shop_info' element={<EditShopInfo/>} />
+            <Route path='order' element={<OrderPage/>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>

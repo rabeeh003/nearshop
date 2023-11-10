@@ -91,7 +91,7 @@ function EditShopInfo() {
                             </FloatingLabel>
                         </Col>
                         <Link to={"/shop/otp_verification"} className='text-center'>
-                            <Button type='submit' style={{ width: '50%' }} variant='info' > Create </Button>
+                            <Button type='submit' style={{ width: '50%' }} variant='info' > Update </Button>
                         </Link>
                         <div style={{ height: "90px" }}></div>
                     </Row>

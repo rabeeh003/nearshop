@@ -32,7 +32,7 @@ function ShopHome() {
             </Link>
           </Col>
           <Col xs={12} sm={6} md={4} className='d-flex flex-column justify-content-center align-items-center'>
-            <Link to={'editprodect'}  style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
+            <Link to={'order'}  style={{width:'100%',maxWidth:"350px"}} className='m-0 p-0 d-flex flex-column justify-content-center align-items-center text-decoration-none'>
               <ImageDiv>
                 <ImgTag src={sh3} />
               </ImageDiv>

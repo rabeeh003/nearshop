@@ -51,7 +51,7 @@ function NavBar() {
                                 <Nav>
                                     <Link title='Home' className='nav-link' to="/shop"> <i class="fa-solid fa-house clr-white"></i></Link>
                                     <Link title='Billing' className='nav-link' to="billing"><i class="fa-solid fa-file-invoice clr-white"></i></Link>
-                                    <Link title='Order' className='nav-link' to="/shop"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
+                                    <Link title='Order' className='nav-link' to="order"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
                                     <Link title='Analize' className='nav-link' to="chart"><i class="fa-solid fa-chart-pie clr-white"></i></Link>
                                     <Link title='AddProdect' className='nav-link' to="addprodect"><i class="fa-regular fa-square-plus clr-white"></i></Link>
                                 </Nav>
@@ -65,7 +65,7 @@ function NavBar() {
                                         id="dropdown-menu-align-end"
                                         variant="light"
                                     >
-                                        <Link to={'/shop'}>
+                                        <Link to={'edit_shop_info'}>
                                             <DropItem className='btn' eventKey="1"><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
                                         </Link>
                                         <Link to={''}>
@@ -89,13 +89,13 @@ function NavBar() {
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <OfIcon>
-                            <Link to="/shop" onClick={handleClose} className='nav-link'>
-                                <OfItem title='Profile' className='clr-white'><i class="clr-white fa-solid fa-user pe-2"></i>Profile</OfItem>
+                            <Link to="edit_shop_info" onClick={handleClose} className='nav-link'>
+                                <OfItem title='Edit Profile' className='clr-white'><i class="clr-white fa-solid fa-user pe-2"></i>Profile</OfItem>
                             </Link>
                             <Link to="chart" onClick={handleClose} className='nav-link'>
                                 <OfItem title='Chart' className='clr-white' href="#features"><i class="clr-white fa-solid fa-chart-pie pe-2"></i>Chart</OfItem>
                             </Link>
-                            <Link to="/shop" onClick={handleClose} className='nav-link'>
+                            <Link to="" onClick={handleClose} className='nav-link'>
                                 <OfItem title='Settings' className='clr-white' href="#features"><i class="clr-white fa-solid fa-gear pe-2"></i>Settings</OfItem>
                             </Link>
                             <Link to="" onClick={handleClose} className='nav-link'>
