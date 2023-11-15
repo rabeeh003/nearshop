@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-
+import axios from 'axios';
 
 import LogGif from '../../../assets/images/signup.gif'
 import { Link } from 'react-router-dom';
@@ -49,10 +49,29 @@ const FormInput = styled.input`
 `;
 
 const UserSignup = () => {
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const [formData, setFormData] = useState({
+        "full_name": '',
+        "phone_number": null,
+        "email": '',
+        "phone_two": null,
+        "address": '',
+    });
 
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
     };
+
+    function handleSubmit(e){
+        e.preventDefault()
+        console.log(formData)
+        axios.post('http://127.0.0.1:8000/api/signup/', {"Customer":formData})
+        .then(responce => console.log(responce))
+        .catch(error => console.log(error))
+    };
+
     return (
         <Container fluid>
             <div className="px-1 py-5 mx-auto">
@@ -60,7 +79,7 @@ const UserSignup = () => {
                     <Col className="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                         <Card>
                             <h4 className="text-center h4 mb-4">Signup</h4>
-                            <FormContainer onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit} method='post' >
                                 <Row className='d-flex w-100'>
                                     <Col xs={12} md={6} className='d-flex justify-content-center align-items-center'>
                                         <GifImage src={LogGif} alt='image' />
@@ -68,33 +87,33 @@ const UserSignup = () => {
                                     <Col xs={12} md={6}>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Full Name<span className="text-danger"> *</span></FormLabel>
-                                            <FormInput type="text" id="fname" name="fname" placeholder="Enter your full name" />
+                                            <FormInput type="text" id="full_name" name="full_name" value={formData.full_name} onChange={handleChange} placeholder="Enter your full name" />
                                         </FormGroup>
 
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Mail<span className="text-danger"> *</span></FormLabel>
-                                            <FormInput type="text" id="email" name="email" placeholder="Enter your mail" />
+                                            <FormInput type="text" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your mail" />
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Phone number<span className="text-danger"> *</span></FormLabel>
-                                            <FormInput type="text" id="mob" name="mob" placeholder="Enter your Phone" />
+                                            <FormInput type="text" id="phone_number" name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Enter your Phone" />
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Phone number</FormLabel>
-                                            <FormInput type="text" id="mob" name="mob" placeholder="Enter your Phone 2" />
+                                            <FormInput type="text" id="phone_two" name="phone_two" value={formData.phone_two} onChange={handleChange} placeholder="Enter your Phone 2" />
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Address<span className="text-danger"> *</span></FormLabel>
-                                            <FormInput type="text" id="ans" name="ans" placeholder="Enter your Address" />
+                                            <FormInput type="text" id="address" name="address" value={formData.address} onChange={handleChange} placeholder="Enter your Address" />
                                         </FormGroup>
                                         <div className="row d-column">
-                                            <Link to={'/otp_verification'} className='text-center'>
+                                            {/* <Link className='text-center'> */}
                                                 <Button variant='success' type='submit' className='btn'> Get OTP </Button>
-                                            </Link>
+                                            {/* </Link> */}
                                         </div>
                                     </Col>
                                 </Row>
-                            </FormContainer>
+                            </form>
                         </Card>
                     </Col>
                 </Row>

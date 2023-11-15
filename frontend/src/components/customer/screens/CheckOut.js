@@ -1,29 +1,29 @@
-import React, { useState } from 'react'
-import { Row, Col, Dropdown, Button, Form } from 'react-bootstrap';
+import React from 'react'
+import { Row, Col, Button, Form } from 'react-bootstrap';
 import styled from 'styled-components';
-import Modal from 'react-bootstrap/Modal';
+// import Modal from 'react-bootstrap/Modal';
 
 // Add Location Model
-function AddLocation(props) {
-    return (
-        <Modal
-            className='user-select-none'
-            {...props}
-            size="md"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    <i class="fa-solid fa-map"></i> Add Location
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                Map Hear
-            </Modal.Body>
-        </Modal>
-    );
-}
+// function AddLocation(props) {
+//     return (
+//         <Modal
+//             className='user-select-none'
+//             {...props}
+//             size="md"
+//             aria-labelledby="contained-modal-title-vcenter"
+//             centered
+//         >
+//             <Modal.Header closeButton>
+//                 <Modal.Title id="contained-modal-title-vcenter">
+//                     <i class="fa-solid fa-map"></i> Add Location
+//                 </Modal.Title>
+//             </Modal.Header>
+//             <Modal.Body>
+//                 Map Hear
+//             </Modal.Body>
+//         </Modal>
+//     );
+// }
 
 // CheckOut page code started
 const BoxShadow = {
@@ -32,7 +32,7 @@ const BoxShadow = {
 }
 
 function CheckOut() {
-    const [showNoti, setShowNoti] = React.useState(false);
+    // const [showLocation, setShowLocation] = React.useState(false);
     
     return (
         <Page>
