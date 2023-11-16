@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import LogGif from '../../../assets/images/signup.gif'
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 
 const Card = styled.div`
@@ -63,11 +63,11 @@ const UserSignup = () => {
             [e.target.name]: e.target.value,
         });
     };
-
-    function handleSubmit(e){
+    const token = localStorage.getItem('authToken');
+    const handleSubmit = async(e) => {
         e.preventDefault()
         console.log(formData)
-        axios.post('http://127.0.0.1:8000/api/signup/', {"Customer":formData})
+        await axios.post('http://127.0.0.1:8000/api/signup/', formData)
         .then(responce => console.log(responce))
         .catch(error => console.log(error))
     };
@@ -79,7 +79,7 @@ const UserSignup = () => {
                     <Col className="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
                         <Card>
                             <h4 className="text-center h4 mb-4">Signup</h4>
-                            <form onSubmit={handleSubmit} method='post' >
+                            <form >
                                 <Row className='d-flex w-100'>
                                     <Col xs={12} md={6} className='d-flex justify-content-center align-items-center'>
                                         <GifImage src={LogGif} alt='image' />
@@ -108,7 +108,7 @@ const UserSignup = () => {
                                         </FormGroup>
                                         <div className="row d-column">
                                             {/* <Link className='text-center'> */}
-                                                <Button variant='success' type='submit' className='btn'> Get OTP </Button>
+                                                <Button variant='success' onClick={handleSubmit} type='submit' className='btn'> Get OTP </Button>
                                             {/* </Link> */}
                                         </div>
                                     </Col>

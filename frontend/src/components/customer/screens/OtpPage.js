@@ -1,67 +1,84 @@
-import React from 'react'
 import LogGif from '../../../assets/images/otp_gif.gif'
-import styled from 'styled-components'
-import { useState, useRef } from 'react';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+
+import { auth } from '../../config/firebase'
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 
 function OtpPage() {
-    const [otp, setOtp] = useState(['', '', '', '']);
-    const inputRefs = useRef(otp.map(() => React.createRef()));
+  const [phone, setPhone] = useState('');
+  const [user, setUser] = useState(null);
+  const [otp, setOtp] = useState('');
 
-    const handleOtpChange = (e, index) => {
-        const value = e.target.value;
-        if (!/^\d*$/.test(value)) return; // Only allow numeric input
+  const sendOtp = async () => {
+    try {
+      const recapcha = new RecaptchaVerifier(auth, "recapcha", {})
+      const confirmation = await signInWithPhoneNumber(auth, phone, recapcha)
+      setUser(confirmation);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-        const newOtp = [...otp];
-        newOtp[index] = value;
-        setOtp(newOtp);
+  const verifyOtp = async () => {
+    try {
+      const data = await user.confirm(otp)
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
-        if (value !== '') {
-            if (index < otp.length - 1) {
-                inputRefs.current[index + 1].current.focus();
-            } else {
-                // Last input field reached
-                // You can trigger OTP verification here
-            }
-        } else if (index > 0) {
-            inputRefs.current[index - 1].current.focus();
-        }
-    };
-    return (
-        <Page className='container-fluid'>
-            <div className="row justify-content-center" style={{ height: "80vh" }}>
-                <div className="col-12 col-md-6 col-lg-4" >
-                    <Card className="card">
-                        <Col xs={12} className='d-flex justify-content-center align-items-center'>
-                            <GifImage src={LogGif} alt='image' />
-                        </Col>
-                        <CardBody className="card-body">
-                            <h4>Verify</h4>
-                            <p>Your code was sent to you via email</p>
-                            <OtpField className="otp-field">
-                                {otp.map((digit, index) => (
-                                    <Input
-                                        key={index}
-                                        type="text"
-                                        value={digit}
-                                        ref={inputRefs.current[index]}
-                                        onChange={(e) => handleOtpChange(e, index)}
-                                    />
-                                ))}
-                            </OtpField>
-                            <VerifyButton className="btn btn-primary" disabled={!otp.every((digit) => digit !== '')}>
-                                Verify
-                            </VerifyButton>
-                            <ResendLink className="resend text-muted mb-0">
-                                Didn't receive code? <Link to={-1}>Request again</Link>
-                            </ResendLink>
-                        </CardBody>
-                    </Card>
-                </div>
-            </div>
-        </Page>
-    )
+  return (
+    <Page className='container-fluid'>
+      <div className="row justify-content-center" style={{ height: "80vh" }}>
+        <div className="col-12 col-md-6 col-lg-4">
+          <Card className="card">
+            <Col xs={12} className='d-flex justify-content-center align-items-center'>
+              <GifImage src={LogGif} alt='image' />
+            </Col>
+            <CardBody className="card-body">
+              <h4>Verify</h4>
+              <p>Enter Your Number :</p>
+              <Col className=''>
+                <PhoneInput
+                  country={'in'}
+                  value={phone}
+                  onChange={(phone) => setPhone("+" + phone)}
+                />
+              </Col>
+
+              <VerifyButton className="btn btn-success" onClick={sendOtp} disabled={!phone}>
+                Get OTP
+              </VerifyButton>
+              <div id='recapcha'></div>
+              <p>Enter OTP Code</p>
+              <Col className='w-100'>
+                <Input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  placeholder="0 0 0 0"
+                  style={{ width: "40%" }}
+                />
+              </Col>
+
+              <VerifyButton onClick={verifyOtp} className="btn btn-success" disabled={!otp}>
+                Verify
+              </VerifyButton>
+              <ResendLink className="resend text-muted mb-0">
+                {/* Didn't receive code? <Link to={-1}>Request again</Link> */}
+              </ResendLink>
+            </CardBody>
+          </Card>
+        </div>
+      </div>
+    </Page>
+  );
 }
 
 const Page = styled.div`
@@ -86,13 +103,6 @@ const Card = styled.div`
 const CardBody = styled.div`
   padding: 20px, 5px;
   text-align: center;
-`;
-
-const OtpField = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
 `;
 
 const Input = styled.input`

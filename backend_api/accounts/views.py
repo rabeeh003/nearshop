@@ -1,25 +1,25 @@
+from django.shortcuts import render
 from rest_framework import viewsets
-from .serializers import CusSignup
+from rest_framework.generics import ListCreateAPIView,CreateAPIView
+from .serializers import CusSignup, CusSignin
 from rest_framework.response import Response
-from rest_framework import status
-# from rest_framework.authtoken.models import Token
 from .models import Customer
+from rest_framework.permissions import AllowAny
 
 
-class cus_signup(viewsets.ModelViewSet):
+
+class cus_signup(ListCreateAPIView):
+    permission_classes= [AllowAny]
     queryset = Customer.objects.all()
     serializer_class = CusSignup
-    # def post(self, request, format=None):
-    #     serializer = CusSignup(data=request.data)
-    #     if serializer.is_valid():
-    #         account = serializer.save()
-    #         # token, created = Token.objects.get_or_create(user=account)
-    #         data = {
-    #             'response': 'registered',
-    #             'full_name': account.full_name,
-    #             'phone_number': account.phone_number,
-    #             'email': account.email,
-    #             # 'token': token.key
-    #         }
-    #         return Response(data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class cus_signin(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = CusSignin
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        customer = serializer.validated_data
+        # Perform any additional actions for signin, such as generating tokens, logging in the user, etc.
+        return Response("User signed in successfully")
