@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
-
 import LogGif from '../../../assets/images/signup.gif'
+import { useLocation, useNavigate } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 
 
@@ -16,12 +16,6 @@ const Card = styled.div`
 const GifImage = styled.img`
   width: 100%;
 `
-
-const FormContainer = styled.form`
-  margin: 0;
-  padding: 0;
-`;
-
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,6 +43,10 @@ const FormInput = styled.input`
 `;
 
 const UserSignup = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [phone, setPhone] = useState('');
+
     const [formData, setFormData] = useState({
         "full_name": '',
         "phone_number": null,
@@ -63,14 +61,29 @@ const UserSignup = () => {
             [e.target.name]: e.target.value,
         });
     };
-    const token = localStorage.getItem('authToken');
-    const handleSubmit = async(e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
         console.log(formData)
         await axios.post('http://127.0.0.1:8000/api/signup/', formData)
-        .then(responce => console.log(responce))
-        .catch(error => console.log(error))
+            .then(responce => {
+                console.log(responce)
+                navigate('/');
+            })
+            .catch(error => console.log(error))
     };
+
+    useEffect(() => {
+        if (location.state?.passedData) {
+            setPhone(location.state.passedData);
+            setFormData((prevData) => ({
+                ...prevData,
+                phone_number: location.state.passedData,
+            }));
+        } else {
+            navigate('/otp_verification');
+        }
+    }, [location.state, navigate]);
 
     return (
         <Container fluid>
@@ -96,7 +109,7 @@ const UserSignup = () => {
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Phone number<span className="text-danger"> *</span></FormLabel>
-                                            <FormInput type="text" id="phone_number" name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Enter your Phone" />
+                                            <FormInput type="text" id="phone_number" name="phone_number" value={phone} disabled placeholder="Enter your Phone" />
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Phone number</FormLabel>
@@ -108,7 +121,7 @@ const UserSignup = () => {
                                         </FormGroup>
                                         <div className="row d-column">
                                             {/* <Link className='text-center'> */}
-                                                <Button variant='success' onClick={handleSubmit} type='submit' className='btn'> Get OTP </Button>
+                                            <Button variant='success' onClick={handleSubmit} type='submit' className='btn'> Create Account </Button>
                                             {/* </Link> */}
                                         </div>
                                     </Col>

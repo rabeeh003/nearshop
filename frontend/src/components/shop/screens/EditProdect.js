@@ -10,7 +10,7 @@ function EditProdect() {
         <Row className='bg-gray p-2 ' style={{ borderRadius: "10px" }}>
           <Col xs={12} sm={4} md={3} className='d-flex align-items-center justify-content-center'>
             <ImageFeald>
-              <img src='' />
+              <image src='' />
             </ImageFeald>
           </Col>
           <Col xs={12} sm={8} md={9} style={{}}>

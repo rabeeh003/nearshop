@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Row, Col, Image } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import styled from 'styled-components'
 
 import sh1 from '../../../assets/images/sh1.png'

@@ -2,6 +2,7 @@ import LogGif from '../../../assets/images/otp_gif.gif'
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
@@ -13,12 +14,14 @@ function OtpPage() {
   const [phone, setPhone] = useState('');
   const [user, setUser] = useState(null);
   const [otp, setOtp] = useState('');
+  const navigate = useNavigate();
 
   const sendOtp = async () => {
     try {
       const recapcha = new RecaptchaVerifier(auth, "recapcha", {})
       const confirmation = await signInWithPhoneNumber(auth, phone, recapcha)
       setUser(confirmation);
+      
     } catch (err) {
       console.log(err);
     }
@@ -28,7 +31,9 @@ function OtpPage() {
     try {
       const data = await user.confirm(otp)
       console.log(data);
-    } catch (err) {
+      navigate('/signup',{state:{passedData: phone}});
+    }
+    catch (err) {
       console.log(err);
     }
   }
@@ -44,8 +49,9 @@ function OtpPage() {
             <CardBody className="card-body">
               <h4>Verify</h4>
               <p>Enter Your Number :</p>
-              <Col className=''>
+              <Col className='d-flex justify-content-center'>
                 <PhoneInput
+                  className='w-auto'
                   country={'in'}
                   value={phone}
                   onChange={(phone) => setPhone("+" + phone)}
@@ -107,7 +113,6 @@ const CardBody = styled.div`
 
 const Input = styled.input`
   height: 45px;
-  width: 42px;
   border-radius: 6px;
   outline: none;
   font-size: 1.125rem;
