@@ -1,4 +1,4 @@
-from .views import cus_signup,cus_signin
+from .views import cus_signup,cus_signin, cus_signout
 from django.urls import path
 # from rest_framework import routers
 
@@ -8,6 +8,7 @@ from django.urls import path
 urlpatterns = [
     path('signup/', cus_signup.as_view(), name='signup'),
     path('signin/', cus_signin.as_view(), name='signin'),
+    path('signout/', cus_signout.as_view(), name='signout'),
 ]
 
 # urlpatterns += router.urls

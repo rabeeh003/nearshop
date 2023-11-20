@@ -1,14 +1,15 @@
 import Carousel from 'react-bootstrap/Carousel';
 import styled from 'styled-components';
-import ImGG from 'file:///home/rabeeh/Pictures/flip.webp';
-import ImGG2 from 'file:///home/rabeeh/Pictures/flip2.webp';
+import ImGG2 from '../../../../assets/images/ban1.png';
+import ImGG3 from '../../../../assets/images/ban2.png';
+import ImGG from '../../../../assets/images/ban3.png';
 import Container from 'react-bootstrap/esm/Container';
 
 
 function DarkVariantExample() {
     return (
         <Container fluid>
-        <Banner>
+        <Banner >
         <Carousel data-bs-theme="dark">
             <Carousel.Item>
                 <BanImgDiv>
@@ -32,7 +33,7 @@ function DarkVariantExample() {
                 <BanImgDiv>
                     <BanImg
                         className="d-block w-100"
-                        src={ImGG}
+                        src={ImGG3}
                         alt="Third slide"
                     />
                 </BanImgDiv>
@@ -51,8 +52,10 @@ const BanImgDiv = styled.div`
     width: 100%;
 `
 const BanImg = styled.img`
-    height: 20vh;
+    height: 30vh;
+    border-radius: 20px;
     image-rendering: auto;
+    object-fit: cover;
 `
 
 export default DarkVariantExample;

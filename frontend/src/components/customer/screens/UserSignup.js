@@ -46,6 +46,7 @@ const UserSignup = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [phone, setPhone] = useState('');
+    const [efs, setEfs] = useState('');
 
     const [formData, setFormData] = useState({
         "full_name": '',
@@ -70,7 +71,10 @@ const UserSignup = () => {
                 console.log(responce)
                 navigate('/');
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                setEfs=(error.message)
+                console.log(error)
+            })
     };
 
     useEffect(() => {

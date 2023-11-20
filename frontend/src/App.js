@@ -27,7 +27,6 @@ import ShopCreate from './components/shop/screens/ShopCreate';
 import EditShopInfo from './components/shop/screens/EditShopInfo';
 import OGCPage from './components/shop/screens/OGCPage';
 import OrderPage from './components/shop/screens/OrderPage';
-
 function App() {
   return (
     <>
