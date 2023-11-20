@@ -1,9 +1,87 @@
-import React from 'react'
-import { Container, Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Container, Row, Col, Form, FloatingLabel, Button, Modal } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useLinkClickHandler } from 'react-router-dom'
+import GoogleMapReact from 'google-map-react';
 
+
+// Add Location Model
+function AddLocation(props) {
+    const [userLocation, setUserLocation] = useState({
+        latitude: 10.850516,
+        longitude: 76.271080
+    });
+    const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
+    const defaultProps = {
+        center: {
+            lat: userLocation.latitude,
+            lng: userLocation.longitude
+        },
+        zoom: 30
+    };
+
+    const getUserLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    setUserLocation({ latitude, longitude });
+                },
+                (error) => {
+                    console.error('Error getting user location:', error);
+                }
+            );
+        }
+        else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    };
+    return (
+        <Modal
+            className='user-select-none'
+            {...props}
+            size="xl"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <i class="fa-solid fa-map"></i> Add Location
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <button className='btn btn-info' onClick={getUserLocation}>Get User Location</button>
+                {/* {userLocation && (
+                    <div>
+                        <h2>User Location</h2>
+                        <p>Latitude: {userLocation.latitude}</p>
+                        <p>Longitude: {userLocation.longitude}</p>
+                    </div>
+                )} */}
+                {userLocation && (
+                    <div style={{ height: '400px', width: '100%' }}>
+                        <GoogleMapReact
+                            bootstrapURLKeys={{ key: "AIzaSyAQWZD9fJVKSDmHmGGi7gYgk9homdj_DAc" }}
+                            defaultCenter={defaultProps.center}
+                            defaultZoom={defaultProps.zoom}
+                        >
+                            <AnyReactComponent
+                                lat={userLocation.latitude}
+                                lng={userLocation.longitude}
+                                text="loading.."
+                            />
+                        </GoogleMapReact>
+                    </div>
+                )}
+            </Modal.Body>
+        </Modal>
+    );
+}
+
+// shop creation
 function ShopCreate() {
+    const [addLocation, setAddLocation] = useState(false);
     return (
         <Page>
             <Container>
@@ -48,15 +126,6 @@ function ShopCreate() {
                         <Col xs={12} md={6}>
                             <FloatingLabel
                                 controlId="floatingInput"
-                                label="Location"
-                                className="mb-3 w-100"
-                            >
-                                <Form.Control type="text" placeholder="" required />
-                            </FloatingLabel>
-                        </Col>
-                        <Col xs={12} md={6}>
-                            <FloatingLabel
-                                controlId="floatingInput"
                                 label="Place"
                                 className="mb-3 w-100"
                             >
@@ -90,6 +159,11 @@ function ShopCreate() {
                                 <Form.Control type="text" placeholder="" required />
                             </FloatingLabel>
                         </Col>
+                        <Col xs={12} >
+                            <Button className='btn btn-info' onClick={() => setAddLocation(true)}>
+                                Add location
+                            </Button>
+                        </Col>
                         <Link to={"/shop/otp_verification"} className='text-center'>
                             <Button type='submit' style={{ width: '50%' }} variant='info' > Create </Button>
                         </Link>
@@ -97,6 +171,7 @@ function ShopCreate() {
                     </Row>
                 </form>
             </Container>
+            <AddLocation show={addLocation} onHide={() => setAddLocation(false)} />
         </Page>
     )
 }
