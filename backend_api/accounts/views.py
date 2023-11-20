@@ -54,3 +54,8 @@ class cus_signout(APIView):
         response = Response({'message': 'success logout'})
         response.delete_cookie('jwt')
         return response
+    
+# shopper section
+
+# owner authentication
+
