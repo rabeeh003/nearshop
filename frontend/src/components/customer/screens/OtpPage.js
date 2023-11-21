@@ -77,7 +77,7 @@ function OtpPage() {
                   type="text"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  placeholder="0 0 0 0"
+                  placeholder="O T P"
                   style={{ width: "40%" }}
                 />
               </Col>

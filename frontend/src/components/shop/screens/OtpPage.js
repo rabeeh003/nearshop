@@ -1,69 +1,47 @@
-import React from 'react'
 import LogGif from '../../../assets/images/otp_gif.gif'
-import styled from 'styled-components'
-import { useState, useRef } from 'react';
-import { Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Button, Col, FloatingLabel, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+
+import { auth, provider } from '../../config/firebase'
+import { signInWithPopup } from 'firebase/auth';
 
 function OtpPage() {
-  const [otp, setOtp] = useState(['', '', '', '']);
-  const inputRefs = useRef(otp.map(() => React.createRef()));
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate()
 
-  const handleOtpChange = (e, index) => {
-    const value = e.target.value;
-    if (!/^\d*$/.test(value)) return;
+  const handileGoogleSignin = () => {
+    signInWithPopup(auth, provider).then((result)=>{
+      const user = result.user
+      setUser(user)
+      console.log(user);
+      navigate('/shop/signup',{ state: { passedData:user.email} })
+      console.log(user.email);
+    }).catch((err) => console.log(err));
+  }
 
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    if (value !== '') {
-      if (index < otp.length - 1) {
-        inputRefs.current[index + 1].current.focus();
-      } else {
-        // Last input field reached
-        // You can trigger OTP verification here
-      }
-    } else if (index > 0) {
-      inputRefs.current[index - 1].current.focus();
-    }
-  };
   return (
     <Page className='container-fluid'>
       <div className="row justify-content-center" style={{ height: "80vh" }}>
-        <div className="col-12 col-md-6 col-lg-4" >
+        <div className="col-12 col-md-6 col-lg-4">
           <Card className="card">
             <Col xs={12} className='d-flex justify-content-center align-items-center'>
               <GifImage src={LogGif} alt='image' />
             </Col>
             <CardBody className="card-body">
-              <h4>Verify</h4>
-              <p>Your code was sent to you via email</p>
-              <OtpField className="otp-field">
-                {otp.map((digit, index) => (
-                  <Input
-                    key={index}
-                    type="text"
-                    value={digit}
-                    ref={inputRefs.current[index]}
-                    onChange={(e) => handleOtpChange(e, index)}
-                  />
-                ))}
-              </OtpField>
-              <VerifyButton className="btn btn-primary" disabled={!otp.every((digit) => digit !== '')}>
-                <Link to={'/shop/start_shop'} className='text-decoration-none' style={{color:'white'}}>
-                  Verify
-                </Link>
-              </VerifyButton>
-              <ResendLink className="resend text-muted mb-0">
-                Didn't receive code? <Link to={-1}>Request again</Link>
-              </ResendLink>
+              <h4>Verify for register</h4>
+              <Col>
+                <Button className='btn btn-danger' onClick={handileGoogleSignin} > Signin with Google </Button>
+              </Col>
             </CardBody>
           </Card>
         </div>
       </div>
     </Page>
-  )
+  );
 }
 
 const Page = styled.div`
@@ -90,16 +68,8 @@ const CardBody = styled.div`
   text-align: center;
 `;
 
-const OtpField = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
-
 const Input = styled.input`
   height: 45px;
-  width: 42px;
   border-radius: 6px;
   outline: none;
   font-size: 1.125rem;

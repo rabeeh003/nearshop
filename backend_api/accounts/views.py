@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, ListAPIView
-from .serializers import CusSignup, CusSignin
+from .serializers import CusSignup, CusSignin, OwnerSerial
 from rest_framework.response import Response
-from .models import Customer
+from .models import Customer, Owner
 from rest_framework.permissions import AllowAny
 import jwt, datetime
 
@@ -58,4 +58,7 @@ class cus_signout(APIView):
 # shopper section
 
 # owner authentication
-
+class owner_register(CreateAPIView):
+    permission_classes= [AllowAny]
+    queryset = Owner.objects.all()
+    serializer_class = OwnerSerial

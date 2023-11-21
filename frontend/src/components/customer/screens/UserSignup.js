@@ -5,7 +5,8 @@ import axios from 'axios';
 import LogGif from '../../../assets/images/signup.gif'
 import { useLocation, useNavigate } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
-
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 
 const Card = styled.div`
   padding: 30px 40px;
@@ -63,6 +64,13 @@ const UserSignup = () => {
         });
     };
 
+    const handlePhoneChange = (phone) => {
+        setFormData({
+            ...formData,
+            phone_two: "+" + phone,
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         console.log(formData)
@@ -72,7 +80,7 @@ const UserSignup = () => {
                 navigate('/');
             })
             .catch(error => {
-                setEfs=(error.message)
+                setEfs = (error.message)
                 console.log(error)
             })
     };
@@ -113,11 +121,25 @@ const UserSignup = () => {
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Phone number<span className="text-danger"> *</span></FormLabel>
-                                            <FormInput type="text" id="phone_number" name="phone_number" value={phone} disabled placeholder="Enter your Phone" />
+                                            {/* <FormInput type="text" id="phone_number" name="phone_number" value={phone} disabled placeholder="Enter your Phone" /> */}
+                                            <PhoneInput
+                                                className='mb-3'
+                                                inputStyle={{ height: "45px", width: '100%', fontSize: '15px' }}
+                                                country={'in'}
+                                                value={formData.phone_number}
+                                                disabled
+                                            />
                                         </FormGroup>
                                         <FormGroup >
-                                            <FormLabel className="form-control-label px-3">Phone number</FormLabel>
-                                            <FormInput type="text" id="phone_two" name="phone_two" value={formData.phone_two} onChange={handleChange} placeholder="Enter your Phone 2" />
+                                            <FormLabel className="form-control-label px-3">Phone number<span className="text-danger"> *</span></FormLabel>
+                                            {/* <FormInput type="text" id="phone_two" name="phone_two" value={formData.phone_two} onChange={handleChange} placeholder="Enter your Phone 2" /> */}
+                                            <PhoneInput
+                                                className='mb-3'
+                                                inputStyle={{ height: "45px", width: '100%', fontSize: '15px' }}
+                                                country={'in'}
+                                                value={formData.phone_two}
+                                                onChange={handlePhoneChange}
+                                            />
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Address<span className="text-danger"> *</span></FormLabel>
