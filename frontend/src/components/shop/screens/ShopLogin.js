@@ -1,11 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Row, Col, Container, Form, Button } from 'react-bootstrap'
 import LogGif from '../../../assets/images/shoplogin.gif'
 import styled from 'styled-components'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function ShopLogin() {
+
+    // const [mail, setMail] = useState('');
+    // const [pass, setPass] = useState('');
+    const [checkErr, setCheckErr] = useState('');
+    const [formData, setFormData] = useState({
+        "mail": "",
+        "password": "",
+    })
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
+    const login = async (e) => {
+        e.preventDefault();
+    
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/owner_login/', formData);
+    
+            console.log(response.data);
+            setCheckErr('');
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            setCheckErr('Your entered email or password is incorrect');
+        }
+    };
+
     return (
         <Page>
             <Container>
@@ -18,16 +46,17 @@ function ShopLogin() {
                                 label="Gmail"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="email" placeholder="" required />
+                                <Form.Control type="email" name='mail' onChange={handleInputChange} required />
                             </FloatingLabel>
                             <FloatingLabel
                                 controlId="floatingInput"
                                 label="Password"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="password" placeholder="" required />
+                                <Form.Control type="password" name='password' onChange={handleInputChange} required />
                             </FloatingLabel>
-                            <Button type='submit' variant='info' > Login </Button>
+                            {checkErr && <p>{checkErr}</p>}
+                            <Button type='submit' variant='info' onClick={login} > Login </Button>
                             <p className='mt-4'>Don't have an account?<Link to={'/shop/signup'} className='ms-2'>Signup</Link></p>
 
                         </Col>

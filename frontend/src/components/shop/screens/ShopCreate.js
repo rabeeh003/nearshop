@@ -1,22 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Form, FloatingLabel, Button, Modal } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Link, useLinkClickHandler } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import GoogleMapReact from 'google-map-react';
+import axios from 'axios'
 
-
-// Add Location Model
-function AddLocation(props) {
+// shop creation
+function ShopCreate() {
+    // location model
     const [userLocation, setUserLocation] = useState({
-        latitude: 10.850516,
-        longitude: 76.271080
+        lat: 10.850516,
+        lng: 76.271080
     });
     const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
     const defaultProps = {
         center: {
-            lat: userLocation.latitude,
-            lng: userLocation.longitude
+            lat: userLocation.lat,
+            lng: userLocation.lng
         },
         zoom: 30
     };
@@ -26,7 +27,12 @@ function AddLocation(props) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const { latitude, longitude } = position.coords;
-                    setUserLocation({ latitude, longitude });
+                    setUserLocation({ lat: latitude, lng: longitude });
+                    setFormData((prevFormData) => ({
+                        ...prevFormData,
+                        lat: latitude,
+                        lng: longitude,
+                    }));
                 },
                 (error) => {
                     console.error('Error getting user location:', error);
@@ -37,51 +43,60 @@ function AddLocation(props) {
             console.error('Geolocation is not supported by this browser.');
         }
     };
-    return (
-        <Modal
-            className='user-select-none'
-            {...props}
-            size="xl"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    <i class="fa-solid fa-map"></i> Add Location
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <button className='btn btn-info' onClick={getUserLocation}>Get User Location</button>
-                {/* {userLocation && (
-                    <div>
-                        <h2>User Location</h2>
-                        <p>Latitude: {userLocation.latitude}</p>
-                        <p>Longitude: {userLocation.longitude}</p>
-                    </div>
-                )} */}
-                {userLocation && (
-                    <div style={{ height: '400px', width: '100%' }}>
-                        <GoogleMapReact
-                            bootstrapURLKeys={{ key: "AIzaSyAQWZD9fJVKSDmHmGGi7gYgk9homdj_DAc" }}
-                            defaultCenter={defaultProps.center}
-                            defaultZoom={defaultProps.zoom}
-                        >
-                            <AnyReactComponent
-                                lat={userLocation.latitude}
-                                lng={userLocation.longitude}
-                                text="loading.."
-                            />
-                        </GoogleMapReact>
-                    </div>
-                )}
-            </Modal.Body>
-        </Modal>
-    );
-}
 
-// shop creation
-function ShopCreate() {
-    const [addLocation, setAddLocation] = useState(false);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    // form data
+    const [formData, setFormData] = useState({
+        "shop_name": "",
+        "shop_id": "",
+        "shop_phone": "",
+        "shop_label": "",
+        "shop_place": "",
+        "shop_mail": "",
+        "lat": "",
+        "lng": "",
+        "banner_image": null,
+        "profile_image": null,
+        "shop_owner":""
+    });
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleFileChange = (event, fileType) => {
+        const file = event.target.files[0];
+        setFormData({ ...formData, [fileType]: file });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(formData);
+        const formDataToSend = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            if (value !== null) {
+                formDataToSend.append(key, value);
+            }
+        });
+
+        try {
+            console.log(formDataToSend);
+            await axios.post('http://127.0.0.1:8000/api/shop_register/', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            // Handle success or redirection
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Page>
             <Container>
@@ -93,7 +108,7 @@ function ShopCreate() {
                             </BannerImg>
                             <Form.Group controlId="formFile" className="mb-3">
                                 <Form.Label>Banner Image</Form.Label>
-                                <Form.Control type="file" />
+                                <Form.Control type="file" name="banner_image" onChange={(e) => handleFileChange(e, 'banner_image')} required />
                             </Form.Group>
                         </Col>
                         <Col xs={12} md={6}>
@@ -102,7 +117,7 @@ function ShopCreate() {
                             </ProfileImg>
                             <Form.Group controlId="formFile" className="mb-3">
                                 <Form.Label>Profile</Form.Label>
-                                <Form.Control type="file" />
+                                <Form.Control type="file" name="profile_image" onChange={(e) => handleFileChange(e, 'profile_image')} required />
                             </Form.Group>
                         </Col>
                         <Col xs={12} md={6}>
@@ -111,16 +126,16 @@ function ShopCreate() {
                                 label="Shop Name"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="text" placeholder="" required />
+                                <Form.Control type="text" name="shop_name" onChange={(e) => handleInputChange(e, 'shop_name')} required />
                             </FloatingLabel>
                         </Col>
                         <Col xs={12} md={6}>
                             <FloatingLabel
                                 controlId="floatingInput"
-                                label="Description"
+                                label="Label"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="text" placeholder="" required />
+                                <Form.Control type="text" name="shop_label" onChange={(e) => handleInputChange(e, 'shop_label')} required />
                             </FloatingLabel>
                         </Col>
                         <Col xs={12} md={6}>
@@ -129,7 +144,7 @@ function ShopCreate() {
                                 label="Place"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="text" placeholder="" required />
+                                <Form.Control type="text" name="shop_place" onChange={(e) => handleInputChange(e, 'shop_place')} required />
                             </FloatingLabel>
                         </Col>
                         <Col xs={12} md={6}>
@@ -138,7 +153,7 @@ function ShopCreate() {
                                 label="Email ( shop )"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="email" placeholder="" required />
+                                <Form.Control type="email" name="shop_mail" onChange={(e) => handleInputChange(e, 'shop_mail')} required />
                             </FloatingLabel>
                         </Col>
                         <Col xs={12} md={6}>
@@ -147,7 +162,7 @@ function ShopCreate() {
                                 label="Phone ( shop )"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="number" placeholder="" required />
+                                <Form.Control type="number" name="shop_phone" onChange={(e) => handleInputChange(e, 'shop_phone')} required />
                             </FloatingLabel>
                         </Col>
                         <Col xs={12} md={6}>
@@ -156,22 +171,62 @@ function ShopCreate() {
                                 label="Shop Id ( shop_name_123 )"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="text" placeholder="" required />
+                                <Form.Control type="text" name="shop_id" onChange={(e) => handleInputChange(e, 'shop_id')} required />
                             </FloatingLabel>
                         </Col>
                         <Col xs={12} >
-                            <Button className='btn btn-info' onClick={() => setAddLocation(true)}>
+                            <Button className='btn btn-info' onClick={handleShow}>
                                 Add location
                             </Button>
                         </Col>
-                        <Link to={"/shop/otp_verification"} className='text-center'>
-                            <Button type='submit' style={{ width: '50%' }} variant='info' > Create </Button>
-                        </Link>
+                        {/* <Link to={"/shop/otp_verification"} className='text-center'> */}
+                        <Button type='submit' style={{ width: '50%' }} onClick={handleSubmit} variant='info' > Create </Button>
+                        {/* </Link> */}
                         <div style={{ height: "90px" }}></div>
                     </Row>
                 </form>
             </Container>
-            <AddLocation show={addLocation} onHide={() => setAddLocation(false)} />
+            <Modal
+                className='user-select-none'
+                size="xl"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vcenter">
+                        <i class="fa-solid fa-map"></i> Add Location
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <button className='btn btn-info' onClick={getUserLocation}>Get User Location</button>
+                    {/* {userLocation && (
+                    <div>
+                        <h2>User Location</h2>
+                        <p>Latitude: {userLocation.latitude}</p>
+                        <p>Longitude: {userLocation.longitude}</p>
+                    </div>
+                )} */}
+                    {userLocation && (
+                        <div style={{ height: '400px', width: '100%' }}>
+                            <GoogleMapReact
+                                bootstrapURLKeys={{ key: "AIzaSyAQWZD9fJVKSDmHmGGi7gYgk9homdj_DAc" }}
+                                defaultCenter={defaultProps.center}
+                                defaultZoom={defaultProps.zoom}
+                            >
+                                <AnyReactComponent
+                                    lat={userLocation.lat}
+                                    lng={userLocation.lng}
+                                    text="loading.."
+                                />
+                            </GoogleMapReact>
+                        </div>
+                    )}
+                </Modal.Body>
+            </Modal>
         </Page>
     )
 }

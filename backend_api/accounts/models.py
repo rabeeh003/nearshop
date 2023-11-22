@@ -12,7 +12,10 @@ class Customer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# shop owner data
+    def __str__(self):
+        return self.full_name
+
+# owner data
 class Owner(models.Model):
     name = models.CharField(max_length=150)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -22,6 +25,9 @@ class Owner(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
 # shop data
 class Shop(models.Model):
     shop_name = models.CharField(max_length=150)
@@ -29,8 +35,15 @@ class Shop(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     shop_phone = models.CharField(validators=[phone_regex], max_length=17, unique=True)
     shop_label = models.CharField(max_length=200)
+    shop_place = models.CharField(max_length=200, default='not found')
     shop_mail = models.EmailField( max_length=254, unique=True)
     lat = models.CharField(max_length=250)
     lng = models.CharField(max_length=250)
+    banner_image = models.ImageField( upload_to='shop/banner', height_field=None, width_field=None, max_length=None, default="not found")
+    profile_image = models.ImageField( upload_to='shop/profile', height_field=None, width_field=None, max_length=None, default="not found")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    shop_owner = models.ForeignKey(Owner, to_field='mail', on_delete=models.CASCADE, default=1)
+
+    def __str__(self):
+        return self.shop_name
