@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import {PrivateRoute, LoginRoute, CustomerPrivetRoute, CustomerLoginRoute} from './utils/PriveteRoute';
+
 import Home from '../src/components/customer/screens/Home'
 import Category from './components/customer/screens/Category';
 import NotFont from './components/customer/screens/NotFont';
@@ -37,29 +39,29 @@ function App() {
             <Route path='category' element={<Category />} />
             <Route path='cart'>
               <Route index element={<CartPage />} />
-              <Route path='order' element={<CheckOut />} />
+              <Route path='order' element={<CustomerPrivetRoute><CheckOut /></CustomerPrivetRoute>} />
             </Route>
-            <Route path='user' element={<UserProfile />} />
+            <Route path='user' element={<CustomerPrivetRoute><UserProfile /></CustomerPrivetRoute>} />
             <Route path='shopid' element={<ShopPage />} />
-            <Route path='login' element={<UserLogin />} />
-            <Route path='signup' element={<UserSignup />} />
-            <Route path='otp_verification' element={<COtpPage/>} />
+            <Route path='login' element={<CustomerLoginRoute><UserLogin /></CustomerLoginRoute>} />
+            <Route path='signup' element={<CustomerLoginRoute><UserSignup /></CustomerLoginRoute>} />
+            <Route path='otp_verification' element={<CustomerLoginRoute><COtpPage/></CustomerLoginRoute>} />
             <Route path='*' element={<NotFont />} />
           </Route>
           <Route path='shop' element={<SNavs />} >
-            <Route index element={<ShopHome />} />
-            <Route path='billing' element={<Billing/>} />
-            <Route path='addprodect' element={<AddProdect/>} />
-            <Route path='editprodect' element={<EditProdect/>} />
-            <Route path='offer' element={<OfferPage/>} />
-            <Route path='chart' element={<Chart/>} />
-            <Route path='login' element={<ShopLogin/>} />
-            <Route path='signup' element={<OwnerSignup/>} />
-            <Route path='otp_verification' element={<OtpPage/>} />
-            <Route path='ogc_verification' element={<OGCPage/>} />
-            <Route path='start_shop' element={<ShopCreate/>} />
-            <Route path='edit_shop_info' element={<EditShopInfo/>} />
-            <Route path='order' element={<OrderPage/>} />
+            <Route index element={<PrivateRoute><ShopHome /></PrivateRoute>} />
+            <Route path='billing' element={<PrivateRoute> <Billing/></PrivateRoute>} />
+            <Route path='addprodect' element={<PrivateRoute><AddProdect/></PrivateRoute>} />
+            <Route path='editprodect' element={<PrivateRoute><EditProdect/></PrivateRoute>} />
+            <Route path='offer' element={<PrivateRoute><OfferPage/></PrivateRoute>} />
+            <Route path='chart' element={<PrivateRoute><Chart/></PrivateRoute>} />
+            <Route path='login' element={<LoginRoute><ShopLogin/></LoginRoute>} />
+            <Route path='signup' element={<LoginRoute><OwnerSignup/></LoginRoute>} />
+            <Route path='otp_verification' element={<LoginRoute><OtpPage/></LoginRoute>} />
+            <Route path='ogc_verification' element={<PrivateRoute><OGCPage/></PrivateRoute>} />
+            <Route path='start_shop' element={<PrivateRoute><ShopCreate/></PrivateRoute>} />
+            <Route path='edit_shop_info' element={<PrivateRoute><EditShopInfo/></PrivateRoute>} />
+            <Route path='order' element={<PrivateRoute><OrderPage/></PrivateRoute>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>

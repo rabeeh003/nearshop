@@ -3,7 +3,7 @@ import { Row, Col, Container, Form, Button } from 'react-bootstrap'
 import LogGif from '../../../assets/images/shoplogin.gif'
 import styled from 'styled-components'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import axios from 'axios';
 
 function ShopLogin() {
@@ -21,17 +21,21 @@ function ShopLogin() {
     };
     const login = async (e) => {
         e.preventDefault();
-    
+
+
         try {
             const response = await axios.post('http://127.0.0.1:8000/api/owner_login/', formData);
-    
+
             console.log(response.data);
             setCheckErr('');
+            localStorage.setItem('adminKey', response.data);
+            redirect(-1)
             return response.data;
         } catch (error) {
             console.log(error);
             setCheckErr('Your entered email or password is incorrect');
         }
+
     };
 
     return (
@@ -55,7 +59,7 @@ function ShopLogin() {
                             >
                                 <Form.Control type="password" name='password' onChange={handleInputChange} required />
                             </FloatingLabel>
-                            {checkErr && <p>{checkErr}</p>}
+                            {checkErr && <p style={{ color: "red", fontSize: '15px' }}>{checkErr}</p>}
                             <Button type='submit' variant='info' onClick={login} > Login </Button>
                             <p className='mt-4'>Don't have an account?<Link to={'/shop/signup'} className='ms-2'>Signup</Link></p>
 

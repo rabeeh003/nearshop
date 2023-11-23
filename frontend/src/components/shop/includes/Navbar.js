@@ -1,6 +1,6 @@
 import React from 'react'
 import Container from 'react-bootstrap/Container';
-import {Nav,DropdownButton,Navbar} from 'react-bootstrap';
+import { Nav, DropdownButton, Navbar } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import styled from 'styled-components'
 import Modal from 'react-bootstrap/Modal';
@@ -37,6 +37,12 @@ function NavBar() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const logout = () => {
+        localStorage.removeItem('adminKey')
+        window.location.reload(false)
+    }
+
     return (
         <>
             <Navbar className="bg-admin fixed-top user-select-none">
@@ -72,9 +78,7 @@ function NavBar() {
                                             <DropItem className='btn' eventKey="1"><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
                                         </Link>
                                         <Dropdown.Divider />
-                                        <Link to={''}>
-                                            <DropItem className='btn' eventKey="1">Logout</DropItem>
-                                        </Link>
+                                        <DropItem className='btn' onClick={logout}>Logout</DropItem>
                                     </DropdownButton>
                                 </Navbar.Text>
                             </IconsDiv>

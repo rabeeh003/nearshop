@@ -65,6 +65,11 @@ function NavBar() {
         setFullscreen(breakpoint);
         setShow(true);
     }
+
+    const logout = () => {
+        localStorage.removeItem('userKey')
+        window.location.reload(false)
+    }
     return (
         <>
             <Navbar className="bg-green fixed-top user-select-none">
@@ -109,21 +114,25 @@ function NavBar() {
                                         variant="light"
                                     >
                                         <Link to={'/user'}>
-                                            <DropItem className='btn' eventKey="1"><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
+                                            <DropItem className='btn'><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
                                         </Link>
                                         <Link to={''}>
-                                            <DropItem className='btn' eventKey="1"><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
+                                            <DropItem className='btn'><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
                                         </Link>
                                         <Dropdown.Divider />
+                                        {/* if () {
+                                            
+                                        } else {
+                                            
+                                        } */}
                                         <Link to={'login'}>
-                                            <DropItem className='btn' eventKey="1">Login</DropItem>
+                                            <DropItem className='btn'>Login</DropItem>
                                         </Link>
                                         <Link to={'signup'}>
-                                            <DropItem className='btn' eventKey="1">Signup</DropItem>
+                                            <DropItem className='btn'>Signup</DropItem>
                                         </Link>
-                                        <Link to={''}>
-                                            <DropItem className='btn' eventKey="1">Logout</DropItem>
-                                        </Link>
+                                        
+                                        <DropItem onClick={logout} className='btn'>Logout</DropItem>
                                     </DropdownButton>
                                 </Navbar.Text>
                             </IconsDiv>

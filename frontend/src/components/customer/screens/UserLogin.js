@@ -14,6 +14,7 @@ function UserLogin() {
   const [phone, setPhone] = useState('');
   const [user, setUser] = useState(null);
   const [otp, setOtp] = useState('');
+  const [res, setRes] = useState('');
   const [numberError, setNumberError] = useState('');
   const [otpError, setOtpError] = useState('');
   const navigate = useNavigate();
@@ -34,10 +35,11 @@ function UserLogin() {
 
   const sendOtp = async () => {
     try {
-      const phoneCheckResponse = await checkPhone();
+      const respo = await checkPhone();
       const recapcha = new RecaptchaVerifier(auth, "recapcha", {});
       const confirmation = await signInWithPhoneNumber(auth, phone, recapcha);
       setUser(confirmation);
+      setRes(respo)
     } catch (error) {
       console.log(error);
     }
@@ -47,6 +49,7 @@ function UserLogin() {
     try {
       const data = await user.confirm(otp)
       console.log(data);
+      localStorage.setItem('userKey', res.data);
       navigate('/');
     }
     catch (err) {

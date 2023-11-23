@@ -1,7 +1,7 @@
 import LogGif from '../../../assets/images/otp_gif.gif'
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Col, FloatingLabel, Form } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -10,18 +10,25 @@ import { auth, provider } from '../../config/firebase'
 import { signInWithPopup } from 'firebase/auth';
 
 function OtpPage() {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [user, setUser] = useState();
 
-  const handileGoogleSignin = () => {
-    signInWithPopup(auth, provider).then((result)=>{
-      const user = result.user
-      setUser(user)
-      console.log(user);
-      navigate('/shop/signup',{ state: { passedData:user.email} })
-      console.log(user.email);
-    }).catch((err) => console.log(err));
-  }
+  const handileGoogleSignin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      setUser(result.user);
+      console.log(result.user.email);
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/shop_mail_check/', { mail: user.email });
+        navigate('/shop/login');
+      } catch (error) {
+        navigate('/shop/signup', { state: { passedData: result.user.email } });
+      } 
+    } catch (err) {
+      console.log(err);
+      navigate('/', { state: { passedData: user?.email || '' } });
+    }
+  };
 
   return (
     <Page className='container-fluid'>
@@ -34,7 +41,7 @@ function OtpPage() {
             <CardBody className="card-body">
               <h4>Verify for register</h4>
               <Col>
-                <Button className='btn btn-danger' onClick={handileGoogleSignin} > Signin with Google </Button>
+                <Google className='btn btn-danger' onClick={handileGoogleSignin} > Signin with Google </Google>
               </Col>
             </CardBody>
           </Card>
@@ -68,25 +75,9 @@ const CardBody = styled.div`
   text-align: center;
 `;
 
-const Input = styled.input`
-  height: 45px;
-  border-radius: 6px;
-  outline: none;
-  font-size: 1.125rem;
-  text-align: center;
-  border: 1px solid #ddd;
-  margin: 3px;
 
-  &:focus {
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  }
-`;
 
-const ResendLink = styled.p`
-  font-size: 12px;
-`;
-
-const VerifyButton = styled.button`
+const Google = styled.button`
   background-color: #0dcaf0;
   color: #fff;
   border: none;
