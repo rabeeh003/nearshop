@@ -9,9 +9,9 @@ function Bottumbar() {
             
             <BtNav className='bg-admin'>
                 <Link title='Home' to="/shop" className='nav-link'> <i className="fa-solid fa-house clr-white"></i></Link>
-                <Link title='catagory' to="/shop" className='nav-link'><i className="fa-solid fa-file-invoice clr-white"></i></Link>
-                <Link title='cart' to="/shop" className='nav-link'><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
-                <Link title='About' to="/shop" className='nav-link'><i class="fa-solid fa-square-plus clr-white"></i></Link>
+                <Link title='billing' to="billing" className='nav-link'><i className="fa-solid fa-file-invoice clr-white"></i></Link>
+                <Link title='order' to="order" className='nav-link'><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
+                <Link title='Add Ptodect' to="addprodect" className='nav-link'><i class="fa-solid fa-square-plus clr-white"></i></Link>
             </BtNav>
         </>
     )

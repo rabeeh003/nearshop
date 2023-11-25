@@ -103,7 +103,7 @@ function NavBar() {
                                 <OfItem title='Settings' className='clr-white' href="#features"><i class="clr-white fa-solid fa-gear pe-2"></i>Settings</OfItem>
                             </Link>
                             <Link to="" onClick={handleClose} className='nav-link'>
-                                <OfItem title='Logout' className='clr-white' onClick={handleShow} href="#features"><i class="clr-white fa-solid fa-right-from-bracket pe-2"></i>Logout</OfItem>
+                                <OfItem title='Logout' className='clr-white' onClick={logout} href="#features"><i class="clr-white fa-solid fa-right-from-bracket pe-2"></i>Logout</OfItem>
                             </Link>
                         </OfIcon>
                     </Offcanvas.Body>

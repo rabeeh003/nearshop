@@ -1,9 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Col, Container, Row, Form, Button } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import styled from 'styled-components';
+import SearchSuggestions from '../includes/add product/SearchSuggestions';
+import axios from 'axios';
 
 function AddProdect() {
+    const [showModal, setShowModal] = useState(false);
+    const location = useLocation();
+    const productId = location.state.productId;
+    const [product, setProduct] = useState(null);
+
+    const handleModalOpen = () => setShowModal(true);
+    const handleModalClose = () => setShowModal(false);
+
+    useEffect(() => {
+        const fetchProductDetails = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/p/gpro/${productId}`);
+                setProduct(response.data);
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+            }
+        };
+
+        if (productId) {
+            fetchProductDetails();
+        }
+    }, [productId]);
+
     return (
         <Page>
             <Container fluid>
@@ -19,7 +45,8 @@ function AddProdect() {
                                 controlId="floatingInput"
                                 label="Product Name"
                             >
-                                <Form.Control type="text" />
+                                <Form.Control onClick={handleModalOpen} value={'sdfsdf'} type="text" />
+                                <SearchSuggestions show={showModal} onHide={handleModalClose} />
                             </FloatingLabel>
                         </Col>
                         <Col className='my-1'>
@@ -78,6 +105,8 @@ const Page = styled.div`
   max-width: 90vw;
   margin: auto;
   @media screen and (max-width: 578px) {
+    height: 100%;
+    margin-bottom: 80px;
     max-width: 98vw;
   }
 `

@@ -5,8 +5,7 @@ import { Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-
-import { auth, provider } from '../../config/firebase'
+import { auth, provider } from '../../../config/firebase'
 import { signInWithPopup } from 'firebase/auth';
 
 function OtpPage() {

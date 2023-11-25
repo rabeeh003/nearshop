@@ -100,7 +100,9 @@ max-width: 90vw;
 margin: auto;
 align-items: center;
 @media screen and (max-width: 578px) {
-    max-width: 98vw;
+  height: 100%;
+  margin-bottom: 50px;
+  max-width: 98vw;
 }
 `
 const ProIcon = styled.img`

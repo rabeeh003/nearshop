@@ -4,7 +4,7 @@ import LogGif from '../../../assets/images/login.gif'
 import styled from 'styled-components'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import { auth } from '../../config/firebase'
+import { auth } from '../../../config/firebase'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';

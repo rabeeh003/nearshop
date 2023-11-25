@@ -29,6 +29,7 @@ import ShopCreate from './components/shop/screens/ShopCreate';
 import EditShopInfo from './components/shop/screens/EditShopInfo';
 import OGCPage from './components/shop/screens/OGCPage';
 import OrderPage from './components/shop/screens/OrderPage';
+import GlobalProdectAdd from './components/shop/screens/GlobalProdectAdd';
 function App() {
   return (
     <>
@@ -62,6 +63,7 @@ function App() {
             <Route path='start_shop' element={<PrivateRoute><ShopCreate/></PrivateRoute>} />
             <Route path='edit_shop_info' element={<PrivateRoute><EditShopInfo/></PrivateRoute>} />
             <Route path='order' element={<PrivateRoute><OrderPage/></PrivateRoute>} />
+            <Route path='global_product_add' element={<PrivateRoute><GlobalProdectAdd/></PrivateRoute>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>

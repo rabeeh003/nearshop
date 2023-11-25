@@ -4,12 +4,11 @@ import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-
-import { auth } from '../../config/firebase'
+import { auth } from '../../../config/firebase'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
+import { normalClint } from '../../../config/axios';
 
 function OtpPage() {
   const [phone, setPhone] = useState('');
@@ -21,7 +20,7 @@ function OtpPage() {
   const sendOtp = async () => {
     try {
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/signin/', { phone_number: phone });
+        const response = await normalClint.post('api/signin/', { phone_number: phone });
         // if (response.data.exists) {
           setNumErr('This phone number is already registered');
         // } else {}

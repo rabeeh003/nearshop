@@ -116,7 +116,10 @@ function Billing() {
 const Page = styled.div`
   max-width: 90vw;
   margin: auto;
+  margin-bottom: 10px;
   @media screen and (max-width: 578px) {
+    height: 100%;
+    margin-bottom: 70px;
     max-width: 98vw;
   }
 `
