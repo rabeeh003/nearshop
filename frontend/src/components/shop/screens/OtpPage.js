@@ -18,7 +18,7 @@ function OtpPage() {
       setUser(result.user);
       console.log(result.user.email);
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/shop_mail_check/', { mail: user.email });
+        await axios.post('http://127.0.0.1:8000/api/shop_mail_check/', { mail: user.email });
         navigate('/shop/login');
       } catch (error) {
         navigate('/shop/signup', { state: { passedData: result.user.email } });

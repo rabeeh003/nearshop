@@ -8,7 +8,6 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { auth } from '../../../config/firebase'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
-import { normalClint } from '../../../config/axios';
 
 function OtpPage() {
   const [phone, setPhone] = useState('');
@@ -19,21 +18,25 @@ function OtpPage() {
 
   const sendOtp = async () => {
     try {
-      try {
-        const response = await normalClint.post('api/signin/', { phone_number: phone });
-        // if (response.data.exists) {
-          setNumErr('This phone number is already registered');
-        // } else {}
-      } catch (err) {
-        setNumErr('')
-        const recapcha = new RecaptchaVerifier(auth, "recapcha", {})
-        const confirmation = await signInWithPhoneNumber(auth, phone, recapcha)
+      console.log(phone);
+      const response = await axios.post('http://127.0.0.1:8000/api/signin/', { phone_number: phone });
+  
+      if (response.data.exists) {
+        // If the phone number is already registered
+        setNumErr('This phone number is already registered');
+      } else {
+        // If the phone number is not registered
+        setNumErr('');
+  
+        // Assuming `auth` is your Firebase auth instance
+        const recapcha = new RecaptchaVerifier(auth, "recapcha", {});
+        const confirmation = await signInWithPhoneNumber(auth, phone, recapcha);
         setUser(confirmation);
       }
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   const verifyOtp = async () => {
     try {

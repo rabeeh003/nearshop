@@ -53,8 +53,8 @@ INSTALLED_APPS = [
     # apps
     'accounts',
     'corsheaders',
-    'prodect'
-    'shop',
+    'prodect',
+    'seller',
 ]
 
 MIDDLEWARE = [

@@ -80,7 +80,7 @@ const UserSignup = () => {
                 // navigate('/');
             })
             .catch(error => {
-                setEfs = (error.message)
+                setEfs(error.message)
                 console.log(error)
             })
     };

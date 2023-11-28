@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Container, Row, Col, Form, FloatingLabel, Button, Modal } from 'react-bootstrap'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
 import GoogleMapReact from 'google-map-react';
 import axios from 'axios'
 

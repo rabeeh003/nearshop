@@ -1,6 +1,8 @@
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.generics import ListCreateAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveAPIView
+from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 from .models import global_productes, category
 from .serializers import GlobalProductAdd, GlobalCategory
 import jwt
@@ -43,6 +45,14 @@ class GlobalProduct(ListCreateAPIView):
         except:
             return Response(status=404,)
 
+class ProductDetailView(APIView):
+    permission_classes = [AllowAny]  # Adjust permissions as needed
+
+    def get(self, request, pk):
+        product = get_object_or_404(global_productes, pk=pk)
+        serializer = GlobalProductAdd(product)
+        return Response(serializer.data)
+
 class GlobalCategory(ListAPIView):
     permission_classes = [AllowAny]
     queryset = category.objects.all()
@@ -50,3 +60,12 @@ class GlobalCategory(ListAPIView):
     
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+class CategoryDetailView(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    queryset = category.objects.all()
+    serializer_class = GlobalCategory
+
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(category, pk=pk)

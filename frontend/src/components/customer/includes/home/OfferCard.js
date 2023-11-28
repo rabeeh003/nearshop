@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { Card, Button } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
@@ -6,9 +6,10 @@ import Modal from 'react-bootstrap/Modal';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
-import Tomato from 'file:///home/rabeeh/Pictures/tomato.png'
+import axios from 'axios';
 
 function MyVerticallyCenteredModal(props) {
+    const { product } = props;
     return (
         <Modal
             className='user-select-none'
@@ -19,31 +20,31 @@ function MyVerticallyCenteredModal(props) {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <i class="fa-solid fa-store"></i> Shop Name
+                    <i className="fa-solid fa-store"></i> Shop Name
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <PDetiles>
                     <div style={{ width: "45%" }}>
                         <CardImage>
-                            <Badge style={{ position: 'absolute', top: 0, right: 0 }} bg="success">40% Off</Badge>
-                            <Card.Img variant="top" src={Tomato} />
+                            {/* <Badge style={{ position: 'absolute', top: 0, right: 0 }} bg="success">40% Off</Badge> */}
+                            <Card.Img style={{width:"80%", height:"80%"}} variant="top" src={product?.prodect_image} />
                         </CardImage>
                         <Button variant="success" style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
                     </div>
                     <div className='form-outline' style={{ width: "45%" }}>
-                        <span className='h4'>Tomato</span>
+                        <span className='h4'>{product?.product_name}</span>
                         <p>
-                            Price: <b>₹ 39</b>
+                            Price: <b>₹ {product?.price}</b>
                         </p>
                         <Textarea style={{ fontSize: "12px", width: "100%" }} className='form-control' rows='6'>
-                            Tomato is a widely cultivated and consumed fruit, often treated as a vegetable in cooking. Known for its vibrant red color, it belongs to the Solanaceae family. Tomatoes are versatile in culinary applications, used in salads, sauces, and countless dishes, offering a sweet and tangy flavor with various health benefits.
+                            {product?.product_description}
                         </Textarea>
                     </div>
                 </PDetiles>
             </Modal.Body>
             <Modal.Footer>
-
+                {/* Additional modal footer content if needed */}
             </Modal.Footer>
         </Modal>
     );
@@ -62,7 +63,21 @@ const Textarea = styled.textarea`
 `
 
 function OfferCard() {
-    const [modalShow, setModalShow] = React.useState(false);
+    const [modalShow, setModalShow] = useState(false);
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/p/gpro/');
+                setProducts(response.data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     return (
         <Container fluid className='user-select-none'>
@@ -71,27 +86,28 @@ function OfferCard() {
                 {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color:'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <ScrollableRow>
-                {Array.from({ length: 10 }).map((_, idx) => (
+                {products.map((product, idx) => (
                     <Col key={idx}>
-                        <OfCard onClick={() => setModalShow(true)}>
+                        <OfCard onClick={() => setModalShow(product)}>
                             <CardImage>
-                                <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge>
+                                {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
                                 <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i> Shop Name</Badge>
-                                <Card.Img variant="top" src={Tomato} />
+                                <Card.Img style={{width:"84px", height:"80px"}} variant="top" src={product.prodect_image} />
                             </CardImage>
-                            <Card.Body >
-                                <Card.Title style={{fontSize:'15px'}}>Card Title</Card.Title>
-                                <Card.Text style={{fontSize:'15px'}}>
+                            <Card.Body>
+                                <Card.Title style={{ fontSize: '15px' }}>{product.product_name}</Card.Title>
+                                <Card.Text style={{ fontSize: '15px' }}>
                                     Price: <b>₹ 39</b>
                                 </Card.Text>
-                                <Button variant="success" style={{ width: '100%', fontSize:'15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                <Button variant="success" style={{ width: '100%', fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
                             </Card.Body>
                         </OfCard>
                     </Col>
                 ))}
             </ScrollableRow>
             <MyVerticallyCenteredModal
-                show={modalShow}
+                product={modalShow}
+                show={modalShow !== false}
                 onHide={() => setModalShow(false)}
             />
         </Container>

@@ -29,6 +29,7 @@ function ShopLogin() {
             console.log(response.data);
             setCheckErr('');
             localStorage.setItem('adminKey', response.data);
+            console.log(response.data);
             redirect(-1)
             return response.data;
         } catch (error) {

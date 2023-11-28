@@ -92,7 +92,7 @@ function SearchSuggestions({ show, onHide }) {
                                             <Card.Text style={{ fontSize: '15px' }}>
                                                 Category: <b>{getCategoryName(product.category)}</b>
                                             </Card.Text>
-                                            <Button variant="info" onClick={() => handleAddProductClick(product.id)} style={{ width: '100%', fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Shop</Button>
+                                            <Button variant="info" onClick={() => handleAddProductClick(product)} style={{ width: '100%', fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Shop</Button>
                                         </Card.Body>
                                     </OfCard>
                                 </Col>

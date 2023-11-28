@@ -79,6 +79,7 @@ class owner_login(CreateAPIView):
 
             response = Response({
                 'jwt': token,
+                'id': owner.id,
             })
             # response.set_cookie(key='jwt', value=token, httponly=True)
             return response
