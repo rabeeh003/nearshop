@@ -4,7 +4,6 @@ import Container from 'react-bootstrap/esm/Container'
 import styled from 'styled-components'
 import { Card } from 'react-bootstrap';
 
-import c1 from 'file:///home/rabeeh/Pictures/c1.png'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -32,11 +31,10 @@ function CategoryCard() {
             <ScrollableRow>
                 {categories.map((category, idx) => (
                     <Col className='d-flex justify-content-center' key={idx}>
-                        <Link to={`/category/${category.id}`} className='text-decoration-none text-reset'>
+                        <Link to={`/category/${category.category_name}`} className='text-decoration-none text-reset'>
                             <OfCard>
                                 <CardImage>
-                                    {/* Use the category_image field from the API */}
-                                    <Card.Img style={{borderRadius:"20px", height:"100px", width:"100px"}} variant="top" src={category.category_image} />
+                                    <Card.Img style={{borderRadius:"20px"}} variant="top" src={category.category_image} />
                                 </CardImage>
                                 <Card.Body>
                                     <Card.Title className='text-reset'>{category.category_name}</Card.Title>

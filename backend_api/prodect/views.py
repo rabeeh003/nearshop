@@ -61,11 +61,3 @@ class GlobalCategory(ListAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
-class CategoryDetailView(RetrieveAPIView):
-    permission_classes = [AllowAny]
-    queryset = category.objects.all()
-    serializer_class = GlobalCategory
-
-    def get_object(self):
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(category, pk=pk)

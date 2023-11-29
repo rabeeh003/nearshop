@@ -11,7 +11,7 @@ function ShopCard() {
                 {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <Row className="g-4">
-                {Array.from({ length: 27 }).map((_, idx) => (
+                {Array.from({ length: 6 }).map((_, idx) => (
                     <Col xs={6} sm={4} md={3} lg={2} xxl={1}  key={idx} className='d-flex justify-content-center'>
                         <OfCard>
                             <CardImage>

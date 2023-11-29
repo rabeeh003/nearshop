@@ -42,7 +42,7 @@ function App() {
         <Routes>
           <Route path='/' element={<CNavs />}>
             <Route index element={<Home />} />
-            <Route path='category' element={<Category />} />
+            <Route path='category/:categoryName' element={<Category />} />
             <Route path='cart'>
               <Route index element={<CartPage />} />
               <Route path='order' element={<CustomerPrivetRoute><CheckOut /></CustomerPrivetRoute>} />
