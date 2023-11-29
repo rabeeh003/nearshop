@@ -21,6 +21,8 @@ function OwnerHome() {
         "shop_phone": "",
         "shop_label": "",
         "shop_place": "",
+        "shop_mail": "",
+        "password": "",
         // shop_mail: "",
         // lat: "",
         // lng: "",
@@ -125,7 +127,7 @@ function OwnerHome() {
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Details</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body >
                     {currentShop && (
                         <Form>
                             <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
@@ -149,12 +151,28 @@ function OwnerHome() {
                                         type="text" name="shop_label" value={currentShop.shop_label} onChange={handleChange}
                                     />
                                 </Col>
-                                <Col className='py-3'>
+                                <Col xs={12} className='py-3'>
                                     <Form.Label column sm="2">
                                         Place
                                     </Form.Label>
                                     <Form.Control
                                         type="text" name="shop_place" value={currentShop.shop_place} onChange={handleChange}
+                                    />
+                                </Col>
+                                <Col xs={12} className='py-3'>
+                                    <Form.Label column sm="2">
+                                        Email
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="mail" name="shop_mail" value={currentShop.shop_mail} onChange={handleChange}
+                                    />
+                                </Col>
+                                <Col xs={12} className='py-3'>
+                                    <Form.Label column sm="2">
+                                        Password
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="text" name="password" value={currentShop.password} onChange={handleChange}
                                     />
                                 </Col>
                             </Form.Group>

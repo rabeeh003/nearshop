@@ -44,6 +44,7 @@ class Shop(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     shop_owner = models.ForeignKey(Owner, to_field='mail', on_delete=models.CASCADE, default=1)
+    password = models.CharField(max_length=10, default='1234')
 
     def __str__(self):
         return self.shop_name

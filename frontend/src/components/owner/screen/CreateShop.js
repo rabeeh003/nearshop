@@ -64,7 +64,8 @@ function CreateShop() {
         "lng": "",
         "banner_image": null,
         "profile_image": null,
-        "shop_owner": null
+        "shop_owner": null,
+        "password": ""
     });
 
     useEffect(() => {
@@ -193,6 +194,15 @@ function CreateShop() {
                                 className="mb-3 w-100"
                             >
                                 <Form.Control type="email" name="shop_mail" onChange={(e) => handleInputChange(e, 'shop_mail')} required />
+                            </FloatingLabel>
+                        </Col>
+                        <Col xs={12} md={6}>
+                            <FloatingLabel
+                                controlId="floatingInput"
+                                label="Password ( shop )"
+                                className="mb-3 w-100"
+                            >
+                                <Form.Control type="password" name="password" onChange={(e) => handleInputChange(e, 'password')} required />
                             </FloatingLabel>
                         </Col>
                         <Col xs={12} md={6}>
