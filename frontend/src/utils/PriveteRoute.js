@@ -1,5 +1,23 @@
 import { Navigate } from 'react-router-dom'
 
+// shop priver route
+const OwnerPrivateRoute = ({children, ...rest}) => {
+
+    if(localStorage.getItem("ownerKey")){
+        return children
+    }else{
+        return <Navigate to={"/owner/login"} ></Navigate>
+    }
+}
+
+const OwnerLoginRoute = ({children, ...rest}) => {
+    if(localStorage.getItem('ownerKey')){
+        return <Navigate to={'/owner'}></Navigate>
+    }else{
+        return children
+    }
+}
+
 // admin privet route
 const PrivateRoute = ({children, ...rest}) => {
 
@@ -35,4 +53,4 @@ const CustomerLoginRoute = ({children, ...rest}) => {
     }
 }
 
-export  {PrivateRoute, LoginRoute, CustomerPrivetRoute, CustomerLoginRoute};
+export  {PrivateRoute, LoginRoute, CustomerPrivetRoute, CustomerLoginRoute, OwnerPrivateRoute, OwnerLoginRoute};

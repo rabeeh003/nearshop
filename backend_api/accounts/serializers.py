@@ -27,9 +27,10 @@ class OwnerMailCheck(serializers.Serializer):
     def validate_mail(self, value):
         try:
             owner = Owner.objects.get(mail=value)
-            return owner
+            return owner.mail  # Returning just the mail if it exists
         except Owner.DoesNotExist:
-            raise serializers.ValidationError("Customer with this mail does not exist.")
+            raise serializers.ValidationError("Owner with this mail does not exist.")
+
 
 class OwnerSignin(serializers.Serializer):
     mail = serializers.EmailField()
@@ -52,3 +53,8 @@ class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shop
         fields = '__all__'
+
+class ShopEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Shop
+        fields = ['shop_name', 'shop_id', 'shop_phone', 'shop_label', 'shop_place']

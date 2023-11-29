@@ -59,7 +59,7 @@ function ShopSignup() {
       const { confirmPassword, ...dataToSend } = formData;
       const response = await axios.post('http://127.0.0.1:8000/api/register/', dataToSend);
       console.log(response);
-      navigate('/shop/start_shop');
+      navigate('/owner/login');
     } catch (error) {
       setEfs(error.message);
       console.error(error);
@@ -128,7 +128,7 @@ function ShopSignup() {
             {/* Error message for password mismatch */}
             {efs && <Col xs={12} className='text-danger'>{efs}</Col>}
             {/* <Link to={"/shop/otp_verification"} className='text-center'> */}
-            <Button type='submit' onClick={handleSubmit} style={{ width: '50%' }} variant='info' > Get OTP </Button>
+            <Button type='submit' onClick={handleSubmit} style={{ width: '50%' }} variant='primary' > Create </Button>
             {/* </Link> */}
           </Row>
         </form>

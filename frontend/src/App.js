@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import {PrivateRoute, LoginRoute, CustomerPrivetRoute, CustomerLoginRoute} from './utils/PriveteRoute';
+import {PrivateRoute, LoginRoute, CustomerPrivetRoute, CustomerLoginRoute, OwnerLoginRoute, OwnerPrivateRoute} from './utils/PriveteRoute';
 
 import Home from '../src/components/customer/screens/Home'
 import Category from './components/customer/screens/Category';
@@ -30,6 +30,13 @@ import EditShopInfo from './components/shop/screens/EditShopInfo';
 import OGCPage from './components/shop/screens/OGCPage';
 import OrderPage from './components/shop/screens/OrderPage';
 import GlobalProdectAdd from './components/shop/screens/GlobalProdectAdd';
+// owner
+import GoogleAuth from './components/owner/screen/auth'
+import OwnerRegister from './components/owner/screen/register'
+import OwnerLogin from './components/owner/screen/login'
+import OwnerHome from './components/owner/screen/home'
+import CreateShop from './components/owner/screen/CreateShop'
+import ONavs from './components/owner/ONavs'
 function App() {
   return (
     <>
@@ -64,6 +71,14 @@ function App() {
             <Route path='edit_shop_info' element={<PrivateRoute><EditShopInfo/></PrivateRoute>} />
             <Route path='order' element={<PrivateRoute><OrderPage/></PrivateRoute>} />
             <Route path='global_product_add' element={<PrivateRoute><GlobalProdectAdd/></PrivateRoute>} />
+            <Route path='*' element={<SNotFont />} />
+          </Route>
+          <Route path='owner' element={<ONavs />} >
+            <Route index element={<OwnerPrivateRoute><OwnerHome /></OwnerPrivateRoute>} />
+            <Route path='createshop' element={<OwnerPrivateRoute><CreateShop /></OwnerPrivateRoute>} />
+            <Route path='auth' element={<OwnerLoginRoute> <GoogleAuth/></OwnerLoginRoute>} />
+            <Route path='login' element={<OwnerLoginRoute> <OwnerLogin/></OwnerLoginRoute>} />
+            <Route path='signup' element={<OwnerLoginRoute><OwnerRegister/></OwnerLoginRoute>} />
             <Route path='*' element={<SNotFont />} />
           </Route>
         </Routes>
