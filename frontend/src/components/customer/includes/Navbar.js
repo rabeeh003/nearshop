@@ -61,6 +61,8 @@ function NavBar() {
     const [addLocation, setAddLocation] = React.useState(false);
     const [fullscreen, setFullscreen] = useState(true);
     const [show, setShow] = useState(false);
+    const [userKey, setUserKey] = useState(localStorage.getItem('userKey'));
+
     function handleShow(breakpoint) {
         setFullscreen(breakpoint);
         setShow(true);
@@ -85,7 +87,7 @@ function NavBar() {
                             <IconsDiv>
                                 <Nav>
                                     <Link title='Home' className='nav-link' to="/"> <i class="fa-solid fa-house clr-white"></i></Link>
-                                    <Link title='Category' className='nav-link' to="/category"><i class="fa-solid fa-border-all clr-white"></i></Link>
+                                    <Link title='Category' className='nav-link' to="/category/grocery"><i class="fa-solid fa-border-all clr-white"></i></Link>
                                     <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
@@ -113,35 +115,37 @@ function NavBar() {
                                         id="dropdown-menu-align-end"
                                         variant="light"
                                     >
-                                        <Link to={'/user'}>
-                                            <DropItem className='btn'><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
-                                        </Link>
-                                        <Link to={''}>
-                                            <DropItem className='btn'><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
-                                        </Link>
-                                        <Dropdown.Divider />
-                                        {/* if () {
-                                            
-                                        } else {
-                                            
-                                        } */}
-                                        <Link to={'login'}>
-                                            <DropItem className='btn'>Login</DropItem>
-                                        </Link>
-                                        <Link to={'signup'}>
-                                            <DropItem className='btn'>Signup</DropItem>
-                                        </Link>
-                                        
-                                        <DropItem onClick={logout} className='btn'>Logout</DropItem>
+                                        {userKey ? (
+                                            <>
+                                                <Link to={'/user'}>
+                                                    <DropItem className='btn'><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
+                                                </Link>
+                                                <Link to={''}>
+                                                    <DropItem className='btn'><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
+                                                </Link>
+                                                <Dropdown.Divider />
+                                                <DropItem onClick={logout} className='btn'>Logout</DropItem>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Link to={'login'}>
+                                                    <DropItem className='btn'>Login</DropItem>
+                                                </Link>
+                                                <Link to={'signup'}>
+                                                    <DropItem className='btn'>Signup</DropItem>
+                                                </Link>
+                                            </>
+                                        )}
                                     </DropdownButton>
                                 </Navbar.Text>
                             </IconsDiv>
                         </Navbar.Collapse>
                     </div>
-                </Container>
+                </Container >
             </Navbar >
             {/* this Model used for search */}
-            <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
+            <Modal Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)
+            }>
                 <Modal.Header closeButton className='bg-green' variant="light">
                     <span className='fw-500 fs-4 clr-white'>Search</span>
                     <Navbar.Text className='ms-5'>

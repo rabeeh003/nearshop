@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, UpdateAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, UpdateAPIView, RetrieveAPIView
 from .serializers import (
     CusSignup,
     CusSignin,
@@ -59,6 +59,11 @@ class cus_signin(CreateAPIView):
 
 # shoppe section
 class shop_register(ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Shop.objects.all()
+    serializer_class = ShopSerializer
+
+class shopsall(RetrieveAPIView):
     permission_classes = [AllowAny]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer

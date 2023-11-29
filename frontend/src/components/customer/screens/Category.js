@@ -7,35 +7,52 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function Category() {
-    const { categoryName } = useParams();
-    const [cat, setCat] = useState([]);
-    const [products, setProducts] = useState([]);
+    const { categoryName } = useParams('grocery');
+    const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const fetchShopDetails = async (shopId) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/shopsall/${shopId}`);
+            return response.data; // Assuming the response contains shop details
+        } catch (error) {
+            console.error(`Error fetching shop details for shop ID ${shopId}:`, error);
+            return null;
+        }
+    };
+
     useEffect(() => {
-        const fetchProducts = async () => {
+        const fetchShopsByCategory = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/s/shopproducts/');
-                // Assuming the API returns an array of products with category_id field
-                console.log("res data", response);
-                const filteredProducts = response.data.filter(product => product.cat.category_name === categoryName);
-                setProducts(filteredProducts);
-                console.log(products);
-                setLoading(false);
+                const productsResponse = await axios.get('http://127.0.0.1:8000/api/s/shopproducts/');
+                const categoriesResponse = await axios.get('http://127.0.0.1:8000/api/p/gcategory/');
+
+                const filteredCategory = categoriesResponse.data.find(cat => cat.category_name === categoryName);
+
+                if (filteredCategory) {
+                    const categoryId = filteredCategory.id;
+                    const productsInCategory = productsResponse.data.filter(product => product.cat.id === categoryId);
+
+                    // Get unique shop IDs for the products in the category
+                    const uniqueShopIds = Array.from(new Set(productsInCategory.map(product => product.shop_id)));
+
+                    // Fetch shop details for each unique shop ID
+                    const shopsByCategory = await Promise.all(
+                        uniqueShopIds.map(async (shopId) => {
+                            const shopDetails = await fetchShopDetails(shopId);
+                            return shopDetails;
+                        })
+                    );
+
+                    setShops(shopsByCategory.filter(shop => shop !== null)); // Filter out any null values
+                    setLoading(false);
+                }
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error fetching shops by category:', error);
             }
         };
-        const fetchCategory = async () => {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/p/gcategory/');
-                const filteredCat = response.data.filter(cat => cat.category_name === categoryName);
-                setCat(filteredCat)
-                console.log('cat : ',cat);
-            } catch {}
-        }
-        fetchCategory();
-        fetchProducts();
+
+        fetchShopsByCategory();
     }, [categoryName]);
 
     if (loading) {
@@ -46,18 +63,18 @@ function Category() {
             <CategoryCard />
             <Container fluid className='user-select-none'>
                 <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }} className='mt-2'>
-                    <span className='h5'>Catagory Name</span>
+                    <span className='h5' >{categoryName}</span>
                     {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
                 </Col>
                 <Row className="g-4">
-                    {products.map((product, idx) => (
-                        <Col xs={6} sm={4} md={3} lg={2} xxl={1} key={idx} className='d-flex justify-content-center'>
+                {shops.map(shop => (
+                        <Col xs={6} sm={4} md={3} lg={2} xxl={1} key={shop.id} className='d-flex justify-content-center'>
                             <OfCard>
                                 <CardImage>
-                                    <Card.Img variant="top" className='object-fit-fill rounded-circle' src={product.seller.profile_image} />
+                                    <Card.Img variant="top" className='object-fit-fill rounded-circle' src={shop.profile_image} />
                                 </CardImage>
                                 <div>
-                                    <Card.Title style={{ fontSize: "15px" }}>{product.seller.shop_name}</Card.Title>
+                                    <Card.Title style={{ fontSize: "15px", textAlign:'center' }}>{shop.shop_name}</Card.Title>
                                     <Button variant="success" className='mt-1' style={{ width: '100%', fontSize: "12px" }}>Vist</Button>
                                 </div>
                             </OfCard>

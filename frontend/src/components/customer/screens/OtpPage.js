@@ -19,8 +19,9 @@ function OtpPage() {
   const sendOtp = async () => {
     try {
       console.log(phone);
+      console.log('start');
       const response = await axios.post('http://127.0.0.1:8000/api/signin/', { phone_number: phone });
-  
+      console.log('checked');
       if (response.data.exists) {
         // If the phone number is already registered
         setNumErr('This phone number is already registered');
@@ -103,6 +104,8 @@ const Page = styled.div`
   height: 60vh;
   margin: auto;
   @media screen and (max-width: 578px) {
+    height: 100vh;
+    margin-bottom: 80px;
     max-width: 98vw;
   }
 `

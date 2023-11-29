@@ -76,8 +76,7 @@ const UserSignup = () => {
         console.log(formData)
         await axios.post('http://127.0.0.1:8000/api/signup/', formData)
             .then(responce => {
-                console.log(responce)
-                // navigate('/');
+                navigate('/login');
             })
             .catch(error => {
                 setEfs(error.message)
