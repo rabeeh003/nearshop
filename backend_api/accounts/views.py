@@ -6,7 +6,7 @@ from .serializers import (
     CusSignin,
     OwnerSerial,
     ShopSerializer,
-    ShopEditSerializer,
+    ShopLogin,
     OwnerSignin,
     OwnerMailCheck,
 )
@@ -70,14 +70,53 @@ class shop_update(UpdateAPIView):
 
     def put(self, request, *args, **kwargs):
         instance = self.get_object()
-        fields_to_update = list(request.data.keys())  # Convert dict_keys to a list of field names
-        serializer_class = type('ShopSerializer', (ShopSerializer,),
-                                {'Meta': type('Meta', (), {'model': Shop, 'fields': fields_to_update})})
+        fields_to_update = list(
+            request.data.keys()
+        )  # Convert dict_keys to a list of field names
+        serializer_class = type(
+            "ShopSerializer",
+            (ShopSerializer,),
+            {"Meta": type("Meta", (), {"model": Shop, "fields": fields_to_update})},
+        )
 
         serializer = serializer_class(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class shop_login(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ShopLogin
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            shop = serializer.validated_data
+
+            payload = {
+                "message": "login success",
+                "id": shop.id,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+                "iat": datetime.datetime.utcnow(),
+            }
+
+            token = jwt.encode(payload, "secret", algorithm="HS256")
+
+            response = Response({"jwt": token, "id": shop.id, "mail": shop.shop_mail})
+            # response.set_cookie(key='jwt', value=token, httponly=True)
+            return response
+        except Shop.DoesNotExist:
+            responce = Response(
+                {
+                    "message": "Account not found, please check mail or password",
+                    "shoper": None,
+                }
+            )
+            response.status_code = 400
+            responce.set_cookie(key="jwt", value="", httponly=True)
+            return response
 
 
 # owner authentication

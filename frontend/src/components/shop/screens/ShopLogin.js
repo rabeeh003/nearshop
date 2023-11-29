@@ -3,40 +3,36 @@ import { Row, Col, Container, Form, Button } from 'react-bootstrap'
 import LogGif from '../../../assets/images/shoplogin.gif'
 import styled from 'styled-components'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { Link, redirect } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function ShopLogin() {
-
-    // const [mail, setMail] = useState('');
-    // const [pass, setPass] = useState('');
+    const navigate = useNavigate()
     const [checkErr, setCheckErr] = useState('');
     const [formData, setFormData] = useState({
-        "mail": "",
-        "password": "",
+        "shop_mail": "",
+        "password": ""
     })
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     };
+
     const login = async (e) => {
         e.preventDefault();
 
-
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/owner_login/', formData);
-
+            const response = await axios.post('http://127.0.0.1:8000/api/shop_login/', formData);
             console.log(response.data);
             setCheckErr('');
             localStorage.setItem('adminKey', response.data);
             console.log(response.data);
-            redirect(-1)
-            return response.data;
+            navigate('/shop')
         } catch (error) {
             console.log(error);
             setCheckErr('Your entered email or password is incorrect');
         }
-
     };
 
     return (
@@ -51,7 +47,7 @@ function ShopLogin() {
                                 label="Gmail"
                                 className="mb-3 w-100"
                             >
-                                <Form.Control type="email" name='mail' onChange={handleInputChange} required />
+                                <Form.Control type="email" name='shop_mail' onChange={handleInputChange} required />
                             </FloatingLabel>
                             <FloatingLabel
                                 controlId="floatingInput"
@@ -62,7 +58,8 @@ function ShopLogin() {
                             </FloatingLabel>
                             {checkErr && <p style={{ color: "red", fontSize: '15px' }}>{checkErr}</p>}
                             <Button type='submit' variant='info' onClick={login} > Login </Button>
-                            <p className='mt-4'>Don't have an account?<Link to={'/shop/signup'} className='ms-2'>Signup</Link></p>
+                            <p className='mt-4'>Forget password. contact your owner.</p>
+                            <p className=''>Don't have an account? open<Link to={'/owner/login'} className='ms-2'>Owner Account</Link></p>
 
                         </Col>
                     </Row>

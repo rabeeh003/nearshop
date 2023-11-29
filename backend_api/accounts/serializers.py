@@ -54,7 +54,19 @@ class ShopSerializer(serializers.ModelSerializer):
         model = Shop
         fields = '__all__'
 
-class ShopEditSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Shop
-        fields = ['shop_name', 'shop_id', 'shop_phone', 'shop_label', 'shop_place']
+class ShopLogin(serializers.Serializer):
+    shop_mail = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        shop_mail = data.get('shop_mail')  # Use 'shop_mail' instead of 'mail'
+        password = data.get('password')
+
+        if not shop_mail or not password:
+            raise serializers.ValidationError("Both shop_mail and password are required.")
+
+        try:
+            shop = Shop.objects.get(shop_mail=shop_mail, password=password)
+            return shop
+        except Shop.DoesNotExist:
+            raise serializers.ValidationError("Account not found, please check shop_mail or password")

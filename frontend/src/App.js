@@ -23,9 +23,7 @@ import OfferPage from './components/shop/screens/OfferPage';
 import Chart from './components/shop/screens/Chart';
 import ShopLogin from './components/shop/screens/ShopLogin';
 import OwnerSignup from './components/shop/screens/OwnerSignup';
-import OtpPage from './components/shop/screens/OtpPage';
 import COtpPage from './components/customer/screens/OtpPage';
-import ShopCreate from './components/shop/screens/ShopCreate';
 import EditShopInfo from './components/shop/screens/EditShopInfo';
 import OGCPage from './components/shop/screens/OGCPage';
 import OrderPage from './components/shop/screens/OrderPage';
@@ -65,9 +63,7 @@ function App() {
             <Route path='chart' element={<PrivateRoute><Chart/></PrivateRoute>} />
             <Route path='login' element={<LoginRoute><ShopLogin/></LoginRoute>} />
             <Route path='signup' element={<LoginRoute><OwnerSignup/></LoginRoute>} />
-            <Route path='otp_verification' element={<LoginRoute><OtpPage/></LoginRoute>} />
             <Route path='ogc_verification' element={<PrivateRoute><OGCPage/></PrivateRoute>} />
-            <Route path='start_shop' element={<PrivateRoute><ShopCreate/></PrivateRoute>} />
             <Route path='edit_shop_info' element={<PrivateRoute><EditShopInfo/></PrivateRoute>} />
             <Route path='order' element={<PrivateRoute><OrderPage/></PrivateRoute>} />
             <Route path='global_product_add' element={<PrivateRoute><GlobalProdectAdd/></PrivateRoute>} />
