@@ -14,7 +14,7 @@ function MyVerticallyCenteredModal(props) {
         <Modal
             className='user-select-none'
             {...props}
-            size="md"
+            size='lg'
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
@@ -26,11 +26,11 @@ function MyVerticallyCenteredModal(props) {
             <Modal.Body>
                 <PDetiles>
                     <div style={{ width: "45%" }}>
-                        <CardImage>
+                        <ProImage>
                             {/* <Badge style={{ position: 'absolute', top: 0, right: 0 }} bg="success">40% Off</Badge> */}
-                            <Card.Img style={{width:"80%", height:"80%"}} variant="top" src={product?.prodect_image} />
-                        </CardImage>
-                        <Button variant="success" style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                            <Card.Img style={{ objectFit: 'fill' }} variant="top" src={product?.prodect_image} />
+                        </ProImage>
+
                     </div>
                     <div className='form-outline' style={{ width: "45%" }}>
                         <span className='h4'>{product?.product_name}</span>
@@ -43,12 +43,25 @@ function MyVerticallyCenteredModal(props) {
                     </div>
                 </PDetiles>
             </Modal.Body>
-            <Modal.Footer>
-                {/* Additional modal footer content if needed */}
+            <Modal.Footer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Button variant="success" style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
             </Modal.Footer>
         </Modal>
     );
 }
+
+const ProImage = styled.div`
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    border-radius: 10px;
+    width: 90%;
+    max-height: 250px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+`
 
 const PDetiles = styled.div`
     display: flex;
@@ -92,7 +105,7 @@ function OfferCard() {
                             <CardImage>
                                 {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
                                 <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i> Shop Name</Badge>
-                                <Card.Img style={{width:"84px", height:"80px"}} variant="top" src={product.prodect_image} />
+                                <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={product.prodect_image} />
                             </CardImage>
                             <Card.Body>
                                 <Card.Title style={{ fontSize: '15px' }}>{product.product_name}</Card.Title>

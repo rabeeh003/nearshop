@@ -26,7 +26,7 @@ function ShopLogin() {
             const response = await axios.post('http://127.0.0.1:8000/api/shop_login/', formData);
             console.log(response.data);
             setCheckErr('');
-            localStorage.setItem('adminKey', response.data);
+            localStorage.setItem('adminKey', JSON.stringify(response.data));
             console.log(response.data);
             navigate('/shop')
         } catch (error) {

@@ -128,11 +128,19 @@ function NavBar() {
                                             </>
                                         ) : (
                                             <>
+                                                <p className='p-0 m-0 ps-2' style={{fontSize:'12px'}} >Customer</p>
                                                 <Link to={'login'}>
                                                     <DropItem className='btn'>Login</DropItem>
                                                 </Link>
                                                 <Link to={'signup'}>
                                                     <DropItem className='btn'>Signup</DropItem>
+                                                </Link>
+                                                <Dropdown.Divider />
+                                                <Link to={'shop'}>
+                                                    <DropItem className='btn'>Shop</DropItem>
+                                                </Link>
+                                                <Link to={'owner'}>
+                                                    <DropItem className='btn'>Owner</DropItem>
                                                 </Link>
                                             </>
                                         )}

@@ -5,7 +5,6 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import styled from 'styled-components';
 import SearchSuggestions from '../includes/add product/SearchSuggestions';
 import axios from 'axios';
-import { jwtDecode } from "jwt-decode";
 
 
 function AddProdect() {
@@ -14,11 +13,16 @@ function AddProdect() {
     const productId = location.state?.product || null;
     const [product, setProduct] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [shoppro, setShoppro] = useState([]);
+    const reversedShopPro = [...shoppro].reverse();
+    const [shopId, setShopId] = useState('')
+    const [proError, setProError] = useState('');
+
     const [FormData, setFormData] = useState({
-        "shop_id": null,
-        "product_id": null,
-        "price": null
-    })
+        shop_id: null,
+        product_id: null,
+        price: null
+    });
 
     const handleModalOpen = () => setShowModal(true);
     const handleModalClose = () => setShowModal(false);
@@ -30,37 +34,44 @@ function AddProdect() {
         });
     };
 
+
+
     const handleSubmit = async () => {
         try {
-            // Make a POST request to submit the form data
-            const response = await axios.post('http://127.0.0.1:8000/api/s/addproduct/', FormData);
-            // Handle success or perform further actions
-            console.log('Submitted successfully!', response.data);
+            await axios.post('http://127.0.0.1:8000/api/s/addproduct/', FormData);
+            setProError('')
+
         } catch (error) {
-            // Handle error
-            console.error('Error submitting form:', error);
+            setProError('This product is already added to the shop.');
         }
     };
 
     useEffect(() => {
-        // const adminKeyString = localStorage.getItem('adminKey');
-        // const adminKey = JSON.parse(adminKeyString);
-        // const shopId = adminKey.id;
-        // if (shopId) {
-        //     setFormData({
-        //         ...FormData,
-        //         shop_id: shopId
-        //     });
-        // }
+        const adminKeyString = localStorage.getItem('adminKey');
+        if (adminKeyString) {
+            const adminKey = JSON.parse(adminKeyString);
+            setShopId(adminKey.id)
+            console.log('shopid : ', shopId);
+            const updatedFormData = {
+                ...FormData,
+                shop_id: shopId
+            };
+            setFormData(updatedFormData);
+            console.log("updatedFormData : ", updatedFormData);
+        } else {
+            console.log('adminKey not found in localStorage');
+        }
         const fetchProductDetails = async () => {
             try {
                 if (productId) {
                     const response = await axios.get(`http://127.0.0.1:8000/api/p/gpro/${productId}`);
                     setProduct(response.data);
-                    setFormData({
-                        ...FormData,
+                    setProError('')
+
+                    setFormData(prevFormData => ({
+                        ...prevFormData,
                         product_id: productId
-                    });
+                    }));
 
                     const categoriesResponse = await axios.get('http://127.0.0.1:8000/api/p/gcategory');
                     setCategories(categoriesResponse.data);
@@ -69,19 +80,31 @@ function AddProdect() {
                 console.error('Error fetching product details:', error);
             }
         };
+        const fetchShopProducts = async () => {
+            try {
+                if (shopId) {
+                    const response = await axios.get('http://127.0.0.1:8000/api/s/shopproducts');
+                    setShoppro(response.data.filter(product => product.shop_id === shopId));
+                    console.log(shoppro);
+                }
+            } catch (error) {
+                console.error('Error fetching shop products:', error);
+            }
+        };
 
+        fetchShopProducts();
         fetchProductDetails();
     }, [productId]);
 
     const getCategoryName = (categoryId) => {
         const category = categories.find((cat) => cat.id === categoryId);
-        return category ? category.category_name : 'Category Not Found';
+        return category ? category.category_name : '';
     };
 
     return (
         <Page>
             <Container fluid>
-                <Row className='bg-gray p-2 ' style={{ borderRadius: "10px" }}>
+                <Row className='p-2 ' style={{ borderRadius: "10px", backgroundColor: 'whitesmoke' }}>
                     <Col xs={12} sm={4} md={3} className='d-flex align-items-center justify-content-center'>
                         <ImageFeald>
                             {/* <image src={product ? product.prodect_image : ''} /> */}
@@ -105,6 +128,7 @@ function AddProdect() {
                                 <SearchSuggestions show={showModal} onHide={handleModalClose} />
                             </FloatingLabel>
                         </Col>
+                        <p style={{ color: 'red', fontSize: "13px" }}>{proError}</p>
                         <Col className='my-1'>
                             <FloatingLabel
                                 controlId="floatingInput"
@@ -128,29 +152,36 @@ function AddProdect() {
                                 controlId="floatingInput"
                                 label="Price"
                             >
-                                <Form.Control onChange={handleInputChange} type="number" />
+                                <Form.Control name='price' onChange={handleInputChange} type="number" />
                             </FloatingLabel>
                         </Col>
                     </Col>
                     <Col className='my-2'>
-                        <Button onClick={handleSubmit} style={{ height: '55px', width: '100%' }}>Add</Button>
+                        <Button variant='info' onClick={handleSubmit} style={{ height: '55px', width: '100%' }}>Add</Button>
                     </Col>
                 </Row>
-                <Row className='bg-gray mt-3 p-3' style={{ borderRadius: '10px', height: '60vh' }}>
+                <Row className='mt-3 p-3' style={{ borderRadius: '10px', height: '60vh', backgroundColor: 'whitesmoke' }}>
+
                     <Col xs={12} className='d-flex pb-2' style={{ alignItems: 'flex-start', justifyContent: 'space-between', height: "fit-content", borderBottom: '1px solid black' }}>
                         <HeadTest>No</HeadTest>
-                        <HeadTest>Prodect Name</HeadTest>
+                        <HeadTest>Image</HeadTest>
+                        <HeadTest>Product Name</HeadTest>
                         <HeadTest>Count / KG</HeadTest>
                         <HeadTest>Price</HeadTest>
                         <HeadTest>Remove</HeadTest>
                     </Col>
-                    <Col xs={12} className='d-flex pt-2' style={{ alignItems: 'flex-start', justifyContent: 'space-between', height: '100%' }}>
-                        <HeadTest>1</HeadTest>
-                        <HeadTest>Prodect Name</HeadTest>
-                        <HeadTest>Count / KG</HeadTest>
-                        <HeadTest>Price</HeadTest>
-                        <HeadTest><i class="fa-regular fa-circle-xmark me-3"></i></HeadTest>
-                    </Col>
+                    {reversedShopPro.map((product, index) => (
+                        <Col key={index} xs={12} className='d-flex pt-2' style={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                            <HeadTest>{shoppro.length - index}</HeadTest>
+                            <ImgDiv>
+                                <HeadImg src={product.gpro.prodect_image} />
+                            </ImgDiv>
+                            <HeadTest>{product.gpro.product_name}</HeadTest>
+                            <HeadTest>{product.gpro.weight_type}</HeadTest>
+                            <HeadTest>{product.price}</HeadTest>
+                            <HeadTest><i className="fa-regular fa-circle-xmark me-3"></i></HeadTest>
+                        </Col>
+                    ))}
                 </Row>
             </Container>
         </Page>
@@ -184,5 +215,16 @@ const HeadTest = styled.span`
     @media screen and (max-width: 578px) {
         font-size: small;
     }
+`
+const ImgDiv = styled.div`
+    padding: 5px;
+    margin: 0;
+    background-color: #fff;
+    border-radius: 10px;
+    width: 80px;
+    text-align: center;
+`
+const HeadImg = styled.img`
+    height: 5vh;
 `
 export default AddProdect
