@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 from .models import seller_products
 
 class ProductTable(admin.ModelAdmin):
-    list_display = ('get_product_image', 'shop_id', 'get_product_name', 'price', 'product_status', 'offer_count', 'offer_start', 'offer_end')
+    list_display = ('id', 'get_product_image', 'shop_id', 'get_product_name', 'price', 'product_status', 'offer_count', 'offer_start', 'offer_end')
 
     def get_product_name(self, obj):
         return obj.product_id.product_name 

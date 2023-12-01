@@ -6,7 +6,12 @@ from accounts.serializers import ShopSerializer
 class SellerProductAdd(serializers.ModelSerializer):
     class Meta:
         model = seller_products
-        fields = ["shop_id","product_id","price"]
+        fields = ["shop_id","product_id","price","product_status"]
+
+class SellerProductUpdate(serializers.ModelSerializer):
+    class Meta:
+        model = seller_products
+        fields = ['price', 'product_status']
 
 class SellerAllProduct(serializers.ModelSerializer):
     gpro = GlobalProductAdd(source='product_id')

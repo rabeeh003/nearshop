@@ -47,19 +47,21 @@ function AddProdect() {
     };
 
     useEffect(() => {
-        const adminKeyString = localStorage.getItem('adminKey');
-        if (adminKeyString) {
-            const adminKey = JSON.parse(adminKeyString);
-            setShopId(adminKey.id)
-            console.log('shopid : ', shopId);
-            const updatedFormData = {
-                ...FormData,
-                shop_id: shopId
-            };
-            setFormData(updatedFormData);
-            console.log("updatedFormData : ", updatedFormData);
-        } else {
-            console.log('adminKey not found in localStorage');
+        const fetchShopId = () => {
+            const adminKeyString = localStorage.getItem('adminKey');
+            if (adminKeyString) {
+                const adminKey = JSON.parse(adminKeyString);
+                setShopId(adminKey.id)
+                console.log('shopid : ', shopId);
+                const updatedFormData = {
+                    ...FormData,
+                    shop_id: shopId
+                };
+                setFormData(updatedFormData);
+                console.log("updatedFormData : ", updatedFormData);
+            } else {
+                console.log('adminKey not found in localStorage');
+            }
         }
         const fetchProductDetails = async () => {
             try {
@@ -91,10 +93,10 @@ function AddProdect() {
                 console.error('Error fetching shop products:', error);
             }
         };
-
+        fetchShopId();
         fetchShopProducts();
         fetchProductDetails();
-    }, [productId]);
+    }, [productId,shopId]);
 
     const getCategoryName = (categoryId) => {
         const category = categories.find((cat) => cat.id === categoryId);
@@ -160,9 +162,8 @@ function AddProdect() {
                         <Button variant='info' onClick={handleSubmit} style={{ height: '55px', width: '100%' }}>Add</Button>
                     </Col>
                 </Row>
-                <Row className='mt-3 p-3' style={{ borderRadius: '10px', height: '60vh', backgroundColor: 'whitesmoke' }}>
-
-                    <Col xs={12} className='d-flex pb-2' style={{ alignItems: 'flex-start', justifyContent: 'space-between', height: "fit-content", borderBottom: '1px solid black' }}>
+                <ScrollableRow className='mt-3 p-3 pt-0' style={{position:'relative', borderRadius: '10px', height: '60vh', backgroundColor: 'whitesmoke' }}>
+                    <Col xs={12} className='d-flex pb-2 pt-3' style={{ position:'sticky', top:0, backgroundColor: 'whitesmoke', alignItems: 'flex-start', justifyContent: 'space-between', height: "fit-content", borderBottom: '1px solid black' }}>
                         <HeadTest>No</HeadTest>
                         <HeadTest>Image</HeadTest>
                         <HeadTest>Product Name</HeadTest>
@@ -170,19 +171,25 @@ function AddProdect() {
                         <HeadTest>Price</HeadTest>
                         <HeadTest>Remove</HeadTest>
                     </Col>
-                    {reversedShopPro.map((product, index) => (
-                        <Col key={index} xs={12} className='d-flex pt-2' style={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                            <HeadTest>{shoppro.length - index}</HeadTest>
-                            <ImgDiv>
-                                <HeadImg src={product.gpro.prodect_image} />
-                            </ImgDiv>
-                            <HeadTest>{product.gpro.product_name}</HeadTest>
-                            <HeadTest>{product.gpro.weight_type}</HeadTest>
-                            <HeadTest>{product.price}</HeadTest>
-                            <HeadTest><i className="fa-regular fa-circle-xmark me-3"></i></HeadTest>
+                    {shoppro.length > 0 ? (
+                        reversedShopPro.map((product, index) => (
+                            <Col key={index} xs={12} className='d-flex pt-2' style={{alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                                <HeadTest>{shoppro.length - index}</HeadTest>
+                                <ImgDiv>
+                                    <HeadImg src={product.gpro.prodect_image} />
+                                </ImgDiv>
+                                <HeadTest>{product.gpro.product_name}</HeadTest>
+                                <HeadTest>{product.gpro.weight_type}</HeadTest>
+                                <HeadTest>{product.price}</HeadTest>
+                                <HeadTest><i className="fa-regular fa-circle-xmark me-2"></i></HeadTest>
+                            </Col>
+                        ))
+                    ) : (
+                        <Col xs={12} className='d-flex pt-2' style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <p>No products available</p>
                         </Col>
-                    ))}
-                </Row>
+                    )}
+                </ScrollableRow>
             </Container>
         </Page>
     )
@@ -226,5 +233,30 @@ const ImgDiv = styled.div`
 `
 const HeadImg = styled.img`
     height: 5vh;
+`
+
+const ScrollableRow = styled.div`
+    overflow-y: auto;
+    cursor: pointer;
+    white-space: nowrap;
+    padding-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color .3s;
+    -ms-overflow-style: none;
+    &:hover {
+        scrollbar-color: black transparent;
+    }
+    &:not(:hover)::-webkit-scrollbar-thumb {
+        background: transparent;
+    }
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    &::-webkit-scrollbar-thumb{
+	    border-radius: 10px;
+    	background-color: green;
+    }
 `
 export default AddProdect
