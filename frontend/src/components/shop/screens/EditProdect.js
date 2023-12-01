@@ -42,12 +42,13 @@ function EditProdect() {
   const handleSubmit = async () => {
     try {
       const dataToUpdate = {};
-      if (FormData.price !== currentData.price) {
-        dataToUpdate.price = FormData.price;
-      }
-      if (FormData.product_status !== currentData.product_status) {
+      if (FormData.product_status !== null && FormData.product_status !== currentData.product_status) {
         dataToUpdate.product_status = FormData.product_status;
       }
+      if (FormData.price !== null && FormData.price !== currentData.price) {
+        dataToUpdate.price = FormData.price;
+      }
+      
       console.log("Data to update : ", dataToUpdate);
       if (Object.keys(dataToUpdate).length > 0) {
         const url = `http://127.0.0.1:8000/api/s/editproduct/${currentData.id}/update/`;

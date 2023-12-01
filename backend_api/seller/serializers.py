@@ -11,7 +11,7 @@ class SellerProductAdd(serializers.ModelSerializer):
 class SellerProductUpdate(serializers.ModelSerializer):
     class Meta:
         model = seller_products
-        fields = ['price', 'product_status']
+        fields = ['price', 'product_status', 'offer_price', 'offer_start', 'offer_end']
 
 class SellerAllProduct(serializers.ModelSerializer):
     gpro = GlobalProductAdd(source='product_id')

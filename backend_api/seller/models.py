@@ -17,8 +17,8 @@ class seller_products(models.Model):
     edited_at = models.DateTimeField(auto_now=True)
     offer_price = models.IntegerField(blank=True, null=True)
     offer_count = models.CharField(max_length=10, blank=True, null=True)
-    offer_start = models.DateTimeField(blank=True, null=True)
-    offer_end = models.DateTimeField(blank=True, null=True)
+    offer_start = models.DateField(blank=True, null=True)
+    offer_end = models.DateField(blank=True, null=True)
 
     def __str__(self):  
         return str(self.product_id) 
