@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import CategoryCard from '../includes/category/CategoryCard'
 import { Card, Container, Col, Row, Button } from 'react-bootstrap';
-import icon from 'file:///home/rabeeh/Pictures/superlogo.jpg'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -68,15 +67,15 @@ function Category() {
                 </Col>
                 <Row className="g-4">
                 {shops.map(shop => (
-                        <Col xs={6} sm={4} md={3} lg={2} xxl={1} key={shop.id} className='d-flex justify-content-center'>
+                        <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={shop.id} className='d-flex justify-content-center'>
                             <OfCard>
                                 <CardImage>
                                     <Card.Img variant="top" className='object-fit-fill rounded-circle' src={shop.profile_image} />
                                 </CardImage>
-                                <div>
-                                    <Card.Title style={{ fontSize: "15px", textAlign:'center' }}>{shop.shop_name}</Card.Title>
-                                    <Button variant="success" className='mt-1' style={{ width: '100%', fontSize: "12px" }}>Vist</Button>
-                                </div>
+                                <Card.Body className='text-center'>
+                                    <Card.Title style={{ fontSize: '15px' }}>{shop.shop_name}</Card.Title>
+                                    <Button variant='' className='mt-2 btn-outline-success' style={{ width: '100px', fontSize: '12px' }}>Visit</Button>
+                                </Card.Body>
                             </OfCard>
                         </Col>
                     ))}

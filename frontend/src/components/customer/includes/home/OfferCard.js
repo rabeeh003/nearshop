@@ -19,8 +19,9 @@ function MyVerticallyCenteredModal(props) {
             centered
         >
             <Modal.Header closeButton>
+            <img className="me-2" alt='logo' style={{width:"40px",height:"40px", borderRadius:"50%", objectFit:'cover', border:'1px solid black'}} src={product.seller?.profile_image} /> 
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <i className="fa-solid fa-store"></i> Shop Name
+                    {product.seller?.shop_name}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -28,17 +29,20 @@ function MyVerticallyCenteredModal(props) {
                     <div style={{ width: "45%" }}>
                         <ProImage>
                             {/* <Badge style={{ position: 'absolute', top: 0, right: 0 }} bg="success">40% Off</Badge> */}
-                            <Card.Img style={{ objectFit: 'fill' }} variant="top" src={product?.prodect_image} />
+                            <Card.Img style={{ objectFit: 'fill' }} variant="top" src={product.gpro?.prodect_image} />
                         </ProImage>
 
                     </div>
                     <div className='form-outline' style={{ width: "45%" }}>
                         <span className='h4'>{product?.product_name}</span>
-                        <p>
-                            Price: <b>₹ {product?.price}</b>
-                        </p>
+                        {product.offer_price ? (
+                            <p >
+                                Price:<span class="text-decoration-line-through"> ₹ {product?.price} </span><span className='ps-2'> <b>  ₹ {product?.offer_price}</b></span>
+                            </p>
+                        ) : ("")}
+
                         <Textarea style={{ fontSize: "12px", width: "100%" }} className='form-control' rows='6'>
-                            {product?.product_description}
+                            {product.gpro?.product_description}
                         </Textarea>
                     </div>
                 </PDetiles>
@@ -82,8 +86,39 @@ function OfferCard() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/p/gpro/');
-                setProducts(response.data);
+                const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts/`);
+                const filteredProducts = response.data.filter(product => product.offer_price !== null);
+
+                // Map to group products by their name
+                const productMap = new Map();
+                filteredProducts.forEach(product => {
+                    const productName = product.gpro.product_name;
+                    if (!productMap.has(productName)) {
+                        productMap.set(productName, []);
+                    }
+                    productMap.get(productName).push(product);
+                });
+
+                // Find the best offer for each product
+                const bestOffers = [];
+                productMap.forEach(products => {
+                    const bestOffer = products.reduce((prev, curr) => {
+                        const priceDifference = curr.price - curr.offer_price;
+                        return priceDifference > (prev ? prev.priceDifference : -Infinity) ? {
+                            product: curr,
+                            priceDifference: priceDifference
+                        } : prev;
+                    }, null);
+                    if (bestOffer) {
+                        bestOffers.push(bestOffer.product);
+                    }
+                });
+
+                // Sort best offers based on the price difference
+                bestOffers.sort((a, b) => b.price - b.offer_price - (a.price - a.offer_price));
+
+                setProducts(bestOffers);
+
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -104,15 +139,15 @@ function OfferCard() {
                         <OfCard onClick={() => setModalShow(product)}>
                             <CardImage>
                                 {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
-                                <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i> Shop Name</Badge>
-                                <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={product.prodect_image} />
+                                <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i>{product.seller.shop_name}</Badge>
+                                <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={product.gpro.prodect_image} />
                             </CardImage>
-                            <Card.Body>
-                                <Card.Title style={{ fontSize: '15px' }}>{product.product_name}</Card.Title>
+                            <Card.Body className='text-center mt-2'>
+                                <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>
                                 <Card.Text style={{ fontSize: '15px' }}>
-                                    Price: <b>₹ 39</b>
+                                    Price: <span class="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
                                 </Card.Text>
-                                <Button variant="success" style={{ width: '100%', fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                <Button variant="" className='btn-outline-success' style={{ width: "120px", fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
                             </Card.Body>
                         </OfCard>
                     </Col>
@@ -137,9 +172,11 @@ const CardImage = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: auto;
 `
 const OfCard = styled.div`
     margin:0 20px;
+    text-align: center;
 `
 const ScrollableRow = styled.div`
     display: flex;

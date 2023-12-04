@@ -1,37 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { Card, Button, Container, Col } from 'react-bootstrap';
 import styled from 'styled-components';
-
-import icon from 'file:///home/rabeeh/Pictures/superlogo.jpg'
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 function ShopCard() {
+    const [shops, setShops] = useState([]);
+
+    useEffect(() => {
+        const fetchShops = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/shop_register/');
+                setShops(response.data);
+            } catch (error) {
+                console.error('Error fetching shops:', error);
+            }
+        };
+
+        fetchShops();
+    }, []);
+
     return (
         <Container fluid className='user-select-none'>
-            <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }} className='mt-2'>
+            <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '20px' }} className='mt-2'>
                 <span className='h5'><b>Near Shops</b></span>
-                {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <ScrollableRow>
-                {Array.from({ length: 10 }).map((_, idx) => (
-                    <Col key={idx}>
-                        <Link to={'shopid'} className='nav-link'>
-                        <OfCard>
-                            <CardImage>
-                                <Card.Img variant="top" className='object-fit-fill rounded-circle' src={icon} />
-                            </CardImage>
-                            <Card.Body>
-                                <Card.Title style={{fontSize:"15px"}}>Shop Name</Card.Title>
-                                <Button variant="success" className='mt-2' style={{ width: '100%',fontSize:"12px" }}>Vist</Button>
-                            </Card.Body>
-                        </OfCard>
+                {shops.map((shop) => (
+                    <Col key={shop.id}>
+                        <Link to={`/shop/${shop.id}`} className='nav-link'>
+                            <OfCard>
+                                <CardImage>
+                                    <Card.Img variant='top' className='object-fit-fill rounded-circle' src={shop.profile_image} alt={shop.name} />
+                                </CardImage>
+                                <Card.Body className='text-center'>
+                                    <Card.Title style={{ fontSize: '15px' }}>{shop.shop_name}</Card.Title>
+                                    <Button variant='' className='mt-2 btn-outline-success' style={{ width: '80px', fontSize: '12px' }}>Visit</Button>
+                                </Card.Body>
+                            </OfCard>
                         </Link>
                     </Col>
                 ))}
             </ScrollableRow>
         </Container>
-    )
+    );
 }
+
+
 const CardImage = styled.div`
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     border-radius: 50%;

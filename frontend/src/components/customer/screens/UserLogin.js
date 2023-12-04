@@ -13,6 +13,7 @@ function UserLogin() {
 
   const [phone, setPhone] = useState('');
   const [user, setUser] = useState(null);
+  const [tryser, setTryser] = useState(null);
   const [otp, setOtp] = useState('');
   const [res, setRes] = useState('');
   const [numberError, setNumberError] = useState('');
@@ -23,6 +24,7 @@ function UserLogin() {
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/signin/', { phone_number: phone });
       console.log(response);
+      setTryser(response.data)
       setNumberError('');
       return response.data;
     } catch (error) {
@@ -49,7 +51,7 @@ function UserLogin() {
     try {
       const data = await user.confirm(otp)
       console.log(data);
-      localStorage.setItem('userKey', res.data);
+      localStorage.setItem('userKey', JSON.stringify(tryser));
       navigate('/');
     }
     catch (err) {

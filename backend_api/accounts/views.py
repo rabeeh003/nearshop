@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, UpdateAPIView, RetrieveAPIView, RetrieveUpdateAPIView
 from .serializers import (
     CusSignup,
     CusSignin,
@@ -21,7 +21,6 @@ class cus_signup(CreateAPIView):
     permission_classes = [AllowAny]
     queryset = Customer.objects.all()
     serializer_class = CusSignup
-
 
 class cus_signin(CreateAPIView):
     permission_classes = [AllowAny]
@@ -46,6 +45,7 @@ class cus_signin(CreateAPIView):
             responce.set_cookie(key="jwt", value=token, httponly=True)
             responce.data = {
                 "jwt": token,
+                "id": customer.id,
             }
             return responce
 
@@ -56,6 +56,22 @@ class cus_signin(CreateAPIView):
             }
             return Response(error_payload, status=404)
 
+class cus_details(RetrieveUpdateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = CusSignup
+    queryset = Customer.objects.all()
+    lookup_field = 'id'  # Set the lookup field to 'id'
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+        return self.get_queryset().filter(id=user_id).first()
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 # shoppe section
 class shop_register(ListCreateAPIView):

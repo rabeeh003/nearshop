@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Col, Row } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 
 import OrderHis from '../includes/Profile/OrderHis';
 import LocationsTwoType from '../includes/Profile/LocationsTwoType';
+import axios from 'axios';
 
 const BoxShadow = {
     boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
@@ -19,12 +20,78 @@ function UserProfile() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [editData, setEditData] = useState({
+        "full_name": "",
+        "phone_number": "",
+        "email": "",
+        "phone_two": null,
+        "address": "",
+    })
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditData({
+            ...editData,
+            [name]: value
+        });
+    };
+
+    const [signUpData, setSignUpData] = useState([]);
+    const [userId, setUserId] = useState();
+
+    useEffect(() => {
+        const fetchShopId = () => {
+            const adminKeyString = localStorage.getItem('userKey');
+            if (adminKeyString) {
+                const userKey = JSON.parse(adminKeyString);
+                setUserId(userKey.id);
+                console.log('user id : ', userId);
+            } else {
+                console.log('adminKey not found in localStorage');
+            }
+        };
+
+        fetchShopId();
+
+    }, [userId]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/customer/${userId}/`);
+                setSignUpData(response.data);
+                setEditData({
+                    ...editData,
+                    full_name: response.data.full_name,
+                    phone_number: response.data.phone_number,
+                    phone_two:response.data.phone_two,
+                    email: response.data.email,
+                    address: response.data.address
+                });
+                console.log(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        if (userId) {
+            fetchData();
+        }
+    }, [userId]);
+    const updateUser = async () => {
+        try {
+          const response = await axios.put(`http://127.0.0.1:8000/api/customer/${userId}/`, editData);
+          console.log('User data updated:', response.data);
+          handleClose()
+        } catch (error) {
+          console.error('Error updating user data:', error);
+        }
+      };
     return (
         <Useer>
-            <HeadHeight className='Row d-flex'>
+            <HeadHeight className='Row d-flex p-3'>
                 <Col xs={10} style={{ paddingLeft: "10%" }} className='d-flex flex-column justify-content-around'>
-                    <span>User Name</span>
-                    <span>9080706050</span>
+                    <span>Name  : {signUpData.full_name}</span>
+                    <span>Phone : {signUpData.phone_number}</span>
+                    <span>Email : {signUpData.email}</span>
                 </Col>
                 <Col className='d-flex align-items-center'>
                     <span onClick={handleShow} >
@@ -104,8 +171,9 @@ function UserProfile() {
                                 Name
                             </Form.Label>
                             <Col sm="10">
-                                <Form.Control defaultValue="UserName" />
+                                <Form.Control name='full_name' value={editData.full_name} onChange={handleInputChange} />
                             </Col>
+
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                             <Form.Label column sm="2">
@@ -114,7 +182,7 @@ function UserProfile() {
                             <Col sm="10">
                                 <Form.Control
                                     type="text"
-                                    placeholder="9876543210"
+                                    value={editData.phone_number}
                                     aria-label="Disabled input example"
                                     readOnly
                                 />
@@ -122,18 +190,30 @@ function UserProfile() {
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
                             <Form.Label column sm="2">
-
                             </Form.Label>
                             <Col sm="10">
                                 <Form.Control
                                     type="number"
-                                    defaultValue="1234567890"
+                                    value={parseInt(editData.phone_two)}
+                                    name='phone_two'
+                                    onChange={handleInputChange}
+                                />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                            <Form.Label column sm="2">Email</Form.Label>
+                            <Col sm="10">
+                                <Form.Control
+                                    type="text"
+                                    value={editData.email}
+                                    name='email'
+                                    onChange={handleInputChange}
                                 />
                             </Col>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                             <Form.Label>Address</Form.Label>
-                            <Form.Control as="textarea" rows={3} defaultValue="State, Jilla, Panjayath/Muncipality, Place Name, House name, Pin"/>
+                            <Form.Control as="textarea" rows={3} value={editData.address} name='address' onChange={handleInputChange} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -141,7 +221,7 @@ function UserProfile() {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="success">Save</Button>
+                    <Button variant="success" onClick={updateUser}>Save</Button>
                 </Modal.Footer>
             </Modal>
         </Useer>
