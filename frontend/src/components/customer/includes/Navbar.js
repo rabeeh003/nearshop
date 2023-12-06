@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -10,6 +10,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from 'react-router-dom';
+import LocationPicker from '../../../assets/map/LocationPicker';
 
 // Notification Model
 function NotifiactionModel(props) {
@@ -39,17 +40,17 @@ function AddLocation(props) {
         <Modal
             className='user-select-none'
             {...props}
-            size="md"
+            size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-            <Modal.Header closeButton>
+            <Modal.Header className='bg-success' style={{ color: 'white' }} closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     <i class="fa-solid fa-map"></i> Add Location
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                Map Hear
+                <LocationPicker />
             </Modal.Body>
         </Modal>
     );
@@ -61,12 +62,63 @@ function NavBar() {
     const [addLocation, setAddLocation] = React.useState(false);
     const [fullscreen, setFullscreen] = useState(true);
     const [show, setShow] = useState(false);
-    const [userKey, setUserKey] = useState(localStorage.getItem('userKey'));
+    const [userKey] = useState(localStorage.getItem('userKey'));
+    const [userId, setUserId] = useState();
+    const [selectedLocation, setSelectedLocation] = useState('Choose Location');
+    const [listLocation, setListLocation] = useState(null)
+
+    const handleAddLocation = () => {
+        console.log('lets start : hi');
+        setAddLocation(true);
+        console.log('set add locatin is true');
+    };
 
     function handleShow(breakpoint) {
         setFullscreen(breakpoint);
         setShow(true);
     }
+    const handleLocationSelection = (locationName) => {
+        setSelectedLocation(locationName);
+    };
+
+    useEffect(() => {
+        const fetchShopId = () => {
+            if (userId) {
+                const adminKeyString = localStorage.getItem('userKey');
+                if (adminKeyString) {
+                    const userKey = JSON.parse(adminKeyString);
+                    setUserId(userKey.id);
+                    console.log('user id : ', userId);
+                } else {
+                    console.log('adminKey not found in localStorage');
+                }
+            }
+        };
+
+        fetchShopId();
+    }, [userId]);
+
+    useEffect(() => {
+        const allLocations = JSON.parse(localStorage.getItem("allLocations"));
+        if (allLocations) {
+            setListLocation(allLocations);
+        }
+    }, [userId]); // Include userId in the dependency array if needed
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const allLocations = JSON.parse(localStorage.getItem("allLocations"));
+            if (allLocations) {
+                setListLocation(allLocations);
+            }
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+        };
+    }, []);
 
     const logout = () => {
         localStorage.removeItem('userKey')
@@ -92,20 +144,31 @@ function NavBar() {
                                 </Nav>
                             </IconsDiv>
                             <Nav onClick={() => setShowNoti(true)}><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav>
-                            <Navbar.Text>
-                                <DropdownButton
-                                    align="end"
-                                    title="Location"
-                                    id="dropdown-menu-align-end"
-                                    variant="light"
-                                    className='me-2'
-                                >
+                            <Navbar.Text className='mx-2 d-flex'>
+                                <Dropdown>
+                                    <Dropdown.Toggle variant="light" id="dropdown-location">
+                                        {selectedLocation}
+                                    </Dropdown.Toggle>
 
-                                    <Dropdown.Item eventKey="1"><i class="fa-solid fa-map-location-dot pe-2 "></i>Location 1</Dropdown.Item>
-                                    <Dropdown.Item eventKey="2"><i class="fa-solid fa-map-location-dot pe-2 "></i>Location 2</Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item onClick={() => setAddLocation(true)} eventKey="3"> <i className="fa-solid fa-plus pe-2 "></i>Add New</Dropdown.Item>
-                                </DropdownButton>
+                                    <Dropdown.Menu>
+                                        {listLocation ? (
+                                            listLocation.map((location, index) => (
+                                                <Dropdown.Item
+                                                    key={index}
+                                                    onClick={() => handleLocationSelection(location.name)}
+                                                >
+                                                    {location.name}
+                                                </Dropdown.Item>
+                                            ))
+                                        ) : (
+                                            <Dropdown.Item disabled>No locations available</Dropdown.Item>
+                                        )}
+                                        <Dropdown.Divider />
+                                        <Dropdown.Item onClick={handleAddLocation}>
+                                            <i className="fa-solid fa-plus pe-2"></i>Add New
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             </Navbar.Text>
                             <IconsDiv>
                                 <Navbar.Text>
@@ -128,7 +191,7 @@ function NavBar() {
                                             </>
                                         ) : (
                                             <>
-                                                <p className='p-0 m-0 ps-2' style={{fontSize:'12px'}} >Customer</p>
+                                                <p className='p-0 m-0 ps-2' style={{ fontSize: '12px' }} >Customer</p>
                                                 <Link to={'login'}>
                                                     <DropItem className='btn'>Login</DropItem>
                                                 </Link>
@@ -152,8 +215,7 @@ function NavBar() {
                 </Container >
             </Navbar >
             {/* this Model used for search */}
-            <Modal Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)
-            }>
+            <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
                 <Modal.Header closeButton className='bg-green' variant="light">
                     <span className='fw-500 fs-4 clr-white'>Search</span>
                     <Navbar.Text className='ms-5'>
@@ -163,11 +225,13 @@ function NavBar() {
                             id="dropdown-menu-align-end"
                             variant="light"
                         >
-
-                            <Dropdown.Item eventKey="1"><i class="fa-solid fa-map-location-dot pe-2"></i>Location 1</Dropdown.Item>
-                            <Dropdown.Item eventKey="2"><i class="fa-solid fa-map-location-dot pe-2"></i>Location 2</Dropdown.Item>
-                            <Dropdown.Divider />
-                            <Dropdown.Item eventKey="3"> <i className="fa-solid fa-plus pe-2"></i>Add New</Dropdown.Item>
+                            {listLocation ? (
+                                <>
+                                    <Dropdown.Item><i className="fa-solid fa-map-location-dot pe-2"></i>{listLocation.location_name}</Dropdown.Item>
+                                </>
+                            ) : (
+                                <Dropdown.Item eventKey="1">No location available</Dropdown.Item>
+                            )}
                         </DropdownButton>
                     </Navbar.Text>
                 </Modal.Header>

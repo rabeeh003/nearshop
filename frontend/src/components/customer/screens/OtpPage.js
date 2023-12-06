@@ -36,6 +36,16 @@ function OtpPage() {
       }
     } catch (err) {
       console.log(err);
+      try {
+        setNumErr('');
+  
+        // Assuming `auth` is your Firebase auth instance
+        const recapcha = new RecaptchaVerifier(auth, "recapcha", {});
+        const confirmation = await signInWithPhoneNumber(auth, phone, recapcha);
+        setUser(confirmation);
+      } catch (error) {
+        setNumErr('somthing when wrong');
+      }
     }
   };
 
