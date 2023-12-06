@@ -1,4 +1,5 @@
 import LogGif from '../../../assets/images/otp_gif.gif'
+import google from '../../../assets/images/google.png'
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
@@ -41,7 +42,10 @@ const GoogleAuth = () => {
             <CardBody className="card-body">
               <h4>Verify for register</h4>
               <Col>
-                <Google className='btn btn-danger' onClick={handleGoogleSignin} > Signin with Google </Google>
+                <Google className='btn btn-danger' onClick={handleGoogleSignin} >
+                  <GoogleImg src={google} />
+                  Signin with Google
+                </Google>
               </Col>
             </CardBody>
             <p className='mt-4 text-center w-100'>Have an account?<Link to={'/owner/login'} className='ms-2'>Signin</Link></p>
@@ -78,13 +82,19 @@ const CardBody = styled.div`
 
 
 
-const Google = styled.button`
-  background-color: #0dcaf0;
+const Google = styled.div`
+  background-color: blue;
   color: #fff;
   border: none;
+  font-weight: 500;
   border-radius: 5px;
-  padding: 10px 20px;
-  margin: 10px;
   cursor: pointer;
 `;
+
+const GoogleImg = styled.img`
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  margin-right: 10px;
+`
 export default GoogleAuth
