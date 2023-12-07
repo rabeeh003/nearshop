@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Card, Button } from 'react-bootstrap';
 import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-
+import axios from "axios"
 import Tomato from 'file:///home/rabeeh/Pictures/tomato.png'
+import { useParams } from 'react-router-dom';
+
 
 // Reviews about shop
 
@@ -152,9 +154,9 @@ const Textarea = styled.textarea`
 // Shop page code start
 
 function ShopPage() {
-    const [modalShow, setModalShow] = React.useState(false);
-    const [locShow, setLocShow] = React.useState(false);
-    const [reviewShow, setReview] = React.useState(false);
+    const [modalShow, setModalShow] = useState(false);
+    const [locShow, setLocShow] = useState(false);
+    const [reviewShow, setReview] = useState(false);
 
     const copyToClipboard = () => {
         const copyText = 'Hello, world!';
@@ -165,18 +167,113 @@ function ShopPage() {
             console.error('Failed to copy: ', error);
         });
     };
+
+    const [allData, setAllData] = useState(null);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [allCategories, setAllCategories] = useState({});
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const categoriesOrder = [
+        "offer",
+        'grocery',
+        'vegetable',
+        'fruits',
+        'packes',
+        'bakery',
+        'drinks',
+    ];
+
+    useEffect(() => {
+        const url = window.location.pathname;
+        const parts = url.split('/');
+        const shopId = parts[parts.length - 1];
+
+        axios.get(`http://127.0.0.1:8000/api/s/shop/${shopId}/`)
+            .then(response => {
+                console.log("Shop Data:", response.data);
+                setAllData(response.data);
+                // setFilteredProducts(response.data.shop_products || []);
+            })
+            .catch(error => {
+                console.error('Error fetching shop data:', error);
+            });
+
+        axios.get('http://127.0.0.1:8000/api/p/gcategory/')
+            .then(response => {
+                console.log("Categories:", response.data);
+                const categoriesDict = {};
+                response.data.forEach(category => {
+                    categoriesDict[category.category_name] = [];
+                });
+                setAllCategories({ ...categoriesDict, offer: [] });
+                console.log("categoriesDict : ", categoriesDict);
+            })
+            .catch(error => {
+                console.error('Error fetching categories:', error);
+            });
+    }, []);
+
+    useEffect(() => {
+        console.log("start");
+        if (allData && allData.seller_products) {
+            console.log("okkey");
+            const updatedCategories = { ...allCategories }; // Copy the existing categories
+
+            allData.seller_products.forEach(product => {
+                const categoryName = product.cat.category_name;
+
+                // Check if the category exists and if the product is not already added
+                if (!updatedCategories[categoryName]) {
+                    updatedCategories[categoryName] = [product];
+                } else if (
+                    !updatedCategories[categoryName].some(
+                        existingProduct => existingProduct.id === product.id
+                    )
+                ) {
+                    updatedCategories[categoryName].push(product);
+                }
+            });
+
+            // Filter products for 'offer' category based on offer_price not equal to zero
+            const offerProducts = allData.seller_products.filter(product => product.offer_price >= 1);
+
+            // Add or update 'offer' category
+            if (!updatedCategories['offer']) {
+                updatedCategories['offer'] = offerProducts;
+            } else {
+                offerProducts.forEach(offerProduct => {
+                    if (
+                        !updatedCategories['offer'].some(
+                            existingProduct => existingProduct.id === offerProduct.id
+                        )
+                    ) {
+                        updatedCategories['offer'].push(offerProduct);
+                    }
+                });
+            }
+
+            setAllCategories(updatedCategories);
+        }
+    }, [allData, allCategories]);
+    
+    const handleCategorySelect = categoryName => {
+        setSelectedCategory(categoryName);
+        setFilteredProducts(allCategories[categoryName] || []);
+    };
+    
     return (
         <Page className='user-select-none'>
             <Container fluid >
                 <Row style={{ position: 'relative' }}>
-                    <Col xs={12} style={{ widows: '100vw', height: "150px", backgroundColor: '#a1e3b9' }}>
-                        <BannerImage src='' alt='ShopName' />
+                    <Col xs={12} style={{}}>
+                        <BannerDiv>
+                            <BannerImage src={allData ? allData.banner_image : ""} alt={allData ? allData.profile_image : ""} />
+                        </BannerDiv>
                     </Col>
                     <Col style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
-                        <ProfileImage style={{ position: 'absolute', top: "35%", }} src='' alt='ShopLogo' />
-                        <ShopName>Al Salama</ShopName>
-                        <ShopDis>Super Market</ShopDis>
-                        <ShopLoc>salalah</ShopLoc>
+                        <ProfileImage style={{ position: 'absolute', top: "35%", }} src={allData ? allData.profile_image : ""} alt='ShopLogo' />
+                        <ShopName>{allData ? allData.shop_name : ""}</ShopName>
+                        <ShopDis>{allData ? allData.shop_label : ""}</ShopDis>
+                        <ShopLoc>{allData ? allData.shop_place : ""}</ShopLoc>
                         <ShopLinks>
                             <i class="fa-solid fa-share-from-square p-3" onClick={copyToClipboard}></i>
                             <i class="fa-solid fa-map-location-dot p-3" onClick={setLocShow}></i>
@@ -187,30 +284,42 @@ function ShopPage() {
                 <Row>
                     <Col >
                         <CatTab>
-                            <CatText>Offer</CatText>
-                            <CatText>Grocery</CatText>
-                            <CatText>Veg</CatText>
-                            <CatText>Fruites</CatText>
-                            <CatText>Backary</CatText>
-                            <CatText>Outher</CatText>
+                            {categoriesOrder.map(categoryName => {
+                                const categoryProducts = allCategories[categoryName];
+                                if (categoryProducts && categoryProducts.length !== 0) {
+                                    return (
+                                        <CatText key={categoryName} onClick={() => handleCategorySelect(categoryName)}>
+                                            {categoryName}
+                                        </CatText>
+                                    );
+                                }
+                                return null;
+                            })}
                         </CatTab>
                     </Col>
                 </Row>
                 <Row className="g-4 pt-3" >
-                    {Array.from({ length: 27 }).map((_, idx) => (
-                        <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={idx} className='d-flex' style={{ justifyContent: 'center' }}>
-                            <OfCard onClick={() => setModalShow(true)}>
+                    {filteredProducts.map(product => (
+                        <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={""} className='d-flex' style={{ justifyContent: 'center' }}>
+                            <OfCard onClick={() => setModalShow(product)}>
                                 <CardImage>
-                                    <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge>
-                                    <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i> Shop Name</Badge>
-                                    <Card.Img variant="top" src={Tomato} />
+                                    {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
+                                    {/* <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i>{product.seller.shop_name}</Badge> */}
+                                    <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={`http://127.0.0.1:8000${product.gpro.prodect_image}`} />
                                 </CardImage>
-                                <Card.Body >
-                                    <Card.Title style={{ fontSize: '15px' }}>Card Title</Card.Title>
+                                <Card.Body className='text-center mt-2'>
+                                    <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>
                                     <Card.Text style={{ fontSize: '15px' }}>
-                                        Price: <b>₹ 39</b>
+                                        {product.offer_price ? (
+                                            <span>
+                                                Price: <span className="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
+                                            </span>
+                                        ) : (
+                                            <span>Price: ₹ {product.price}</span>
+                                        )}
+
                                     </Card.Text>
-                                    <Button variant="success" style={{ width: '100%', fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add</Button>
+                                    <Button variant="" className='btn-outline-success' style={{ fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
                                 </Card.Body>
                             </OfCard>
                         </Col>
@@ -240,16 +349,30 @@ const Page = styled.div`
     max-width: 98vw;
   }
 `
-const BannerImage = styled.img``
+
+const BannerDiv = styled.div`
+    width: 100%;
+    height: 20vh;
+`
+const BannerImage = styled.img`
+    height: 100%;
+    border-radius: 20px;
+    image-rendering: auto;
+    object-fit: cover;
+    width: 100%;
+`
 const ProfileImage = styled.img`
-    height: 90px;
-    width: 90px;
+    height: 110px;
+    width: 110px;
+    object-fit: cover;
     background-color: #fff;
-    border: 4px solid white;
+    border: 4px solid green;
+    padding: 2px;
     border-radius:50%;
 `
 const ShopName = styled.h4`
     padding-top: 10px;
+    margin-top: 15px;
 `
 const ShopDis = styled.span``
 const ShopLoc = styled.span``
@@ -307,10 +430,11 @@ const CardImage = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: auto;
 `
 const OfCard = styled.div`
-    margin:0 10px;
-    width: 120px;
+    margin:0 20px;
+    text-align: center;
 `
 
-export default ShopPage
+export default ShopPage;

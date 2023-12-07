@@ -48,7 +48,7 @@ function App() {
               <Route path='order' element={<CustomerPrivetRoute><CheckOut /></CustomerPrivetRoute>} />
             </Route>
             <Route path='user' element={<CustomerPrivetRoute><UserProfile /></CustomerPrivetRoute>} />
-            <Route path='shopid' element={<ShopPage />} />
+            <Route path='/:shop_id' element={<ShopPage />} />
             <Route path='login' element={<CustomerLoginRoute><UserLogin /></CustomerLoginRoute>} />
             <Route path='signup' element={<CustomerLoginRoute><UserSignup /></CustomerLoginRoute>} />
             <Route path='otp_verification' element={<CustomerLoginRoute><COtpPage/></CustomerLoginRoute>} />

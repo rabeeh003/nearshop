@@ -2,12 +2,11 @@ from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIV
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 from .models import seller_products
-from .serializers import SellerProductAdd, SellerAllProduct, SellerProductUpdate
+from .serializers import SellerProductAdd, SellerAllProduct, SellerProductUpdate, ShopDetailSerializer
 from accounts.models import Shop
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class SellerProductView(ListCreateAPIView):
@@ -61,11 +60,7 @@ class ProductDetails(RetrieveAPIView):
     serializer_class = SellerAllProduct
     lookup_field = 'pk'
 
-# @api_view(['GET'])
-# def ProductDetails(request):
-#     category_name = request.GET.get('category')  # Extract category from query parameter
-#     if category_name:
-#         products = seller_products.objects.filter(product_id__category__category_name=category_name)
-#         serializer = SellerAllProduct(products, many=True)
-#         return Response(serializer.data)
-#     return Response({"error": "No category specified."})
+class ShopDetailAPIView(RetrieveAPIView):
+    queryset = Shop.objects.all()
+    serializer_class = ShopDetailSerializer
+    lookup_field = 'shop_id'

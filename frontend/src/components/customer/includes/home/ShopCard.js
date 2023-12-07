@@ -27,8 +27,8 @@ function ShopCard() {
             </Col>
             <ScrollableRow>
                 {shops.map((shop) => (
-                    <Col key={shop.id}>
-                        <Link to={`/shop/${shop.id}`} className='nav-link'>
+                    <Col xl={2} key={shop.id}>
+                        <Link to={`/${shop.shop_id}`} className='nav-link'>
                             <OfCard>
                                 <CardImage>
                                     <Card.Img variant='top' className='object-fit-fill rounded-circle' src={shop.profile_image} alt={shop.name} />
