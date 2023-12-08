@@ -8,6 +8,7 @@ function EditProdect() {
   const [currentData, setCurrentData] = useState()
   const [shopId, setShopId] = useState()
   const [product, setProduct] = useState(null);
+  const [don, setDonw] = useState(1)
 
   const [FormData, setFormData] = useState({
     "price": null,
@@ -54,6 +55,7 @@ function EditProdect() {
         const url = `http://127.0.0.1:8000/api/s/editproduct/${currentData.id}/update/`;
         await axios.patch(url, dataToUpdate);
         console.log('Product updated successfully');
+        setDonw(don+1)
       } else {
         console.log('No changes to submit');
       }
@@ -84,7 +86,7 @@ function EditProdect() {
         if (shopId) {
           const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts?shop_id=${shopId}`);
           setProduct(response.data.filter(product => product.shop_id === shopId));
-          console.log('product : ', product);
+          console.log('product : ', response.data);
         }
       } catch (error) {
         console.error('Error fetching shop products:', error);
@@ -92,7 +94,7 @@ function EditProdect() {
     };
 
     fetchShopProducts();
-  }, [shopId]);
+  }, [shopId,don]);
   return (
     <Page>
       <Container fluid>

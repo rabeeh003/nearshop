@@ -8,6 +8,9 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import axios from "axios"
 import Tomato from 'file:///home/rabeeh/Pictures/tomato.png'
 import { useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 // Reviews about shop
@@ -157,12 +160,19 @@ function ShopPage() {
     const [modalShow, setModalShow] = useState(false);
     const [locShow, setLocShow] = useState(false);
     const [reviewShow, setReview] = useState(false);
+    const notify = () => {
+        toast("Link copied")
+        copyToClipboard()
+    }
 
     const copyToClipboard = () => {
-        const copyText = 'Hello, world!';
+        const copyText = `http://localhost:3000/${allData.shop_id}`;
+
 
         navigator.clipboard.writeText(copyText).then(() => {
-            alert('Copied to clipboard: ' + copyText);
+            // alert('Copied to clipboard: ' + copyText);
+
+
         }).catch((error) => {
             console.error('Failed to copy: ', error);
         });
@@ -172,6 +182,7 @@ function ShopPage() {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [allCategories, setAllCategories] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [catDone, setCatDone] = useState(1)
     const categoriesOrder = [
         "offer",
         'grocery',
@@ -205,7 +216,7 @@ function ShopPage() {
                     categoriesDict[category.category_name] = [];
                 });
                 setAllCategories({ ...categoriesDict, offer: [] });
-                console.log("categoriesDict : ", categoriesDict);
+                console.log("get categoriesDict : ", categoriesDict);
             })
             .catch(error => {
                 console.error('Error fetching categories:', error);
@@ -213,8 +224,9 @@ function ShopPage() {
     }, []);
 
     useEffect(() => {
-        console.log("start");
+        console.log("checking start");
         if (allData && allData.seller_products) {
+
             console.log("okkey");
             const updatedCategories = { ...allCategories }; // Copy the existing categories
 
@@ -233,10 +245,8 @@ function ShopPage() {
                 }
             });
 
-            // Filter products for 'offer' category based on offer_price not equal to zero
             const offerProducts = allData.seller_products.filter(product => product.offer_price >= 1);
 
-            // Add or update 'offer' category
             if (!updatedCategories['offer']) {
                 updatedCategories['offer'] = offerProducts;
             } else {
@@ -252,14 +262,26 @@ function ShopPage() {
             }
 
             setAllCategories(updatedCategories);
+            console.log("updated catagory ( filter ) :", allCategories);
+            if (allCategories !== 0 && allCategories !== 0) {
+                const defaultCategory = categoriesOrder.find(category => allCategories[category]?.length > 0);
+                if (defaultCategory) {
+                    setSelectedCategory(defaultCategory);
+                    setFilteredProducts(allCategories[defaultCategory] || []);
+                }
+                setCatDone(catDone + 1)
+                console.log("defualt selectedCategory : ", selectedCategory);
+            }
+
         }
-    }, [allData, allCategories]);
-    
+    }, [allData]);
+
     const handleCategorySelect = categoryName => {
         setSelectedCategory(categoryName);
         setFilteredProducts(allCategories[categoryName] || []);
+        console.log("onclick selectedCategory : ", selectedCategory);
     };
-    
+
     return (
         <Page className='user-select-none'>
             <Container fluid >
@@ -275,7 +297,19 @@ function ShopPage() {
                         <ShopDis>{allData ? allData.shop_label : ""}</ShopDis>
                         <ShopLoc>{allData ? allData.shop_place : ""}</ShopLoc>
                         <ShopLinks>
-                            <i class="fa-solid fa-share-from-square p-3" onClick={copyToClipboard}></i>
+                            <i class="fa-solid fa-share-from-square p-3" onClick={notify}></i>
+                            <ToastContainer
+                                position="top-center"
+                                autoClose={5000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme="light"
+                            />
                             <i class="fa-solid fa-map-location-dot p-3" onClick={setLocShow}></i>
                             <i class="fa-solid fa-comments p-3" onClick={setReview}></i>
                         </ShopLinks>

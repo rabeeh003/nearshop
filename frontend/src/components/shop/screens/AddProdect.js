@@ -17,6 +17,7 @@ function AddProdect() {
     const reversedShopPro = [...shoppro].reverse();
     const [shopId, setShopId] = useState('')
     const [proError, setProError] = useState('');
+    const [addedData, setAddedData] = useState(1)
 
     const [FormData, setFormData] = useState({
         shop_id: null,
@@ -40,7 +41,7 @@ function AddProdect() {
         try {
             await axios.post('http://127.0.0.1:8000/api/s/addproduct/', FormData);
             setProError('')
-
+            setAddedData(addedData+1)
         } catch (error) {
             setProError('This product is already added to the shop.');
         }
@@ -96,7 +97,7 @@ function AddProdect() {
         fetchShopId();
         fetchShopProducts();
         fetchProductDetails();
-    }, [productId,shopId]);
+    }, [productId,shopId,addedData]);
 
     const getCategoryName = (categoryId) => {
         const category = categories.find((cat) => cat.id === categoryId);
