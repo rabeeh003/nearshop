@@ -49,6 +49,8 @@ class Order(models.Model):
     total_price = models.IntegerField(null=True, blank=True)
     ob_id = models.CharField(default='0',max_length=20, null=True, blank=True)
     customer_phone = models.CharField(max_length=15,null=True, blank=True)
+    def __str__(self):
+        return f"{self.name}"
 
 class Payment(models.Model):
     METHOD_CHOICES = [
@@ -56,7 +58,10 @@ class Payment(models.Model):
         ('Debit Card', 'Debit Card'),
         ('PayPal', 'PayPal'),
         ('Cash on Delivery', 'Cash on Delivery'),
-        # Add other methods as needed
+    ]
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Finished', 'Finished'),
     ]
 
     method = models.CharField(max_length=20, choices=METHOD_CHOICES)
@@ -65,6 +70,7 @@ class Payment(models.Model):
     user = models.ForeignKey(Customer, on_delete=models.DO_NOTHING)
     shop = models.ForeignKey(Shop, on_delete=models.DO_NOTHING)
     order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, related_name='payment_orders')
+    payment_status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="Pending")
     
     def __str__(self):
         return f"{self.method} - {self.date_time}"
@@ -84,3 +90,6 @@ class OrderProducts(models.Model):
     product_count = models.CharField( max_length=8)
     date_time = models.DateTimeField(auto_now_add=True)
     count_type = models.CharField( max_length=5, default='kg')
+    product_price = models.CharField( max_length=7, null=True, blank=True)
+    def __str__(self):
+        return f"{self.product}"

@@ -115,6 +115,7 @@ class MessageDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MessageSerializer
 
 class OrderProductListCreateView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
     queryset = Message.objects.all()
     serializer_class = OrderProductSerializer
 

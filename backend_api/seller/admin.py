@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import seller_products, Order, Payment, Message
+from .models import seller_products, Order, Payment, Message, OrderProducts
 
 class ProductTable(admin.ModelAdmin):
     list_display = ('id', 'get_product_image', 'shop_id', 'get_product_name', 'product_status', 'price', 'offer_price', 'offer_start', 'offer_end')
@@ -19,6 +19,16 @@ class ProductTable(admin.ModelAdmin):
     get_product_name.short_description = 'Product Name' 
 
 admin.site.register(seller_products, ProductTable)
-admin.site.register(Order)
+
+class OrderTable(admin.ModelAdmin):
+    list_display = ('id', 'shop_id', "user_id", "name", "status")
+
+admin.site.register(Order, OrderTable)
+
 admin.site.register(Payment)
 admin.site.register(Message)
+
+class OrderProductTable(admin.ModelAdmin):
+    list_display = ('id',"order", 'shop_id', "user_id","product","date_time")
+
+admin.site.register(OrderProducts, OrderProductTable)

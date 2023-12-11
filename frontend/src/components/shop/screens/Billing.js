@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Billing() {
     const [showModal, setShowModal] = useState(false)
@@ -15,9 +17,9 @@ function Billing() {
     let location = useLocation();
     const addpro = location.state?.product || null
     const [count, setCount] = useState(null)
-    const [type, setype] = useState(null)
+    const [type, setype] = useState('')
     const [phone, setPhone] = useState('')
-    const [totel, setTotel] = useState("")
+    const [totel, setTotel] = useState('0')
     const [disc, setDisc] = useState(0)
     const [grand, setGrand] = useState(0)
     const [shopId, setShopId] = useState()
@@ -32,17 +34,18 @@ function Billing() {
     const [pros, setPros] = useState({
         "product_count": "",
         "count_type": "",
-        "user": null,
-        "shop": null,
-        "order": null,
-        "product": null
+        "user": '',
+        "shop": '',
+        "order": '',
+        "product": '',
+        "product_price": ''
     })
     const [billpro, setBillpro] = useState([])
     const [proCount, setProCount] = useState([])
     const [proPrice, setProPrice] = useState([])
     const [cType, setCType] = useState([])
 
-    const submitBill = async() => {
+    const submitBill = async () => {
         const dataToUpdate = {};
         const propertiesToCheck = ['name', 'status', 'total_price', 'customer_phone', 'shop'];
         propertiesToCheck.forEach(property => {
@@ -51,11 +54,37 @@ function Billing() {
             }
         });
         console.log("-------= start post =-------");
-        console.log("--> BillData : ",billData);
-        console.log("--> dataToUpdate : ",dataToUpdate);
+        console.log("--> BillData : ", billData);
+        console.log("--> dataToUpdate : ", dataToUpdate);
         await axios.post('http://127.0.0.1:8000/api/s/orders/', dataToUpdate)
-            .then(response => {
+            .then(async (response) => {
                 console.log('Response:', response.data);
+                console.log("-------= product data post =-------");
+                const allProduct = billpro.map((productId, index) => ({
+                    product_count: proCount[index],
+                    count_type: cType[index],
+                    shop: shopId,
+                    order: response.data.id,
+                    product: productId.id,
+                    product_price: proPrice[index]
+                }));
+                console.log("product to upload : ", allProduct);
+                allProduct.forEach(productData => {
+                    axios.post('http://127.0.0.1:8000/api/s/orderproduct/', productData)
+                        .then(response => {
+                            console.log('Product added successfully:', response.data);
+                            setCType([])
+                            setProPrice([])
+                            setBillData({})
+                            setBillpro([])
+                            setProCount([])
+                        })
+                        .catch(error => {
+                            console.error('Error adding product:', error);
+                            // Handle error for each product
+                        });
+                });
+                toast("billed successfully.")
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -93,7 +122,8 @@ function Billing() {
                     const priceFor1kg = addpro.price;
                     const priceForG = (priceFor1kg / 1000) * count;
                     console.log("Price is :", priceForG);
-                    setTotel(totel + priceForG)
+                    const parsedTotel = parseFloat(totel);
+                    setTotel(parsedTotel + priceForG)
                     console.log("totel : ", totel);
                     const updatedPrice = [...prevProPrice, priceForG];
                     return updatedPrice;
@@ -102,7 +132,8 @@ function Billing() {
                     const priceFor1kg = addpro.price;
                     const priceForG = priceFor1kg * count;
                     console.log("Price is :", priceForG);
-                    setTotel(totel + priceForG)
+                    const parsedTotel = parseFloat(totel);
+                    setTotel(parsedTotel + priceForG)
                     console.log("totel : ", totel);
                     const updatedPrice = [...prevProPrice, priceForG];
                     return updatedPrice;
@@ -255,6 +286,18 @@ function Billing() {
                         </Col>
                         <Col>
                             <Button onClick={submitBill} variant='info' style={{ height: '55px', width: '90%', marginLeft: "5px" }}>Bill</Button>
+                            <ToastContainer
+                                position="top-center"
+                                autoClose={3000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme="light"
+                            />
                         </Col>
                     </Col>
                 </Row>
