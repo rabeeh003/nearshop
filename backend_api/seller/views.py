@@ -1,8 +1,9 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView , UpdateAPIView
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
-from .models import seller_products
-from .serializers import SellerProductAdd, SellerAllProduct, SellerProductUpdate, ShopDetailSerializer
+from .models import seller_products, Order, Payment, Message
+from .serializers import SellerProductAdd, SellerAllProduct, SellerProductUpdate, ShopDetailSerializer, OrderSerializer, PaymentSerializer, MessageSerializer, OrderProductSerializer
 from accounts.models import Shop
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -64,3 +65,59 @@ class ShopDetailAPIView(RetrieveAPIView):
     queryset = Shop.objects.all()
     serializer_class = ShopDetailSerializer
     lookup_field = 'shop_id'
+
+
+# order
+class OrderListCreateView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+        
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class PaymentListCreateView(generics.ListCreateAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+class PaymentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+class MessageListCreateView(generics.ListCreateAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+
+class MessageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+
+class OrderProductListCreateView(generics.ListCreateAPIView):
+    queryset = Message.objects.all()
+    serializer_class = OrderProductSerializer
+
+class OrderProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Message.objects.all()
+    serializer_class = OrderProductSerializer

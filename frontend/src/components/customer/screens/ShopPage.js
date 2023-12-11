@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Col, Container, Row, Form } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Card, Button } from 'react-bootstrap';
-import Badge from 'react-bootstrap/Badge';
 import Modal from 'react-bootstrap/Modal';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import axios from "axios"
-import Tomato from 'file:///home/rabeeh/Pictures/tomato.png'
-import { useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -102,46 +98,61 @@ function LocationModel(props) {
 // Product details Model
 
 function MyVerticallyCenteredModal(props) {
+    const { product } = props.show;
+    { console.log("sel pro : ", product); }
     return (
         <Modal
             className='user-select-none'
             {...props}
-            size="md"
+            size='lg'
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    <i class="fa-solid fa-store"></i> Shop Name
-                </Modal.Title>
+                <span className='h3 p-0 m-0'>{product ? product.gpro.product_name : ''}</span>
             </Modal.Header>
             <Modal.Body>
-                <PDetiles>
-                    <div style={{ width: "45%" }}>
-                        <CardImage>
-                            <Badge style={{ position: 'absolute', top: 0, right: 0 }} bg="success">40% Off</Badge>
-                            <Card.Img variant="top" src={Tomato} />
-                        </CardImage>
-                        <Button variant="success" style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
-                    </div>
-                    <div className='form-outline' style={{ width: "45%" }}>
-                        <span className='h4'>Tomato</span>
-                        <p>
-                            Price: <b>₹ 39</b>
-                        </p>
-                        <Textarea style={{ fontSize: "12px", width: "100%" }} className='form-control' rows='6'>
-                            Tomato is a widely cultivated and consumed fruit, often treated as a vegetable in cooking. Known for its vibrant red color, it belongs to the Solanaceae family. Tomatoes are versatile in culinary applications, used in salads, sauces, and countless dishes, offering a sweet and tangy flavor with various health benefits.
-                        </Textarea>
-                    </div>
-                </PDetiles>
-            </Modal.Body>
-            <Modal.Footer>
+                {product ? (
+                    <PDetiles>
+                        <div style={{ width: "45%" }}>
+                            <ProImage>
+                                <Card.Img style={{ objectFit: 'fill' }} variant="top" src={`http://127.0.0.1:8000${product.gpro.prodect_image}`} />
+                            </ProImage>
 
+                        </div>
+                        <div className='form-outline' style={{ width: "45%" }}>
+                            <span className='h4'>{product?.product_name}</span>
+                            {product.offer_price ? (
+                                <p >
+                                    Price:<span class="text-decoration-line-through"> ₹ {product?.price} </span><span className='ps-2'> <b>  ₹ {product?.offer_price}</b></span>
+                                </p>
+                            ) : ("")}
+
+                            <Textarea style={{ fontSize: "12px", width: "100%" }} className='form-control' rows='6'>
+                                {product.gpro?.product_description}
+                            </Textarea>
+                        </div>
+                    </PDetiles>
+                ) : ("")}
+            </Modal.Body>
+            <Modal.Footer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Button variant="success" style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
             </Modal.Footer>
         </Modal>
     );
 }
-
+const ProImage = styled.div`
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    border-radius: 10px;
+    width: 90%;
+    max-height: 250px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+`
 const PDetiles = styled.div`
     display: flex;
 `
@@ -335,7 +346,7 @@ function ShopPage() {
                 <Row className="g-4 pt-3" >
                     {filteredProducts.map(product => (
                         <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={""} className='d-flex' style={{ justifyContent: 'center' }}>
-                            <OfCard onClick={() => setModalShow(product)}>
+                            <OfCard onClick={() => setModalShow({ product })}>
                                 <CardImage>
                                     {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
                                     {/* <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i>{product.seller.shop_name}</Badge> */}

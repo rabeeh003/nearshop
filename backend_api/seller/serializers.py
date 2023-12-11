@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import seller_products
+from .models import seller_products, Order, Payment, Message, OrderProducts
 from prodect.serializers import GlobalCategory, GlobalProductAdd
 from accounts.serializers import ShopSerializer
 from accounts.models import Shop
@@ -33,3 +33,28 @@ class ShopDetailSerializer(serializers.ModelSerializer):
         seller_products_queryset = seller_products.objects.filter(shop_id=obj)
         serializer = SellerAllProduct(instance=seller_products_queryset, many=True)
         return serializer.data
+
+# order
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = '__all__'
+
+class OrderProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderProducts
+        fields = '__all__'
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+class OrderSerializer(serializers.ModelSerializer):
+    payment_orders = PaymentSerializer(many=True, read_only=True)
+    message_set = MessageSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = Order
+        fields = '__all__'
