@@ -171,6 +171,23 @@ function ShopPage() {
     const [modalShow, setModalShow] = useState(false);
     const [locShow, setLocShow] = useState(false);
     const [reviewShow, setReview] = useState(false);
+    const [userId, setUserId] = useState()
+
+    useEffect(() => {
+        const fetchUserId = () => {
+            const userKeyString = localStorage.getItem('userKey');
+            if (userKeyString) {
+                const userKey = JSON.parse(userKeyString);
+                setUserId(userKey.id);
+                console.log('user id : ', userId);
+            } else {
+                console.log('adminKey not found in localStorage');
+            }
+        };
+
+        fetchUserId()
+    }, [modalShow]);
+
     const notify = () => {
         toast("Link copied")
         copyToClipboard()
@@ -178,7 +195,6 @@ function ShopPage() {
 
     const copyToClipboard = () => {
         const copyText = `http://localhost:3000/${allData.shop_id}`;
-
 
         navigator.clipboard.writeText(copyText).then(() => {
             // alert('Copied to clipboard: ' + copyText);
@@ -286,6 +302,98 @@ function ShopPage() {
 
         }
     }, [allData]);
+    const [orderId, setOrderId] = useState()
+    const [oData, setOData] = useState({
+        "name": "online",
+        "status": "Cart",
+        "shop": '',
+        "user": userId,
+    })
+
+    const [oPData, setOPData] = useState({
+        "user": '',
+        "shop": '',
+        "order": '',
+        "product": '',
+        "product_count": '',
+        "count_type": '',
+    })
+
+    const addToCart = async (product) => {
+        console.log("_____start_____");
+        console.log("passed data : ", product);
+        console.log("user id  : ", userId, ", shop id :", product.seller.id);
+        const updateOrderData = {
+            ...oData,
+            "shop": product.seller.id,
+            "user": userId,
+        };
+        setOData(updateOrderData);
+
+        if (updateOrderData.user !== '' && updateOrderData.shop !== '') {
+            try {
+                console.log("---- check and create order ----");
+                const response = await axios.get("http://127.0.0.1:8000/api/s/orders/");
+                const existingData = response.data?.filter(item => item.user === userId) || [];
+                console.log("existing data : ", existingData);
+
+                const matchingIndex = existingData.findIndex(item => {
+                    return item.shop === updateOrderData.shop && item.status === 'Cart';
+                });
+
+                if (matchingIndex !== -1) {
+                    console.log("maching index : ", existingData[matchingIndex])
+                    setOrderId(existingData[matchingIndex].id)
+                    console.log("order id : ", orderId);
+
+                } else {
+                    console.log("ready to push : ", updateOrderData);
+                    await axios.post("http://127.0.0.1:8000/api/s/orders/", updateOrderData).then(res => {
+                        console.log("res : ", res.data);
+                        setOrderId(res.data.id)
+                        console.log("order id : ", orderId);
+                    })
+                }
+                console.log("order created");
+                console.log("order id : ", orderId);
+                console.log("----- product adding -----");
+                const updateOrderProductData = {
+                    ...oPData,
+                    "shop": product.seller.id,
+                    "user": userId,
+                    "order": orderId,
+                    "product": product.id,
+                    "product_count": 1,
+                    "count_type": product.gpro.weight_type
+                };
+                setOPData(updateOrderProductData);
+                console.log("updated opd : ", updateOrderProductData);
+                const oProductD = await axios.get("http://127.0.0.1:8000/api/s/orderproduct/")
+                console.log("get the oProductD for check :", oProductD)
+                console.log("user id", userId);
+                const filterdOPD = oProductD.data.filter(item =>
+                    item.user === userId &&
+                    item.shop === updateOrderProductData.shop &&
+                    item.product === updateOrderProductData.product
+                ) || "";
+                console.log("affter filtering products data : ", filterdOPD);
+
+                if (filterdOPD == '') {
+                    console.log("just print products : ", updateOrderProductData);
+                    console.log("just print products : ", oPData);
+                    await axios.post("http://127.0.0.1:8000/api/s/orderproduct/", updateOrderProductData).then(res => {
+                        console.log("submitted, res :", res.data);
+                    }).catch(err => console.log(err))
+                }
+
+            } catch (error) {
+                // Handle errors here
+                alert('Something went wrong');
+            }
+        } else {
+            alert('Something is missing'); // Handle the case where user or shop is empty
+        }
+    }
 
     const handleCategorySelect = categoryName => {
         setSelectedCategory(categoryName);
@@ -346,26 +454,29 @@ function ShopPage() {
                 <Row className="g-4 pt-3" >
                     {filteredProducts.map(product => (
                         <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={""} className='d-flex' style={{ justifyContent: 'center' }}>
-                            <OfCard onClick={() => setModalShow({ product })}>
-                                <CardImage>
-                                    {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
-                                    {/* <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i>{product.seller.shop_name}</Badge> */}
-                                    <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={`http://127.0.0.1:8000${product.gpro.prodect_image}`} />
-                                </CardImage>
-                                <Card.Body className='text-center mt-2'>
-                                    <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>
-                                    <Card.Text style={{ fontSize: '15px' }}>
-                                        {product.offer_price ? (
-                                            <span>
-                                                Price: <span className="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
-                                            </span>
-                                        ) : (
-                                            <span>Price: ₹ {product.price}</span>
-                                        )}
+                            <OfCard >
+                                <div onClick={() => setModalShow({ product })}>
+                                    <CardImage>
+                                        {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
+                                        {/* <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i>{product.seller.shop_name}</Badge> */}
+                                        <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={`http://127.0.0.1:8000${product.gpro.prodect_image}`} />
+                                    </CardImage>
+                                    <Card.Body className='text-center mt-2'>
+                                        <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>
+                                        <Card.Text style={{ fontSize: '15px' }}>
+                                            {product.offer_price ? (
+                                                <span>
+                                                    Price: <span className="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
+                                                </span>
+                                            ) : (
+                                                <span>Price: ₹ {product.price}</span>
+                                            )}
 
-                                    </Card.Text>
-                                    <Button variant="" className='btn-outline-success' style={{ fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
-                                </Card.Body>
+                                        </Card.Text>
+                                    </Card.Body>
+                                </div>
+                                <Button variant="" onClick={() => addToCart(product)} className='btn-outline-success' style={{ fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+
                             </OfCard>
                         </Col>
                     ))}

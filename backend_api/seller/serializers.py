@@ -41,20 +41,21 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = '__all__'
 
-class OrderProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderProducts
-        fields = '__all__'
-
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
-    payment_orders = PaymentSerializer(many=True, read_only=True)
-    message_set = MessageSerializer(many=True, read_only=True)
+    seller = ShopSerializer(source='shop', read_only=True)
     
     class Meta:
         model = Order
+        fields = '__all__'
+
+class OrderProductSerializer(serializers.ModelSerializer):
+    orderdata = OrderSerializer(source='order', read_only=True)
+    pro = SellerAllProduct(source='product',read_only=True)
+    class Meta:
+        model = OrderProducts
         fields = '__all__'

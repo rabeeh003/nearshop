@@ -47,7 +47,7 @@ function Billing() {
 
     const submitBill = async () => {
         const dataToUpdate = {};
-        const propertiesToCheck = ['name', 'status', 'total_price', 'customer_phone', 'shop'];
+        const propertiesToCheck = ['name', 'status', 'customer_phone', 'shop'];
         propertiesToCheck.forEach(property => {
             if (billData[property] !== null) {
                 dataToUpdate[property] = billData[property];
@@ -75,7 +75,13 @@ function Billing() {
                             console.log('Product added successfully:', response.data);
                             setCType([])
                             setProPrice([])
-                            setBillData({})
+                            setBillData({
+                                "name": "",
+                                "status": "Billed",
+                                "total_price": '',
+                                "customer_phone": "+91",
+                                "shop": null,
+                            })
                             setBillpro([])
                             setProCount([])
                         })
@@ -128,7 +134,16 @@ function Billing() {
                     const updatedPrice = [...prevProPrice, priceForG];
                     return updatedPrice;
                 }
-                else {
+                else if (type === "kg") {
+                    const priceFor1kg = addpro.price;
+                    const priceForG = priceFor1kg * count;
+                    console.log("Price is :", priceForG);
+                    const parsedTotel = parseFloat(totel);
+                    setTotel(parsedTotel + priceForG)
+                    console.log("totel : ", totel);
+                    const updatedPrice = [...prevProPrice, priceForG];
+                    return updatedPrice;
+                } else {
                     const priceFor1kg = addpro.price;
                     const priceForG = priceFor1kg * count;
                     console.log("Price is :", priceForG);
@@ -140,7 +155,7 @@ function Billing() {
                 }
             });
 
-            setCount(null);
+            setCount('');
         }
         console.log("---------  Product to list ---------");
         console.log("addpro : ", addpro);
@@ -318,10 +333,15 @@ function Billing() {
                             label="type"
                             className="mb-3"
                         >
-                            <Form.Select aria-label="Default select example" onChange={handleTypeChange}>
-                                <option value="pack">Pack / Kg</option>
-                                {/* <option value="kg">kg</option> */}
-                                <option value="g">gram</option>
+                            <Form.Select aria-label="Default select example" onClick={handleTypeChange}>
+                                {addpro.gpro.weight_type === 'count' ? (
+                                    <option value="pack">Pack</option>
+                                ) : (
+                                    <>
+                                        <option value="kg">kg</option>
+                                        <option value="g">gram</option>
+                                    </>
+                                )}
                             </Form.Select>
                         </FloatingLabel>
                     </Col>

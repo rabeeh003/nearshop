@@ -2,7 +2,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIV
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
-from .models import seller_products, Order, Payment, Message
+from .models import seller_products, Order, Payment, Message, OrderProducts
 from .serializers import SellerProductAdd, SellerAllProduct, SellerProductUpdate, ShopDetailSerializer, OrderSerializer, PaymentSerializer, MessageSerializer, OrderProductSerializer
 from accounts.models import Shop
 from rest_framework.response import Response
@@ -78,8 +78,6 @@ class OrderListCreateView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         data = serializer.validated_data
-        
-
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
@@ -87,7 +85,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True)   
 
         data = serializer.validated_data
 
@@ -116,9 +114,37 @@ class MessageDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class OrderProductListCreateView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
-    queryset = Message.objects.all()
+    queryset = OrderProducts.objects.all()
     serializer_class = OrderProductSerializer
 
 class OrderProductDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Message.objects.all()
+    queryset = OrderProducts.objects.all()
     serializer_class = OrderProductSerializer
+
+
+class CombinedDataView(APIView):
+    def get(self, request):
+        orders = Order.objects.all()
+        order_data = OrderSerializer(orders, many=True).data
+
+        order_products = OrderProducts.objects.all()
+        order_product_data = OrderProductSerializer(order_products, many=True).data
+
+        messages = Message.objects.all()
+        message_data = MessageSerializer(messages, many=True).data
+
+        payments = Payment.objects.all()
+        payment_data = PaymentSerializer(payments, many=True).data
+
+        shops = Shop.objects.all()
+        shop_data = ShopDetailSerializer(shops, many=True).data
+
+        combined_data = {
+            'orders': order_data,
+            'order_products': order_product_data,
+            'messages': message_data,
+            'payments': payment_data,
+            'shops': shop_data
+        }
+
+        return Response(combined_data)

@@ -25,5 +25,6 @@ urlpatterns = [
     path('messages/<int:pk>/', MessageDetailView.as_view(), name='message-detail'),
     path('orderproduct/', OrderProductListCreateView.as_view(), name='orderproduct'),
     path('orderproduct/<int:pk>/', OrderProductDetailView.as_view(), name='orderproduct-detail'),
+    # path('cartorder/', CombinedDataView.as_view(),name='cartorder')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
