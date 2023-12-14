@@ -93,6 +93,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
@@ -105,10 +106,12 @@ class PaymentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = PaymentSerializer
 
 class MessageListCreateView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
 class MessageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
 
@@ -118,33 +121,14 @@ class OrderProductListCreateView(generics.ListCreateAPIView):
     serializer_class = OrderProductSerializer
 
 class OrderProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [AllowAny]
     queryset = OrderProducts.objects.all()
     serializer_class = OrderProductSerializer
 
-
-class CombinedDataView(APIView):
-    def get(self, request):
-        orders = Order.objects.all()
-        order_data = OrderSerializer(orders, many=True).data
-
-        order_products = OrderProducts.objects.all()
-        order_product_data = OrderProductSerializer(order_products, many=True).data
-
-        messages = Message.objects.all()
-        message_data = MessageSerializer(messages, many=True).data
-
-        payments = Payment.objects.all()
-        payment_data = PaymentSerializer(payments, many=True).data
-
-        shops = Shop.objects.all()
-        shop_data = ShopDetailSerializer(shops, many=True).data
-
-        combined_data = {
-            'orders': order_data,
-            'order_products': order_product_data,
-            'messages': message_data,
-            'payments': payment_data,
-            'shops': shop_data
-        }
-
-        return Response(combined_data)
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        
+        self.perform_update(serializer)
+        return Response(serializer.data)

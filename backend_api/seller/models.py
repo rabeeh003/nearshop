@@ -36,6 +36,7 @@ class Order(models.Model):
         ('Billed', 'Billed'),
         ('Cart', 'Cart'),
         ('Ordered', 'Ordered'),
+        ('Accepted', 'Accepted'),
         ('Returned', 'Returned'),
         ('Canceled', 'Canceled'),
         ('Paid', 'Paid'),

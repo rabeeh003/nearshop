@@ -15,7 +15,7 @@ function Billing() {
     const handleModalOpen = () => setShowModal(true)
     const handleModalClose = () => setShowModal(false)
     let location = useLocation();
-    const addpro = location.state?.product || null
+    const addpro = location.state?.product || ""
     const [count, setCount] = useState(null)
     const [type, setype] = useState('')
     const [phone, setPhone] = useState('')
@@ -323,7 +323,7 @@ function Billing() {
                             label="Product Name"
                             className="mb-3"
                         >
-                            <Form.Control type="text" value={addpro?.gpro.product_name} onClick={handleModalOpen} />
+                            <Form.Control type="text" value={addpro.gpro?.product_name} onClick={handleModalOpen} />
                             <SearchSuggestions show={showModal} onHide={handleModalClose} shoppro={shoppro} />
                         </FloatingLabel>
                     </Col>
@@ -334,7 +334,7 @@ function Billing() {
                             className="mb-3"
                         >
                             <Form.Select aria-label="Default select example" onClick={handleTypeChange}>
-                                {addpro.gpro.weight_type === 'count' ? (
+                                {addpro.gpro?.weight_type === 'count' ? (
                                     <option value="pack">Pack</option>
                                 ) : (
                                     <>

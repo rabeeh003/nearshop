@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 
+
 const BoxShadow = {
     boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
 }
@@ -16,6 +17,8 @@ function CartPage() {
     const [userPro, setUserPro] = useState([]);
     const [shopProList, setShopProList] = useState([]);
     const [userId, setUserId] = useState();
+    // const [currentCount, setCurrentCount] = useState([])
+    const [pmworking, plusMinesWorking] = useState()
 
     useEffect(() => {
         const fetchUserId = () => {
@@ -48,11 +51,11 @@ function CartPage() {
                 console.error("Error fetching data:", error);
             }
         };
-
+        console.log("pmworking :",pmworking);
         if (userId) {
             fetchData();
         }
-    }, [userId]);
+    }, [userId, pmworking]);
 
     useEffect(() => {
         const productsByShop = userPro.reduce((acc, product) => {
@@ -75,13 +78,70 @@ function CartPage() {
 
         console.log("shop products", shopProductsList);
         setShopProList(shopProductsList);
-    }, [userPro, orders]);
+        console.log("pmworking :",pmworking);
+    }, [userPro, orders, pmworking]);
 
     useEffect(() => {
         console.log("user orders : ", orders);
         console.log("user pro : ", userPro);
         console.log("shop products", shopProList);
     }, [orders, userPro, shopProList]);
+
+    const plusCount = async (productId, currentCount) => {
+        try {
+            console.log("plus Count : id = ", productId, ' current count = ', currentCount);
+            const updatedCount = parseInt(currentCount) + 1;
+            const response = await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${productId}/`, { product_count: updatedCount });
+            // Handle success - Update the UI or perform any necessary actions
+            console.log('Product count increased:', response.data);
+            plusMinesWorking(pmworking + 1)
+        } catch (error) {
+            // Handle error
+            console.error('Error increasing product count:', error);
+        }
+    };
+
+    const optionChange = async (productId, selectedOption) => {
+        try {
+            const response = await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${productId}/`, { count_type: selectedOption });
+            // Handle success - Update the UI or perform any necessary actions
+            console.log('Product count type updated:', response.data);
+            // You might want to update the UI or perform actions after the count_type is updated
+        } catch (error) {
+            // Handle error
+            console.error('Error updating product count type:', error);
+        }
+    };
+
+    const minusCount = async (productId, currentCount) => {
+        try {
+            if (currentCount > 0) {
+                const updatedCount = parseInt(currentCount) - 1;
+                const response = await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${productId}/`, { product_count: updatedCount });
+                // Handle success - Update the UI or perform any necessary actions
+                console.log('Product count decreased:', response.data);
+                plusMinesWorking(pmworking - 1)
+            } else {
+                // Optionally handle a minimum count scenario
+                console.log('Minimum count reached');
+            }
+        } catch (error) {
+            // Handle error
+            console.error('Error decreasing product count:', error);
+        }
+    };
+
+    const updateCount = async (productId, newCount) => {
+        try {
+            const response = await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${productId}/`, { product_count: newCount });
+            // Handle success - Update the UI or perform any necessary actions
+            console.log('Product count updated:', response.data);
+            // Perform additional actions after successful update, if needed
+        } catch (error) {
+            // Handle error
+            console.error('Error updating product count:', error);
+        }
+    };
     return (
         <Page className='user-select-nones'>
             {shopProList.length > 0 ? (
@@ -133,19 +193,45 @@ function CartPage() {
                                 {/* Render products */}
                                 <Items className='d-block bg-light'>
                                     {shopData.products.map((product, prodIndex) => (
-                                        <Row key={prodIndex} className='w-100 d-flex mb-1 align-items-center border-bottom'>
-                                            <Col xs={2} sm={1} className='d-flex align-items-center justify-content-end' >{prodIndex+1}</Col>
+                                        <Row key={prodIndex} className='w-100 d-flex mb-1 align-items-center border-bottom py-2'>
+                                            <Col xs={2} sm={1} className='d-flex align-items-center justify-content-end' >{prodIndex + 1}</Col>
                                             <Col className='d-sm-block d-md-flex justify-content-between'>
-                                                <Col>
+                                                <Col className='d-flex align-items-center justify-content-between '>
                                                     <ItemImage src={product.pro.gpro.prodect_image} />
                                                     <ItemText>{product.pro.gpro.product_name}</ItemText>
+                                                    <ItemText className='m-3' >₹ 100{product.product_price}</ItemText>
                                                 </Col>
                                                 <Col className='d-flex w-auto justify-content-around align-items-center'>
-                                                    <ItemText className='m-3' >₹ 100{product.product_price}</ItemText>
+
+                                                    <Form.Select aria-label="Default select example" style={{ width: "16vw" }} onChange={(e) => optionChange(product.id, e.target.value)}>
+                                                        {product.count_type === 'count' ? (
+                                                            <option value="pack">Pack</option>
+                                                        ) : (
+                                                            <>
+                                                                {product.count_type === 'kg' ? (
+                                                                    <>
+                                                                        <option value="kg">kg</option>
+                                                                        <option value="g">gram</option>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <option value="g">gram</option>
+                                                                        <option value="kg">kg</option>
+                                                                    </>
+                                                                )}
+
+                                                            </>
+                                                        )}
+                                                    </Form.Select>
                                                     <div className='d-flex align-items-center '>
-                                                        <ItemBtn className="btn fa-solid fa-square-plus"></ItemBtn>
-                                                        <ItemText>{product.product_count}</ItemText>
-                                                        <ItemBtn className='btn fa-solid fa-square-minus' ></ItemBtn>
+                                                        <ItemBtn className="btn fa-solid fa-square-plus" onClick={() => plusCount(product.id, product.product_count)}></ItemBtn>
+                                                        <Form.Control
+                                                        style={{width:"14vw"}}
+                                                            type="number"
+                                                            value={product.product_count}
+                                                            onChange={(e) => updateCount(product.id, e.target.value)}
+                                                        />
+                                                        <ItemBtn className='btn fa-solid fa-square-minus' onClick={() => minusCount(product.id, product.product_count)}></ItemBtn>
                                                     </div>
                                                 </Col><i class=""></i>
                                             </Col>
@@ -223,16 +309,16 @@ const ItemImage = styled.img`
     width: 80px;
     margin: 10px;
     @media screen and (max-width: 578px) {
-        height: 40px;
-        width: 40px;
+        height: 30px;
+        width: 30px;
         margin: 5px;
     }
 `
 const ItemText = styled.span`
-    font-size: 20px;
+    font-size: 1.1rem;
     font-weight: 600;
-    @media screen and (max-width: 578px) {
-        font-size: 15px;
+    @media screen and (max-width: 778px) {
+        font-size: 1rem;
         font-weight: 500;
     }
 `

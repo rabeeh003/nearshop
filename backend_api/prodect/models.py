@@ -10,6 +10,7 @@ class global_productes(models.Model):
 
     WEIGHT_CHOICES = [
         ('kg', 'Kilogram'),
+        ('g', 'Gram'),
         ('count', 'Count'),
     ]
 

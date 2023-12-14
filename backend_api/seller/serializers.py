@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import seller_products, Order, Payment, Message, OrderProducts
 from prodect.serializers import GlobalCategory, GlobalProductAdd
-from accounts.serializers import ShopSerializer
+from accounts.serializers import ShopSerializer, CusSignup
 from accounts.models import Shop
 
 class SellerProductAdd(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     seller = ShopSerializer(source='shop', read_only=True)
-    
+    userData = CusSignup(source="user", read_only=True)
     class Meta:
         model = Order
         fields = '__all__'
@@ -56,6 +56,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderProductSerializer(serializers.ModelSerializer):
     orderdata = OrderSerializer(source='order', read_only=True)
     pro = SellerAllProduct(source='product',read_only=True)
+    userData = CusSignup(source="user", read_only=True)
     class Meta:
         model = OrderProducts
         fields = '__all__'
