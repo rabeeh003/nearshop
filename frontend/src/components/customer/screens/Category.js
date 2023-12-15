@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import CategoryCard from '../includes/category/CategoryCard'
 import { Card, Container, Col, Row, Button } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function Category() {
@@ -66,22 +66,25 @@ function Category() {
                     {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
                 </Col>
                 <Row className="g-4">
-                {shops.map(shop => (
+                    {shops.map(shop => (
+
                         <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={shop.id} className='d-flex justify-content-center'>
-                            <OfCard>
-                                <CardImage>
-                                    <Card.Img variant="top" className='object-fit-fill rounded-circle' src={shop.profile_image} />
-                                </CardImage>
-                                <Card.Body className='text-center'>
-                                    <Card.Title style={{ fontSize: '15px' }}>{shop.shop_name}</Card.Title>
-                                    <Button variant='' className='mt-2 btn-outline-success' style={{ width: '100px', fontSize: '12px' }}>Visit</Button>
-                                </Card.Body>
-                            </OfCard>
+                            <Link className='nav-link' to={`/${shop.shop_id}`}>
+                                <OfCard>
+                                    <CardImage>
+                                        <Card.Img variant="top" className='object-fit-fill rounded-circle' src={shop.profile_image} />
+                                    </CardImage>
+                                    <Card.Body className='text-center'>
+                                        <Card.Title style={{ fontSize: '15px' }}>{shop.shop_name}</Card.Title>
+                                        <Button variant='' className='mt-2 btn-outline-success' style={{ width: '100px', fontSize: '12px' }}>Visit</Button>
+                                    </Card.Body>
+                                </OfCard>
+                            </Link>
                         </Col>
                     ))}
                 </Row>
             </Container>
-        </Cato>
+        </Cato >
     )
 }
 

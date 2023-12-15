@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Accordion from 'react-bootstrap/Accordion';
 import { Row, Modal, Col, Button } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -127,6 +127,28 @@ function OrderPage() {
         console.error('Error fetching data:', error);
       });
   }, [orderMessages]);
+
+  // scroll bottum
+
+  const ChatBody = ({ children }) => {
+    const chatBodyRef = useRef(null);
+  
+    const scrollToBottom = () => {
+      if (chatBodyRef.current) {
+        chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+      }
+    };
+  
+    useEffect(() => {
+      scrollToBottom();
+    }, [children]);
+  
+    return (
+      <div style={{ maxHeight: "300px", overflow: 'auto' }} ref={chatBodyRef}>
+        {children}
+      </div>
+    );
+  };
 
   return (
     <Page className='user-select-nones'>
@@ -261,28 +283,39 @@ function OrderPage() {
                     <Container>
                       <ChatCard className='mt-5'>
                         <Header>
-                          <i className='fas fa-chevron-left'></i>
-                          <span>Live chat</span>
-                          <i className='fas fa-times'></i>
+                          {/* <i className='fas fa-chevron-left'></i> */}
+                          <span style={{ width: "100%", textAlign: 'center' }}>Live chat</span>
+                          {/* <i className='fas fa-times'></i> */}
                         </Header>
-                        <ChatBody>
+                        <ChatBody >
                           {groupedMessages[userId.id]?.map((message, messageIdx) => (
                             <ChatContent key={messageIdx}>
-                              <img src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' width='30' height='30' />
-                              <ChatBubble className='ml-2 p-3'>{message.text}</ChatBubble>
+                              <Row className='row w-100'>
+                                {message.shop === null ? (
+                                  <Col style={{ width: "fit-content", maxWidth: "90%" }} className='d-flex'>
+                                    <img src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' width='30' height='30' />
+                                    <ChatBubbleUser className='ml-2 p-3'>{message.text}</ChatBubbleUser>
+                                  </Col>
+                                ) : (
+                                  <Col className='d-flex justify-content-end'>
+                                    <ChatBubble className='ml-2 p-3'>{message.text}</ChatBubble>
+                                    <img src={userId.seller.profile_image} width='30' height='30' />
+                                  </Col>
+                                )}
+                              </Row>
                             </ChatContent>
                           ))}
                         </ChatBody>
                         {/* Rest of the content styled similarly */}
                         {/* ... */}
                         <div className='form-group px-3 d-flex justify-content-between align-items-center'>
-                          <textarea
-                            rows='auto'
+                          <InputTextarea
+                            rows='1'
                             style={{ width: "90%", fontSize: '1rem' }}
                             placeholder='Type your message'
                             value={orderMessages[userId.id]?.text || ''}
                             onChange={(e) => handleTextChange(e, userId.id)}
-                          ></textarea>
+                          ></InputTextarea>
                           <button className='btn btn-info text-white' onClick={() => sendMessage(userId.id)}><i class="fa-solid fa-paper-plane"></i></button>
                         </div>
                       </ChatCard>
@@ -372,7 +405,7 @@ const Header = styled.div`
   color: white;
 `;
 const ChatBody = styled.div`
-  height: 100%;
+  min-height: 50px;
   max-height: 40vh;
   overflow-y: auto;
 `
@@ -390,6 +423,15 @@ const ChatBubble = styled.div`
   border: 1px solid #e7e7e9;
 `;
 
+const ChatBubbleUser = styled.div`
+  align-self: flex-end;
+  border: none;
+  background: '#e2ffe8';
+  font-size: 0.9rem;
+  border-radius: 20px;
+  border: 1px solid #e7e7e9;
+`;
+
 const InputTextarea = styled.textarea`
   border-radius: 12px;
   padding: 10px 15px;
@@ -399,8 +441,8 @@ const InputTextarea = styled.textarea`
     box-shadow: none;
   }
   &::placeholder {
-    font-size: 0.9rem;
-    color: #c4c4c4;
+    font-size: 1rem;
+    color: gray;
   }
 `;
 
