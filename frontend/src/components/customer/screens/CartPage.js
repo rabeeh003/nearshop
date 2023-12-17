@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Accordion from 'react-bootstrap/Accordion';
-import { Row, Modal, Col, Button, FormText } from 'react-bootstrap';
+import { Row, Modal, Col, Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import axios from 'axios';
@@ -68,7 +68,7 @@ function CartPage() {
     }, [userId, loadUseEffect]);
 
     const allfilter = []
-    
+
     const [orderToCancel, setOrderToCancel] = useState({ orderId: null, userId: null, userName: '' });
     const [orderToAccept, setOrderToAccept] = useState({ orderId: null, userId: null, userName: '' });
     const [orderToEdit, setOrderToEdit] = useState({ orderId: null, productId: null, userId: null, userName: '', currentCount: "", countType: '', listKey: null });
@@ -176,6 +176,19 @@ function CartPage() {
         removeProduct();
     }, [productToRemove, filteredData]);
 
+    // check out navigate
+    const navigate = useNavigate();
+    const [passingData, setPassingData] = useState({shop:null, products:null})
+    useEffect(() => {
+        console.log("passed data to check out :",passingData);
+        const goToCeckout = () => {
+            navigate('checkout', { state: { shop: passingData.shop, products:passingData.products } });
+        };
+        if (passingData.shop !== null) {
+            goToCeckout()
+        }
+    },[passingData])
+
     return (
         <Page className='user-select-nones'>
             {orders.length > 0 ? (
@@ -276,7 +289,7 @@ function CartPage() {
                                                                 </ActioinBt>
                                                             </Link>
                                                             <Link className='text-reset text-decoration-none m-2'>
-                                                                <ActioinBt className='btn btn-info'>
+                                                                <ActioinBt onClick={() => setPassingData({shop:shopId, products:filteredProducts})} className='btn btn-info'>
                                                                     Pay
                                                                 </ActioinBt>
                                                             </Link>
@@ -324,8 +337,8 @@ function CartPage() {
                                                             </Col>
                                                         </Col>
                                                         {shopId.status === "Cart" || shopId.status === "Returned" ? (
-                                                            <Col sm={12} md={6} className='d-flex align-items-center justify-content-around'>
-                                                                <Col sm={4} md={4} className='d-flex align-items-center justify-content-center'>
+                                                            <Col xs={12} md={6} className='d-flex align-items-center justify-content-around'>
+                                                                <Col xs={4} md={4} className='d-flex align-items-center justify-content-center'>
                                                                     <Form.Select aria-label="Default select example" style={{ minWidth: "70px", width: "100%", maxWidth: "90px" }}
                                                                         onClick={() => {
                                                                             setEditShow(true);
@@ -352,7 +365,7 @@ function CartPage() {
                                                                         )}
                                                                     </Form.Select>
                                                                 </Col>
-                                                                <Col sm={6} className='d-flex align-items-center justify-content-center'>
+                                                                <Col xs={4} sm={6} className='d-flex align-items-center justify-content-center'>
                                                                     <ItemBtn className='fa-solid fa-square-minus'
                                                                         onClick={() => {
                                                                             setEditShow(true);
@@ -376,7 +389,7 @@ function CartPage() {
                                                                     ></ItemBtn>
                                                                 </Col>
                                                                 {/* <span class="position-absolute top-50 start-100 translate-middle badge border border-light rounded-circle bg-danger p-2" style={{fontSize:"0.1rem"}}><i class="fs-6 fa-solid fa-trash text-white"></i></span> */}
-                                                                <Col class="w-auto" style={{ fontSize: "0.1rem" }}><i onClick={() => { setProductToRemove({ productId: order.id }) }} class="rounded-circle bg-danger p-2 fs-6 fa-solid fa-trash text-white"></i></Col>
+                                                                <Col xs={"auto"} class="w-auto" style={{ fontSize: "0.1rem" }}><i onClick={() => { setProductToRemove({ productId: order.id }) }} class="rounded-circle bg-danger p-2 fs-6 fa-solid fa-trash text-white"></i></Col>
                                                             </Col>
 
                                                         ) : (
@@ -400,13 +413,13 @@ function CartPage() {
                                                                 <Row className='row w-100' >
                                                                     {message.user === null ? (
                                                                         <Col style={{ width: "fit-content", maxWidth: "90%" }} className='d-flex'>
-                                                                            <img src={shopId.seller.profile_image} width='30' height='30' />
+                                                                            <img alt='shop-profile' src={shopId.seller.profile_image} width='30' height='30' />
                                                                             <ChatBubble className='ml-2 p-3'>{message.text}</ChatBubble>
                                                                         </Col>
                                                                     ) : (
                                                                         <Col className='d-flex justify-content-end'>
                                                                             <ChatBubbleUser className='ml-2 p-3'>{message.text}</ChatBubbleUser>
-                                                                            <img src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' width='30' height='30' />
+                                                                            <img alt='user-profile' src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' width='30' height='30' />
                                                                         </Col>
                                                                     )}
                                                                 </Row>
@@ -518,11 +531,6 @@ const ItemBtn = styled.span`
     color: #198754;
 `
 
-const ChatBody = styled.div`
-  min-height: 50px;
-  max-height: 40vh;
-  overflow-y: auto;
-`
 const ChatContent = styled.div`
   display: flex;
   flex-direction: row;
@@ -628,7 +636,7 @@ function AcceptModel(props) {
         "shop": null,
         "order": props.order
     })
-    useEffect(() => {
+    useEffect((messageData) => {
         setMessage({ ...messageData, user: props.user, order: props.order });
     }, [props])
 
@@ -797,7 +805,7 @@ function CancelModel(props) {
         "shop": props.shop,
         "order": props.order
     })
-    useEffect(() => {
+    useEffect((messageData) => {
         setMessage({ ...messageData, user: props.user, order: props.order });
     }, [props])
     const handleTextChange = (e) => {

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row, Col, Button, Form } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 // import Modal from 'react-bootstrap/Modal';
 
@@ -31,57 +32,96 @@ const BoxShadow = {
     padding: '10px'
 }
 
-function CheckOut() {
-    // const [showLocation, setShowLocation] = React.useState(false);
-    
+function CheckOut(props) {
+    const location = useLocation();
+    const shopData = location.state ? location.state.shop : null;
+    const products = location.state ? location.state.products : null;
+    console.log("shop & products ", shopData, products);
+    const [total, setTotal] = useState(0);
+
+
+    function calculateTotalPrice(price, count, type) {
+        const numericPrice = parseInt(price);
+        const numericCount = parseInt(count);
+
+        if (!isNaN(numericPrice) && !isNaN(numericCount)) {
+            let totalPrice = 0;
+
+            if (type === "g") {
+                totalPrice = (numericPrice / 1000) * numericCount;
+            } else {
+                totalPrice = numericPrice * numericCount;
+            }
+
+            return totalPrice;
+        } else {
+            return 'Price or count is invalid';
+        }
+    }
+
+    useEffect(() => {
+        // Calculate the total price when the component mounts
+        let totalPrice = 0;
+        products?.forEach((order) => {
+            totalPrice += calculateTotalPrice(order.pro.price, order.product_count, order.count_type);
+        });
+        setTotal(totalPrice);
+    }, [products]);
+
     return (
         <Page>
             <Row>
-                <Col md={6} xs={12}>
+                <Col xs={12} lg={7}>
                     <div style={BoxShadow} className='mb-4 rounded'>
                         <div>
                             <div className='d-flex flex-column w-100'>
                                 <Row className=''>
-                                    <Col style={{ minWidth: 'fit-content' }} className="d-flex align-items-center">
-                                        <ProIcon src='' />
-                                        <ShopName className='h5 m-2 m-sm-4'>Name</ShopName>
+                                    <Col style={{ minWidth: 'fit-content' }} className="text-center m-3">
+                                        <ProIcon src={shopData.seller.profile_image} /><br></br>
+                                        <ShopName className='h5 m-2 m-sm-4'>{shopData.seller.shop_name}</ShopName>
                                     </Col>
                                 </Row>
                                 <Row className='w-100'>
                                     <Col className='d-flex align-items-center justify-content-around'>
-                                        <CartDet><b>Total items : </b>3</CartDet>
-                                        <CartDet><b>Total price : </b>$300</CartDet>
+                                        <CartDet><b>Total items : </b>{products.length}</CartDet>
+                                        <CartDet><b>Total price : </b>₹{total}</CartDet>
                                     </Col>
                                 </Row>
                             </div>
                         </div>
                         <div>
-                            <Items>
-                                <Row className='w-100 d-flex align-items-center'>
-                                    <Col xs={2} sm={1} className='d-flex align-items-center justify-content-end' >1</Col>
-                                    <Col className='d-sm-block d-md-flex justify-content-between'>
-                                        <div>
-                                            <ItemImage src='' />
-                                            <ItemText>Tomato</ItemText>
-                                        </div>
-                                        <div className='d-flex w-auto justify-content-around align-items-center'>
-                                            <ItemText className='m-3' >$123</ItemText>
-                                            <div className='d-flex align-items-center '>
-                                                <ItemText>2 kg</ItemText>
-                                            </div>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Items>
+                            {products?.map((order, orderIdx) => (
+                                <Items key={orderIdx} className='bg-light my-1' style={{ boxShadow: "1px 1px 53px #acaaca,1px 1px 13px #ffffff" }}>
+
+                                    <Row className='w-100 d-flex my-1  align-items-center py-2'>
+                                        <Col className='d-flex align-items-center bg-light rounded-circle p-1 justify-content-center' style={{
+                                            maxWidth: '35px',
+                                            borderRadius: "50px",
+                                            background: "#e0e0e0",
+                                            boxShadow: "6px 6px 12px #acacac,-6px -6px 12px #ffffff"
+                                        }}>{orderIdx + 1}</Col>
+                                        <Col className='d-md-flex align-items-center'>
+                                            <ItemImage src={order.pro.gpro.prodect_image} />
+                                            <ItemText>{order.pro.gpro.product_name}</ItemText>
+                                        </Col>
+                                        <Col xs={3}>
+                                            <ItemText className='m-3'>{order.product_count}{order.count_type}</ItemText>
+                                        </Col>
+                                        <Col xs={3}>
+                                            <ItemText className='m-3'>₹ {calculateTotalPrice(order.pro.price, order.product_count, order.count_type)}</ItemText>
+                                        </Col>
+                                    </Row>
+                                </Items>
+                            ))}
                         </div>
                     </div>
                 </Col>
-                <Col>
+                <Col xs={12} lg={5}>
                     <span>Total</span>
                     <div className='text-center ' style={{ width: '100%', height: '20vh', fontSize: '50px', fontWeight: '500' }}>
-                        ₹ 150
+                        ₹ {total}
                     </div>
-                    <div className='m-auto' style={{maxWidth:"500px"}}>
+                    <div className='m-auto' style={{ maxWidth: "500px" }}>
                         <Form.Select aria-label="Delivery Location" className='mb-2'>
                             <option hidden>Chose Location</option>
                             <option value="1">Home</option>

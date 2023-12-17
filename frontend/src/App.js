@@ -45,7 +45,7 @@ function App() {
             <Route path='category/:categoryName' element={<Category />} />
             <Route path='cart'>
               <Route index element={<CartPage />} />
-              <Route path='order' element={<CustomerPrivetRoute><CheckOut /></CustomerPrivetRoute>} />
+              <Route path='checkout' element={<CustomerPrivetRoute><CheckOut /></CustomerPrivetRoute>} />
             </Route>
             <Route path='user' element={<CustomerPrivetRoute><UserProfile /></CustomerPrivetRoute>} />
             <Route path='/:shop_id' element={<ShopPage />} />
