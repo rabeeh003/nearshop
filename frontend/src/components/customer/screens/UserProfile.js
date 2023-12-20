@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
-import { Col, Row } from 'react-bootstrap';
+import { Col, Image, Row } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import styled from 'styled-components';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-
+import dateFormat, { masks } from "dateformat";
+import Avathar from '../../../assets/images/userAvathar.gif'
 import OrderHis from '../includes/Profile/OrderHis';
 import LocationsTwoType from '../includes/Profile/LocationsTwoType';
 import axios from 'axios';
@@ -17,6 +18,7 @@ const BoxShadow = {
 
 function UserProfile() {
     const [show, setShow] = useState(false);
+    const [allPayment, setPayment] = useState([])
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -53,7 +55,7 @@ function UserProfile() {
 
         fetchShopId();
 
-    }, [userId]);
+    });
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -63,7 +65,7 @@ function UserProfile() {
                     ...editData,
                     full_name: response.data.full_name,
                     phone_number: response.data.phone_number,
-                    phone_two:response.data.phone_two,
+                    phone_two: response.data.phone_two,
                     email: response.data.email,
                     address: response.data.address
                 });
@@ -78,20 +80,39 @@ function UserProfile() {
     }, [userId]);
     const updateUser = async () => {
         try {
-          const response = await axios.put(`http://127.0.0.1:8000/api/customer/${userId}/`, editData);
-          console.log('User data updated:', response.data);
-          handleClose()
+            const response = await axios.put(`http://127.0.0.1:8000/api/customer/${userId}/`, editData);
+            console.log('User data updated:', response.data);
+            handleClose()
         } catch (error) {
-          console.error('Error updating user data:', error);
+            console.error('Error updating user data:', error);
         }
-      };
+    };
+    // fetch payment data
+    useEffect(() => {
+        const fetchPaymentData = async () => {
+            try {
+                const paymentData = await axios.get("http://127.0.0.1:8000/api/s/payments/");
+                console.log("paymentData", paymentData);
+                const filterPayment = paymentData.data.filter(pay => pay.user === userId);
+                console.log("filterPayment", filterPayment.data);
+                setPayment(filterPayment);
+            } catch (error) {
+                console.log("Error fetching payment data", error);
+            }
+        };
+
+        fetchPaymentData();
+    }, [userId]);
+
     return (
         <Useer>
             <HeadHeight className='Row d-flex p-3'>
-                <Col xs={10} style={{ paddingLeft: "10%" }} className='d-flex flex-column justify-content-around'>
-                    <span>Name  : {signUpData.full_name}</span>
-                    <span>Phone : {signUpData.phone_number}</span>
-                    <span>Email : {signUpData.email}</span>
+                <Col className='d-flex align-items-center justify-content-center'>
+                    <Image src={Avathar} width={"40px"} alt='user' />
+                </Col>
+                <Col xs={9} style={{ paddingLeft: "10%" }} className='d-flex flex-column justify-content-around'>
+                    <span className='b-500'>{signUpData.full_name}</span>
+                    <span>{signUpData.phone_number}</span>
                 </Col>
                 <Col className='d-flex align-items-center'>
                     <span onClick={handleShow} >
@@ -103,53 +124,41 @@ function UserProfile() {
                 <Accordion.Item className='mb-4' eventKey="0" style={BoxShadow}>
                     <Accordion.Header>
 
-                        <i style={{ fontSize: '25px' }} class="fa-solid fa-map-location-dot m-3"></i>
+                        <i style={{ fontSize: '25px' }} class="fa-solid fa-map-location-dot m-3 text-success"></i>
                         Locations
                     </Accordion.Header>
                     <Accordion.Body>
                         <ListDiv >
-                            <LocationsTwoType />
+                            <LocationsTwoType userId={userId} />
                         </ListDiv>
                     </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="1" className='mb-4' style={BoxShadow}>
                     <Accordion.Header>
-                        <i style={{ fontSize: '25px' }} class="fa-solid fa-file-invoice-dollar p-3"></i>
+                        <i style={{ fontSize: '25px' }} class="fa-solid fa-file-invoice-dollar p-3 text-success"></i>
                         Payment History
                     </Accordion.Header>
                     <Accordion.Body className='p-0 m-0'>
-                        <ListDiv className='p-0 m-0' >
-                            <ListItem>
-                                <span><span>1</span> date & time</span>
-                                <span>Type</span>
-                                <span>Price</span>
-                            </ListItem>
-                            <ListItem>
-                                <span><span>1</span> date & time</span>
-                                <span>Type</span>
-                                <span>Price</span>
-                            </ListItem>
-                            <ListItem>
-                                <span><span>1</span> date & time</span>
-                                <span>Type</span>
-                                <span>Price</span>
-                            </ListItem>
-                            <ListItem>
-                                <span><span>1</span> date & time</span>
-                                <span>Type</span>
-                                <span>Price</span>
-                            </ListItem>
-                        </ListDiv>
+                        {allPayment.map((payment, idx) => (
+                            <ListDiv key={idx} className='border bottom-1' >
+                                <ListItem>
+                                    <span className='me-2'>{idx + 1}</span>
+                                    <span>{dateFormat(payment.date_time)}</span>
+                                    <span>{payment.method}</span>
+                                    <span>{payment.price}</span>
+                                </ListItem>
+                            </ListDiv>
+                        ))}
                     </Accordion.Body>
                 </Accordion.Item>
                 <Accordion.Item eventKey="2" className='mb-4' style={BoxShadow}>
                     <Accordion.Header>
-                        <i style={{ fontSize: '25px' }} class="fa-solid fa-bag-shopping m-3"></i>
+                        <i style={{ fontSize: '25px' }} class="fa-solid fa-bag-shopping m-3 text-success"></i>
                         Purchase History
                     </Accordion.Header>
                     <Accordion.Body>
                         <ListDiv >
-                            <OrderHis />
+                            <OrderHis userId={userId} />
                         </ListDiv>
                     </Accordion.Body>
                 </Accordion.Item>

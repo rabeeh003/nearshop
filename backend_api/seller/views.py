@@ -1,3 +1,5 @@
+import string
+import random
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView , UpdateAPIView
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -74,6 +76,10 @@ class OrderListCreateView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
 
     def create(self, request, *args, **kwargs):
+        N = 5 
+        ob_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=N))
+        request.data['ob_id'] = ob_id
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -98,8 +104,10 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrderSerializer
 
 class PaymentListCreateView(generics.ListCreateAPIView):
+    permission_classes = [AllowAny]
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+    
 
 class PaymentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Payment.objects.all()

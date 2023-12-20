@@ -1,4 +1,5 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { Accordion } from 'react-bootstrap'
 import styled from 'styled-components'
 
@@ -6,44 +7,75 @@ const BoxShadow = {
     boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
 }
 
-function LocationsTwoType() {
+function LocationsTwoType(props) {
+    const [searchLocation, setSearchLocation] = useState([]);
+    const [addressLocation, setAddressLocation] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const allSearchLocations = JSON.parse(localStorage.getItem("allLocations"));
+            if (allSearchLocations) {
+                setSearchLocation(allSearchLocations);
+            }
+            try {
+                const allAddress = await axios.get("http://127.0.0.1:8000/api/u/location/");
+                const filterAddress = allAddress.data.filter(add => add.customer_id === props.userId);
+                setAddressLocation(filterAddress);
+            } catch (error) {
+                console.error("Error fetching address locations: ", error);
+            }
+        }
+
+        fetchData();
+    }, [props.userId]);
+
+    console.log("searchLocation", searchLocation);
+    console.log("addressLocation", addressLocation);
     return (
 
         <Accordion >
             <Accordion.Item className='mb-4' eventKey="0" style={BoxShadow}>
                 <Accordion.Header>
-                    <i style={{ fontSize: '25px' }} class="fa-solid fa-location-crosshairs m-3"></i>
+                    <i style={{ fontSize: '25px' }} class="fa-solid fa-location-crosshairs m-3 text-success"></i>
                     Delivery Locations
                 </Accordion.Header>
                 <Accordion.Body>
-                    <ListDiv >
+                    <ListDiv>
+                        {searchLocation.length > 0 ? (
+                            searchLocation.map((loc, idx) => (
+                                <ListItem key={idx} className='d-flex justify-content-between'>
+                                    <span><span className='p-2'>{idx + 1}</span> {loc.name}</span>
+                                    <i className="fa-solid fa-trash text-danger"></i>
+                                </ListItem>
+                            ))
+                        ) : (
+                            <p>Not found</p>
+                        )}
                         <ListItem>
-                            <span className=''><span>1</span> Home</span>
-                            <i class="fa-solid fa-trash"></i>
-                        </ListItem>
-                        <ListItem>
-                            <span className=''><span>2</span> Flat</span>
-                            <i class="fa-solid fa-trash"></i>
-                        </ListItem>
-                        <ListItem>
-                            <span className='btn btn-success'><i class="fa-solid fa-plus"></i>Add New</span>
+                            <span className='btn btn-success'><i className="fa-solid fa-plus me-2"></i>Add New</span>
                         </ListItem>
                     </ListDiv>
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item className='mb-4' eventKey="1" style={BoxShadow}>
                 <Accordion.Header>
-                    <i style={{ fontSize: '25px' }} class="fa-solid fa-map-location-dot m-3"></i>
+                    <i style={{ fontSize: '25px' }} class="fa-solid fa-map-location-dot m-3 text-success"></i>
                     Locations
                 </Accordion.Header>
                 <Accordion.Body>
-                    <ListDiv >
+                    <ListDiv>
+                        {addressLocation.length > 0 ? (
+                            addressLocation.map((loc, idx) => (
+                                <ListItem key={idx} className='d-flex justify-content-between'>
+                                    <span><span className='p-2'>{idx + 1}</span> {loc.location_name}</span>
+                                    <i className="fa-solid fa-trash text-danger"></i>
+                                </ListItem>
+                            ))
+                        ) : (
+                            <p>Not found</p>
+                        )}
                         <ListItem>
-                            <span className=''><span>1</span> Name of location</span>
-                            <i class="fa-solid fa-trash"></i>
-                        </ListItem>
-                        <ListItem>
-                            <span className='btn btn-success'><i class="fa-solid fa-plus"></i>Add New</span>
+                            <span className='btn btn-success'><i className="fa-solid fa-plus me-2"></i>Add New</span>
                         </ListItem>
                     </ListDiv>
                 </Accordion.Body>

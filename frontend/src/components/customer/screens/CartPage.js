@@ -273,7 +273,7 @@ function CartPage() {
                                                         </Link>
                                                     ) : shopId.status === "Paid" ? (
                                                         <Link className='text-reset text-decoration-none m-2'>
-                                                            <ActioinBt className='btn btn-info '>#AC322</ActioinBt>
+                                                            <ActioinBt className='btn btn-info '>Code : {shopId.ob_id}</ActioinBt>
                                                         </Link>
                                                     ) : shopId.status === "Accepted" ? (
                                                         <>
@@ -405,7 +405,7 @@ function CartPage() {
                                             <Contain>
                                                 <ChatCard className='mt-5'>
                                                     <Header>
-                                                        <span style={{ width: "100%", textAlign: 'center' }}>Live chat</span>
+                                                        <span style={{ width: "100%", textAlign: 'center' }}>Chat</span>
                                                     </Header>
                                                     <ChatBody>
                                                         {groupedMessages[shopId.id]?.map((message, messageIdx) => (

@@ -8,6 +8,8 @@ class location(models.Model):
     customer_id = models.ForeignKey("accounts.Customer", on_delete=models.CASCADE)
     lat = models.CharField(max_length=100) 
     lng = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    pin_code = models.CharField( max_length=6, blank=True, null=True)
 
     def __str__(self):
         return self.location_name

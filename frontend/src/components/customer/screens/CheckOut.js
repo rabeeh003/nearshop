@@ -1,30 +1,33 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Button, Form } from 'react-bootstrap';
+import { Row, Col, Button, Form, Modal, Dropdown } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import AddressLocationPicker from '../../../assets/map/AddressAndLocation';
+import axios from 'axios';
 // import Modal from 'react-bootstrap/Modal';
 
-// Add Location Model
-// function AddLocation(props) {
-//     return (
-//         <Modal
-//             className='user-select-none'
-//             {...props}
-//             size="md"
-//             aria-labelledby="contained-modal-title-vcenter"
-//             centered
-//         >
-//             <Modal.Header closeButton>
-//                 <Modal.Title id="contained-modal-title-vcenter">
-//                     <i class="fa-solid fa-map"></i> Add Location
-//                 </Modal.Title>
-//             </Modal.Header>
-//             <Modal.Body>
-//                 Map Hear
-//             </Modal.Body>
-//         </Modal>
-//     );
-// }
+function AddLocation(props) {
+    const { onHide } = props;
+    return (
+        <Modal
+            className='user-select-none'
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header className='bg-success' style={{ color: 'white' }} closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    <i class="fa-solid fa-map"></i> Add Location
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <AddressLocationPicker onHide={onHide}  />
+            </Modal.Body>
+        </Modal>
+    );
+}
+
 
 // CheckOut page code started
 const BoxShadow = {
@@ -33,10 +36,12 @@ const BoxShadow = {
 }
 
 function CheckOut(props) {
+    const [addLocation, setAddLocation] = React.useState(false);
     const location = useLocation();
     const shopData = location.state ? location.state.shop : null;
     const products = location.state ? location.state.products : null;
     console.log("shop & products ", shopData, products);
+    console.log("props ", props);
     const [total, setTotal] = useState(0);
 
 
@@ -68,10 +73,71 @@ function CheckOut(props) {
         setTotal(totalPrice);
     }, [products]);
 
+
+
+    const handleAddLocation = () => {
+        console.log('lets start : hi');
+        setAddLocation(true);
+        console.log('set add locatin is true');
+    };
+
+    const [listLocation, setListLocation] = useState([]);
+    const [selectedLocation, setSelectedLocation] = useState({"location_name":'Select address'});
+
+    useEffect(() => {
+        const fetchLocations = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/u/location/');
+                const filterRes = response.data.filter(loc => loc.customer_id === shopData.user)
+                setListLocation(filterRes);
+            } catch (error) {
+                console.error('Error fetching locations:', error);
+            }
+        };
+
+        fetchLocations();
+    }, []);
+
+    const handleLocationSelection = (locationName) => {
+        setSelectedLocation(locationName);
+    };
+
+    const [methord, setMethord] = useState('')
+
+    const [paymentData, setPayment] = useState({
+        "method": null,
+        "price": null,
+        "payment_status": "Pending",
+        "user": null,
+        "shop": null,
+        "order": null
+    })
+
+    useEffect(() => {
+        setPayment({
+            ...paymentData,
+            "price": total,
+            "user": shopData.user,
+            "shop": shopData.shop,
+            "order": shopData.id,
+            "method": methord,
+        })
+    },[total,shopData,selectedLocation,methord])
+
+    const submitData = async() => {
+        console.log("paymentData : ",paymentData);
+        console.log("location : ", selectedLocation.id);
+        try {
+            await axios.post("http://127.0.0.1:8000/api/s/payments/",paymentData)
+            await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, {"status":"Paid","location": selectedLocation.id})
+        } catch (error) {
+            console.log("error : ",error);
+        }
+    }
     return (
         <Page>
-            <Row>
-                <Col xs={12} lg={7}>
+            <Row className='d-flex align-items-center' >
+                <Col xs={12} lg={7}  >
                     <div style={BoxShadow} className='mb-4 rounded'>
                         <div>
                             <div className='d-flex flex-column w-100'>
@@ -89,7 +155,7 @@ function CheckOut(props) {
                                 </Row>
                             </div>
                         </div>
-                        <div>
+                        <div className='overflow-auto' style={{ height: '70vh' }}>
                             {products?.map((order, orderIdx) => (
                                 <Items key={orderIdx} className='bg-light my-1' style={{ boxShadow: "1px 1px 53px #acaaca,1px 1px 13px #ffffff" }}>
 
@@ -116,30 +182,49 @@ function CheckOut(props) {
                         </div>
                     </div>
                 </Col>
-                <Col xs={12} lg={5}>
+                <Col xs={12} lg={5} className=''>
                     <span>Total</span>
                     <div className='text-center ' style={{ width: '100%', height: '20vh', fontSize: '50px', fontWeight: '500' }}>
                         ₹ {total}
                     </div>
                     <div className='m-auto' style={{ maxWidth: "500px" }}>
-                        <Form.Select aria-label="Delivery Location" className='mb-2'>
-                            <option hidden>Chose Location</option>
-                            <option value="1">Home</option>
-                            <option value="2">Office</option>
-                            <option onClick={''}>Add New</option>
-                        </Form.Select>
-                        <Form.Select aria-label="Payment Type">
+                        <Dropdown style={{ width: "100%" }} className='my-2' id="dropdown-menu-align-responsive-1">
+                            <Dropdown.Toggle variant="" id="dropdown-location" className='w-100 d-flex align-items-center justify-content-between border border-1'>
+                                {selectedLocation.location_name}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu className='w-100'>
+                                {listLocation ? (
+                                    listLocation.map((location, index) => (
+                                        <Dropdown.Item
+                                            key={index}
+                                            onClick={() => handleLocationSelection(location)}
+                                        >
+                                            {location.location_name}
+                                        </Dropdown.Item>
+                                    ))
+                                ) : (
+                                    <Dropdown.Item disabled>No locations available</Dropdown.Item>
+                                )}
+                                <Dropdown.Divider />
+                                <Dropdown.Item onClick={handleAddLocation}>
+                                    <i className="fa-solid fa-plus pe-2"></i>Add New
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <Form.Select name='method' onChange={e => setMethord(e.target.value)} aria-label="Payment Type">
                             <option hidden>Select Payment Type</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
+                            <option value="razorpay">razorpay</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Cash on Delivery">Cash on Delivery</option>
                         </Form.Select>
                     </div>
                     <div className='text-center' style={{ width: '100%', fontSize: '50px', fontWeight: '500' }}>
-                        <Button variant='success' className='py-2 px-5'> Pay</Button>
+                        <Button variant='success' onClick={submitData} className='py-2 px-5'> Pay</Button>
                     </div>
                 </Col>
             </Row>
+            <AddLocation show={addLocation} onHide={() => setAddLocation(false)} />
         </Page>
     )
 }

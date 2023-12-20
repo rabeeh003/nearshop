@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import userlogo from "../../../assets/images/userlogo.png"
+import OtpInput from 'react-otp-input';
 import axios from 'axios';
 
 const BoxShadow = {
@@ -16,6 +17,7 @@ function OrderPage() {
   // const [returnShow, setReturnShow] = React.useState(false);
   const [acceptShow, setAcceptShow] = React.useState(false);
   const [cancelShow, setCancelShow] = React.useState(false);
+  const [codeShow, setCodeShow] = React.useState(false);
 
   const [shopId, setShopId] = useState();
   const [orders, setOrders] = useState([]);
@@ -74,7 +76,7 @@ function OrderPage() {
       setReturnShowArray(Array(orders.length).fill(false));
     }
   }, [orders, acceptShow, cancelShow]);
-  const [orderToCancel, setOrderToCancel] = useState({ orderId: null, shopId: null, userName: '' });
+  const [orderToCancel, setOrderToCancel] = useState({ orderId: null, shopId: null, userName: '', code: null });
   const [orderToAccept, setOrderToAccept] = useState({ orderId: null, shopId: null, userName: '' });
 
   const [orderMessages, setOrderMessages] = useState({});
@@ -132,17 +134,17 @@ function OrderPage() {
 
   const ChatBody = ({ children }) => {
     const chatBodyRef = useRef(null);
-  
+
     const scrollToBottom = () => {
       if (chatBodyRef.current) {
         chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
       }
     };
-  
+
     useEffect(() => {
       scrollToBottom();
     }, [children]);
-  
+
     return (
       <div style={{ maxHeight: "300px", overflow: 'auto' }} ref={chatBodyRef}>
         {children}
@@ -193,8 +195,6 @@ function OrderPage() {
                         <Col className='d-flex  justify-content-end m-3 align-items-center'>
                           {userId.status === "Ordered" ? (
                             <>
-
-
                               <Link className='text-reset text-decoration-none'>
                                 <ActioinBt
                                   onClick={() => {
@@ -236,8 +236,15 @@ function OrderPage() {
                               <ActioinBt className='btn btn-outline-danger text-danger'>Canceled</ActioinBt>
                             </Link>
                           ) : userId.status === "Paid" ? (
-                            <Link to={'/'} className='text-reset text-decoration-none m-2'>
-                              <ActioinBt className='btn btn-info '>CODE</ActioinBt>
+                            <Link className='text-reset text-decoration-none m-2'>
+                              <ActioinBt
+                                onClick={() => {
+                                  setCodeShow(true);
+                                  setOrderToCancel({ orderId: userId.id, shopId: userId.shop, userName: userId.userData.full_name, code: userId.ob_id });
+                                }}
+                                className='btn btn-info '>
+                                CODE
+                              </ActioinBt>
                             </Link>
                           ) : userId.status === "Accepted" ? (
                             <Link className='text-reset text-decoration-none m-2'>
@@ -361,6 +368,18 @@ function OrderPage() {
             order={orderToCancel.orderId}
             shop={orderToCancel.shopId}
             userName={orderToCancel.userName}
+          />
+
+          <CodeModel
+            show={codeShow}
+            onHide={() => {
+              setCodeShow(false);
+              setOrderToCancel({ orderId: null, userName: '' });
+            }}
+            order={orderToCancel.orderId}
+            shop={orderToCancel.shopId}
+            userName={orderToCancel.userName}
+            code={orderToCancel.code}
           />
         </>
       ) : (<p className='text-center'>no orders availabe</p>)}
@@ -715,6 +734,59 @@ function CancelModel(props) {
         <InputGroup>
           <Form.Control as="textarea" placeholder='Enter cancel message..' onChange={handleTextChange} aria-label="With textarea" />
           <Button className='bg-danger' onClick={cancelOrder}>Cancel</Button>
+        </InputGroup>
+      </Modal.Footer>
+    </Modal>
+  );
+}
+// finish.
+function CodeModel(props) {
+  console.log("props  from cancel", props);
+  const [otp, setOtp] = useState('');
+  const updatedData = {
+    status: 'Delivered',
+  }
+  const codeSubmit = () => {
+    console.log("code :",props.code, "endered :",otp);
+    if (props.code === otp) {
+      axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
+        .then(async response => {
+          console.log('Order updated successfully:', response.data);
+          props.onHide()
+        })
+        .catch(error => {
+          console.error('There was an error updating the order:', error);
+        });
+    } else {
+    console.log("Ender valid code");
+    }
+  }
+  return (
+    <Modal
+      className='user-select-none'
+      {...props}
+      size="md"
+      aria-labelledby="contained-modal-title-vcenter"
+      backdrop="static"
+      centered
+    >
+      <Modal.Header className='bg-info' closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          <span className='text-white'><i class="fa-solid fa-people-carry-box"></i> Enter {props.userName}'s order code. </span>
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body className='d-flex justify-content-around '>
+        <OtpInput
+          value={otp}
+          onChange={setOtp}
+          numInputs={5}
+          renderSeparator={<span></span>}
+          renderInput={(props) => <input {...props} style={{ width: "50px", height: '50px' }} className='mx-1 text-center fs-1' />}
+        />
+      </Modal.Body>
+      <Modal.Footer>
+        <InputGroup className='d-flex justify-content-center'>
+          <Button className='btn btn-info text-white' onClick={codeSubmit}>Delivered</Button>
         </InputGroup>
       </Modal.Footer>
     </Modal>
