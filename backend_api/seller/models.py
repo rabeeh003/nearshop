@@ -50,7 +50,7 @@ class Order(models.Model):
     total_price = models.IntegerField(null=True, blank=True)
     ob_id = models.CharField(default='0',max_length=20, null=True, blank=True)
     customer_phone = models.CharField(max_length=15,null=True, blank=True)
-    location = models.ForeignKey("user.location",on_delete=models.DO_NOTHING, null=True, blank=True)
+    location = models.ForeignKey("user.location",on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return f"{self.name}"
 
@@ -74,6 +74,7 @@ class Payment(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.DO_NOTHING)
     order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, related_name='payment_orders')
     payment_status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="Pending")
+    payment_id =models.CharField( max_length=50, null=True, blank=True)
     
     def __str__(self):
         return f"{self.method} - {self.date_time}"

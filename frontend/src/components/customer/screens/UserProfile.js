@@ -123,7 +123,6 @@ function UserProfile() {
             <Accordion >
                 <Accordion.Item className='mb-4' eventKey="0" style={BoxShadow}>
                     <Accordion.Header>
-
                         <i style={{ fontSize: '25px' }} class="fa-solid fa-map-location-dot m-3 text-success"></i>
                         Locations
                     </Accordion.Header>

@@ -22,7 +22,7 @@ function AddLocation(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <AddressLocationPicker onHide={onHide}  />
+                <AddressLocationPicker onHide={onHide} />
             </Modal.Body>
         </Modal>
     );
@@ -82,7 +82,7 @@ function CheckOut(props) {
     };
 
     const [listLocation, setListLocation] = useState([]);
-    const [selectedLocation, setSelectedLocation] = useState({"location_name":'Select address'});
+    const [selectedLocation, setSelectedLocation] = useState({ "location_name": 'Select address' });
 
     useEffect(() => {
         const fetchLocations = async () => {
@@ -110,7 +110,8 @@ function CheckOut(props) {
         "payment_status": "Pending",
         "user": null,
         "shop": null,
-        "order": null
+        "order": null,
+        "payment_id": null
     })
 
     useEffect(() => {
@@ -122,18 +123,64 @@ function CheckOut(props) {
             "order": shopData.id,
             "method": methord,
         })
-    },[total,shopData,selectedLocation,methord])
+    }, [total, shopData, selectedLocation, methord])
 
-    const submitData = async() => {
-        console.log("paymentData : ",paymentData);
-        console.log("location : ", selectedLocation.id);
-        try {
-            await axios.post("http://127.0.0.1:8000/api/s/payments/",paymentData)
-            await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, {"status":"Paid","location": selectedLocation.id})
-        } catch (error) {
-            console.log("error : ",error);
+    const submitData = async (e) => {
+        e.preventDefault();
+        if (methord !== "Cash on Delivery") {
+            const razorpayPromise = new Promise((resolve, reject) => {
+                const options = {
+                    key: "rzp_test_WpAPez4PS87jin",
+                    key_secret: "niYhwwTtxw2jwlPsGjSx6OYm",
+                    amount: paymentData.price * 100,
+                    currency: "INR",
+                    name: "superkart",
+                    description: "for testing purpose",
+                    handler: function (response) {
+                        setPayment({
+                            ...paymentData,
+                            "payment_id": response.razorpay_payment_id
+                        })
+                    },
+                    prefill: {
+                        name: shopData.userData.full_name,
+                        email: shopData.userData.email,
+                        contact: shopData.userData.phone_number
+                    },
+                    notes: {
+                        address: "Razorpay Corporate office"
+                    },
+                    theme: {
+                        color: "#198754"
+                    }
+                };
+                const pay = new window.Razorpay(options);
+                pay.on('payment.failed', function (response) {
+                    reject(response.error);
+                });
+                pay.on('payment.success', function (response) {
+                    resolve(response);
+                });
+                pay.open();
+            });
+
+            try {
+                const response = await razorpayPromise;
+                setPayment({
+                    ...paymentData,
+                    "payment_id": response.razorpay_payment_id
+                });
+
+                console.log("paymentData : ", paymentData);
+                console.log("location : ", selectedLocation.id);
+
+                await axios.post("http://127.0.0.1:8000/api/s/payments/", paymentData);
+                await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id });
+            } catch (error) {
+                console.log("error : ", error);
+            }
         }
-    }
+    };
     return (
         <Page>
             <Row className='d-flex align-items-center' >

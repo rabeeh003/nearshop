@@ -1,7 +1,9 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Accordion } from 'react-bootstrap'
+import { Accordion, Modal } from 'react-bootstrap'
 import styled from 'styled-components'
+import LocationPicker from '../../../../assets/map/LocationPicker'
+import AddressLocationPicker from '../../../../assets/map/AddressAndLocation'
 
 const BoxShadow = {
     boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
@@ -10,34 +12,59 @@ const BoxShadow = {
 function LocationsTwoType(props) {
     const [searchLocation, setSearchLocation] = useState([]);
     const [addressLocation, setAddressLocation] = useState([]);
+    const [showLocationModal, setShowLocationModal] = useState(false);
+    const [showAddressModal, setShowAddressModal] = useState(false);
+
+    const handleAddNewClick = () => {
+        setShowLocationModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowLocationModal(false);
+    };
+
+    const fetchData = async () => {
+        const allSearchLocations = JSON.parse(localStorage.getItem("allLocations"));
+        if (allSearchLocations) {
+            setSearchLocation(allSearchLocations);
+        }
+        try {
+            const allAddress = await axios.get("http://127.0.0.1:8000/api/u/location/");
+            const filterAddress = allAddress.data.filter(add => add.customer_id === props.userId);
+            setAddressLocation(filterAddress);
+        } catch (error) {
+            console.error("Error fetching address locations: ", error);
+        }
+    };
 
     useEffect(() => {
-        async function fetchData() {
-            const allSearchLocations = JSON.parse(localStorage.getItem("allLocations"));
-            if (allSearchLocations) {
-                setSearchLocation(allSearchLocations);
-            }
-            try {
-                const allAddress = await axios.get("http://127.0.0.1:8000/api/u/location/");
-                const filterAddress = allAddress.data.filter(add => add.customer_id === props.userId);
-                setAddressLocation(filterAddress);
-            } catch (error) {
-                console.error("Error fetching address locations: ", error);
-            }
-        }
-
         fetchData();
     }, [props.userId]);
 
-    console.log("searchLocation", searchLocation);
-    console.log("addressLocation", addressLocation);
+    const locationHandleDelete = (idx) => {
+        const allSearchLocations = JSON.parse(localStorage.getItem("allLocations"));
+        if (allSearchLocations) {
+            const updatedLocations = allSearchLocations.filter((location, index) => index !== idx);
+            localStorage.setItem("allLocations", JSON.stringify(updatedLocations));
+            setSearchLocation(updatedLocations);
+        }
+    };
+
+    const addressHandilDelete = async (locid) => {
+        try {
+            await axios.delete(`http://127.0.0.1:8000/api/u/location/${locid}/`);
+            fetchData()
+        } catch (error) {
+            console.log("delete error", error);
+        }
+    };
     return (
 
         <Accordion >
             <Accordion.Item className='mb-4' eventKey="0" style={BoxShadow}>
                 <Accordion.Header>
                     <i style={{ fontSize: '25px' }} class="fa-solid fa-location-crosshairs m-3 text-success"></i>
-                    Delivery Locations
+                    Locations
                 </Accordion.Header>
                 <Accordion.Body>
                     <ListDiv>
@@ -45,22 +72,42 @@ function LocationsTwoType(props) {
                             searchLocation.map((loc, idx) => (
                                 <ListItem key={idx} className='d-flex justify-content-between'>
                                     <span><span className='p-2'>{idx + 1}</span> {loc.name}</span>
-                                    <i className="fa-solid fa-trash text-danger"></i>
+                                    <i className="fa-solid fa-trash text-danger" onClick={() => locationHandleDelete(idx)} ></i>
                                 </ListItem>
                             ))
                         ) : (
                             <p>Not found</p>
                         )}
                         <ListItem>
-                            <span className='btn btn-success'><i className="fa-solid fa-plus me-2"></i>Add New</span>
+                            <span className='btn btn-success' onClick={handleAddNewClick}><i className="fa-solid fa-plus me-2"></i>Add New</span>
                         </ListItem>
                     </ListDiv>
                 </Accordion.Body>
+                <Modal
+                    className='user-select-none'
+                    show={showLocationModal}
+                    onHide={() => {
+                        handleCloseModal()
+                        fetchData();
+                    }}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header className='bg-success' style={{ color: 'white' }} closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            <i className="fa-solid fa-map"></i> Add Location
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <LocationPicker onHide={handleCloseModal} />
+                    </Modal.Body>
+                </Modal>
             </Accordion.Item>
             <Accordion.Item className='mb-4' eventKey="1" style={BoxShadow}>
                 <Accordion.Header>
                     <i style={{ fontSize: '25px' }} class="fa-solid fa-map-location-dot m-3 text-success"></i>
-                    Locations
+                    Delivery Locations
                 </Accordion.Header>
                 <Accordion.Body>
                     <ListDiv>
@@ -68,17 +115,40 @@ function LocationsTwoType(props) {
                             addressLocation.map((loc, idx) => (
                                 <ListItem key={idx} className='d-flex justify-content-between'>
                                     <span><span className='p-2'>{idx + 1}</span> {loc.location_name}</span>
-                                    <i className="fa-solid fa-trash text-danger"></i>
+                                    <i className="fa-solid fa-trash text-danger" onClick={() => addressHandilDelete(loc.id)}></i>
                                 </ListItem>
                             ))
                         ) : (
                             <p>Not found</p>
                         )}
                         <ListItem>
-                            <span className='btn btn-success'><i className="fa-solid fa-plus me-2"></i>Add New</span>
+                            <span className='btn btn-success' onClick={() => setShowAddressModal(true)}><i className="fa-solid fa-plus me-2"></i>Add New</span>
                         </ListItem>
                     </ListDiv>
                 </Accordion.Body>
+                <Modal
+                    className='user-select-none'
+                    show={showAddressModal}
+                    onHide={() => {
+                        setShowAddressModal(false)
+                        fetchData()
+                    }}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header className='bg-success' style={{ color: 'white' }} closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            <i class="fa-solid fa-map"></i> Add Location
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <AddressLocationPicker onHide={() => {
+                            fetchData()
+                            setShowAddressModal(false)
+                        }} />
+                    </Modal.Body>
+                </Modal>
             </Accordion.Item>
         </Accordion>
     )

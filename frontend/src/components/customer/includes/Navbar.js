@@ -103,7 +103,7 @@ function NavBar() {
         if (allLocations) {
             setListLocation(allLocations);
         }
-    }, [userId]); // Include userId in the dependency array if needed
+    }, [userId]);
 
     useEffect(() => {
         const handleStorageChange = () => {

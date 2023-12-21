@@ -195,6 +195,7 @@ class LocationPicker extends Component {
     localStorage.setItem("allLocations", JSON.stringify(existingData));
     // Reset isNameExists flag
     this.setState({ isNameExists: false });
+    this.props.onHide()
   };
 
 

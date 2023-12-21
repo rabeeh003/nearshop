@@ -187,7 +187,7 @@ function CartPage() {
         if (passingData.shop !== null) {
             goToCeckout()
         }
-    },[passingData])
+    },[passingData,navigate])
 
     return (
         <Page className='user-select-nones'>
