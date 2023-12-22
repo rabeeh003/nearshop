@@ -68,7 +68,13 @@ function CartPage() {
     }, [userId, loadUseEffect]);
 
     const allfilter = []
-
+    // return model show
+    const [returnShowArray, setReturnShowArray] = useState(Array(orders.length).fill(false));
+    useEffect(() => {
+        if (orders.length > 0) {
+            setReturnShowArray(Array(orders.length).fill(false));
+        }
+    }, [orders, acceptShow, cancelShow]);
     const [orderToCancel, setOrderToCancel] = useState({ orderId: null, userId: null, userName: '' });
     const [orderToAccept, setOrderToAccept] = useState({ orderId: null, userId: null, userName: '' });
     const [orderToEdit, setOrderToEdit] = useState({ orderId: null, productId: null, userId: null, userName: '', currentCount: "", countType: '', listKey: null });
@@ -178,16 +184,16 @@ function CartPage() {
 
     // check out navigate
     const navigate = useNavigate();
-    const [passingData, setPassingData] = useState({shop:null, products:null})
+    const [passingData, setPassingData] = useState({ shop: null, products: null })
     useEffect(() => {
-        console.log("passed data to check out :",passingData);
+        console.log("passed data to check out :", passingData);
         const goToCeckout = () => {
-            navigate('checkout', { state: { shop: passingData.shop, products:passingData.products } });
+            navigate('checkout', { state: { shop: passingData.shop, products: passingData.products } });
         };
         if (passingData.shop !== null) {
             goToCeckout()
         }
-    },[passingData,navigate])
+    }, [passingData, navigate])
 
     return (
         <Page className='user-select-nones'>
@@ -244,7 +250,7 @@ function CartPage() {
                                                                 </ActioinBt>
                                                             </Link>
                                                         </>
-                                                    ) : shopId.status === "Returned" ? (
+                                                    ) : shopId.status === "Reordered" ? (
                                                         <>
                                                             <Link className='text-reset text-decoration-none m-2'>
                                                                 <ActioinBt
@@ -289,7 +295,7 @@ function CartPage() {
                                                                 </ActioinBt>
                                                             </Link>
                                                             <Link className='text-reset text-decoration-none m-2'>
-                                                                <ActioinBt onClick={() => setPassingData({shop:shopId, products:filteredProducts})} className='btn btn-info'>
+                                                                <ActioinBt onClick={() => setPassingData({ shop: shopId, products: filteredProducts })} className='btn btn-info'>
                                                                     Pay
                                                                 </ActioinBt>
                                                             </Link>
@@ -303,7 +309,16 @@ function CartPage() {
                                                                 }}
                                                             >Order</ActioinBt>
                                                         </Link>
-
+                                                    ) : shopId.status === "Delivered" ? (
+                                                        <Link className='text-reset text-decoration-none m-2'>
+                                                            <ActioinBt className='btn btn-warning '
+                                                                onClick={() => {
+                                                                    const updatedArray = [...returnShowArray];
+                                                                    updatedArray[idx] = true;
+                                                                    setReturnShowArray(updatedArray);
+                                                                }}
+                                                            >Return</ActioinBt>
+                                                        </Link>
                                                     ) : ""}
                                                 </Col>
                                             </Row>
@@ -444,11 +459,26 @@ function CartPage() {
                             )
                         })}
                     </Accordion>
+                    {returnShowArray.map((show, idx) => (
+                        show && (
+                            <ReturnModel
+                                key={idx}
+                                show={returnShowArray[idx]}
+                                onHide={() => {
+                                    const updatedArray = [...returnShowArray];
+                                    updatedArray[idx] = false;
+                                    setReturnShowArray(updatedArray);
+                                }}
+                                product={allfilter[idx]}
+                                user={orders[idx]?.seller.shop_name}
+                            />
+                        )
+                    ))}
                     <EditModel
                         show={editShow}
                         onHide={() => {
                             setEditShow(false);
-
+                            fofUseEffect(3)
                             setOrderToEdit({ orderId: null, userName: '', productId: null, countType: "", currentCount: "", listKey: null });
                         }}
                         onUpdateSuccess={handleUpdateSuccess}
@@ -624,6 +654,110 @@ text-align: center;
 }
 `
 
+// return.
+function ReturnModel({ show, onHide, product: product, user }) {
+    const [products, setProducts] = useState(product);
+    console.log("pro :", products, ", user:", user);
+
+    const [messageData, setMessage] = useState({
+        "text": "",
+        "user": null,
+        "shop": products[0]?.shop,
+        "order": products[0]?.order
+    })
+    const handleTextChange = (e) => {
+        setMessage({ ...messageData, text: e.target.value });
+    };
+    const returnOrder = (re) => {
+        console.log("set return : ", re, ", messageData :", messageData);
+        axios.put(`http://127.0.0.1:8000/api/s/orders/${products[0].order}/`, { status: re })
+            .then(async response => {
+                console.log('Order updated successfully:', response.data);
+                try {
+                    const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+                    console.log('Message sent:', response.data);
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                }
+            })
+            .catch(error => {
+                console.error('There was an error updating the order:', error);
+            });
+    }
+    async function checked(idx) {
+        const updatedProducts = [...products];
+        updatedProducts[idx].returned = !updatedProducts[idx].returned;
+        try {
+            await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${updatedProducts[idx].id}/`, { returned: updatedProducts[idx].returned })
+            setProducts(updatedProducts);
+            console.log("updatedProducts on checked", updatedProducts);
+        } catch (error) {
+            console.log("change value error from checked", error);
+        }
+
+    }
+    return (
+        <Modal
+            show={show} onHide={onHide}
+            className='user-select-none'
+            // {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            backdrop="static"
+            centered
+        >
+            <Modal.Header className='bg-warning' closeButton>
+                <Modal.Title id="contained-modal-title-vcenter ">
+                    <span className='text-white'>
+                        <i class="fa-solid fa-rotate-left"></i> Return {user}'s order.
+                    </span>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                {products?.map((order, orderIdx) => (
+                    <Items key={orderIdx} className='bg-light my-1' style={{ boxShadow: "1px 1px 53px #acaaca,1px 1px 13px #ffffff" }}>
+
+                        <Row className='w-100 d-flex my-1  align-items-center py-2'>
+                            <Col className='d-flex align-items-center bg-light rounded-circle p-1 justify-content-center' style={{
+                                maxWidth: '35px',
+                                borderRadius: "50px",
+                                background: "#e0e0e0",
+                                boxShadow: "6px 6px 12px #acacac,-6px -6px 12px #ffffff"
+                            }}>{orderIdx + 1}</Col>
+                            <Col className='d-md-flex align-items-center'>
+                                <ItemImage src={order.pro.gpro.prodect_image} />
+                                <ItemText>{order.pro.gpro.product_name}</ItemText>
+                            </Col>
+                            <Col xs={3}>
+                                <ItemText className='m-3'>{order.product_count}{order.count_type}</ItemText>
+                            </Col>
+                            <Col xs={1}>
+                                <input
+                                    className="form-check-input"
+                                    onClick={() => checked(orderIdx)}
+                                    type="checkbox"
+                                    value=""
+                                    id={`flexCheckDefault-${orderIdx}`}
+                                    checked={order.returned}
+                                />
+                            </Col>
+                        </Row>
+                    </Items>
+                ))}
+            </Modal.Body>
+            <Modal.Footer >
+                <InputGroup>
+                    <Form.Control as="textarea" placeholder='Enter valuable reason..' value={messageData.text} onChange={handleTextChange} aria-label="With textarea" />
+                </InputGroup>
+                <div className='w-100 text-white d-flex justify-content-between'>
+                    <Button className='bg-warning' onClick={() => returnOrder("Replace")}>Replace</Button>
+                    <Button className='bg-warning' onClick={() => returnOrder("Returned")}>Return</Button>
+                </div>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
 //accept function
 function AcceptModel(props) {
     console.log("propa for accept", props);
@@ -651,11 +785,14 @@ function AcceptModel(props) {
                 setMessage({ ...messageData, user: response.data.user, order: response.data.id });
                 console.log("messageData :", messageData);
                 try {
-                    const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
-                    console.log('Message sent:', response.data);
+                    if (messageData.text !== '') {
+                        const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+                        console.log('Message sent:', response.data);
+                    }
                     props.onHide()
                 } catch (error) {
                     console.error('Error sending message:', error);
+                    props.onHide()
                 }
             })
             .catch(error => {

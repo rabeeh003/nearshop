@@ -375,7 +375,8 @@ function ShopPage() {
                 const filterdOPD = oProductD.data.filter(item =>
                     item.user === userId &&
                     item.shop === updateOrderProductData.shop &&
-                    item.product === updateOrderProductData.product
+                    item.product === updateOrderProductData.product &&
+                    item.orderdata.status === "Cart"
                 ) || "";
                 console.log("affter filtering products data : ", filterdOPD);
 

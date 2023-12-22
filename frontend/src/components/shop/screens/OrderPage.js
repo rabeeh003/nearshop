@@ -524,7 +524,7 @@ text-align: center;
 function ReturnModel({ show, onHide, product, user }) {
   console.log("pro :", product, ", user:", user);
   const updatedData = {
-    status: 'Returned',
+    status: 'Reordered',
   }
   const [messageData, setMessage] = useState({
     "text": "",

@@ -37,7 +37,9 @@ class Order(models.Model):
         ('Cart', 'Cart'),
         ('Ordered', 'Ordered'),
         ('Accepted', 'Accepted'),
+        ('Reordered', 'Reordered'),
         ('Returned', 'Returned'),
+        ('Replace', 'Replace'),
         ('Canceled', 'Canceled'),
         ('Paid', 'Paid'),
         ('Delivered', 'Delivered'),
@@ -95,5 +97,6 @@ class OrderProducts(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
     count_type = models.CharField( max_length=5, default='kg')
     product_price = models.CharField( max_length=7, null=True, blank=True)
+    returned = models.BooleanField( max_length=5, default=False)
     def __str__(self):
         return f"{self.product}"

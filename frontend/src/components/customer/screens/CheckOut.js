@@ -127,7 +127,7 @@ function CheckOut(props) {
 
     const submitData = async (e) => {
         e.preventDefault();
-        if (methord !== "Cash on Delivery") {
+        if (methord !== "Cash on Delivery" && methord !== "" && selectedLocation !== null ) {
             const razorpayPromise = new Promise((resolve, reject) => {
                 const options = {
                     key: "rzp_test_WpAPez4PS87jin",

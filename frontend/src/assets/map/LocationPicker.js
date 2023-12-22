@@ -149,10 +149,10 @@ class LocationPicker extends Component {
               },
             }),
             () => {
-              this.updateMapMarker(); // Update the marker position
-              this.map.panTo(new window.google.maps.LatLng(latitude, longitude)); // Pan the map to the new coordinates
+              this.updateMapMarker();
+              this.map.panTo(new window.google.maps.LatLng(latitude, longitude)); 
               this.map.setZoom(this.map.getZoom() + 12);
-              this.getAddressFromLatLng(latitude, longitude); // Get address from new coordinates
+              this.getAddressFromLatLng(latitude, longitude); 
             }
           );
         },
@@ -173,7 +173,7 @@ class LocationPicker extends Component {
         ...prevState.formData,
         [name]: value,
       },
-      isNameExists: false, // Reset the flag when input changes
+      isNameExists: false,
     }));
   };
 

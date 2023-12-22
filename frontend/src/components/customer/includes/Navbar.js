@@ -50,7 +50,7 @@ function AddLocation(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <LocationPicker />
+                <LocationPicker onHide={props.onHide} />
             </Modal.Body>
         </Modal>
     );
