@@ -17,7 +17,6 @@ function OrderPage() {
   // const [returnShow, setReturnShow] = React.useState(false);
   const [acceptShow, setAcceptShow] = React.useState(false);
   const [cancelShow, setCancelShow] = React.useState(false);
-  const [codeShow, setCodeShow] = React.useState(false);
 
   const [shopId, setShopId] = useState();
   const [orders, setOrders] = useState([]);
@@ -71,11 +70,18 @@ function OrderPage() {
   }, [shopId]);
   const allfilter = []
   const [returnShowArray, setReturnShowArray] = useState(Array(orders.length).fill(false));
+  const [codeShowArray, setCodeShowArray] = useState(Array(orders.length).fill(false));
+
   useEffect(() => {
     if (orders.length > 0) {
       setReturnShowArray(Array(orders.length).fill(false));
     }
   }, [orders, acceptShow, cancelShow]);
+  useEffect(() => {
+    if (orders.length > 0) {
+      setCodeShowArray(Array(orders.length).fill(false));
+    }
+  }, [orders]);
   const [orderToCancel, setOrderToCancel] = useState({ orderId: null, shopId: null, userName: '', code: null });
   const [orderToAccept, setOrderToAccept] = useState({ orderId: null, shopId: null, userName: '' });
 
@@ -152,6 +158,54 @@ function OrderPage() {
     );
   };
 
+  // fainel setting affter enter code
+  const [finishSetup, setFinishSetup] = useState(false)
+  const [oldStatus, setOldStatus] = useState('')
+  const [newStatus, setNewStatus] = useState('')
+  const [proForThis, setProForThis] = useState('')
+  useEffect(() => {
+    const handleReturnedCondition = async () => {
+      if (proForThis && proForThis.length > 0) {
+        if (oldStatus === "Returned") {
+          const returnedProducts = proForThis.filter(product => product.returned === true);
+          console.log("5 - filtered pro:", returnedProducts);
+          for (const product of returnedProducts) {
+            try {
+              await axios.delete(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`);
+              console.log(`Product ${product.id} deleted successfully`);
+              // Perform further actions or state updates if needed
+            } catch (error) {
+              console.error(`Error deleting ordered product ${product.id}:`, error);
+            }
+          }
+        }
+        if (oldStatus === "Replace") {
+          const returnedProducts = proForThis.filter(product => product.returned === true);
+          for (const product of returnedProducts) {
+            try {
+              await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`, { returned: false });
+              console.log(`Product ${product.id} - 'returned' status changed to false`);
+              // Perform further actions or state updates if needed
+            } catch (error) {
+              console.error(`Error updating product ${product.id}:`, error);
+            }
+          }
+        }
+      }
+    };
+
+    console.log("------Finel--Setting------");
+    console.log("1 - finish setup :", finishSetup);
+    console.log("2 - oldStatus :", oldStatus);
+    console.log("3 - newStatus :", newStatus);
+    console.log("4 - proForThis:", proForThis);
+
+    if (newStatus === "Delivered" && finishSetup && proForThis && (oldStatus === "Returned" || oldStatus === "Replace")) {
+      setFinishSetup(false);
+      handleReturnedCondition();
+    }
+  }, [finishSetup, oldStatus, newStatus, proForThis]);
+
   return (
     <Page className='user-select-nones'>
       {orders.length > 0 ? (
@@ -227,10 +281,26 @@ function OrderPage() {
                                 </ActioinBt>
                               </Link>
                             </>
-                          ) : userId.status === "Returned" ? (
-                            <Link className='text-reset text-decoration-none m-2'>
-                              <ActioinBt className='btn text-warning border border-warning' style={{ color: 'yellow' }}>Returned</ActioinBt>
-                            </Link>
+                          ) : userId.status === "Returned" || userId.status === "Replace" ? (
+                            <>
+                              <Link className='text-reset text-decoration-none m-2'>
+                                <ActioinBt className='btn text-warning border border-warning' style={{ color: 'yellow' }}>{userId.status}</ActioinBt>
+                              </Link>
+                              <Link className='text-reset text-decoration-none m-2'>
+                                <ActioinBt
+                                  onClick={() => {
+                                    // setCodeShow(true);
+                                    const updatedArray = [...codeShowArray];
+                                    updatedArray[idx] = true;
+                                    setCodeShowArray(updatedArray);
+                                    setOldStatus(userId.status)
+                                    setOrderToCancel({ orderId: userId.id, shopId: userId.shop, userName: userId.userData.full_name, code: userId.ob_id });
+                                  }}
+                                  className='btn btn-info '>
+                                  CODE
+                                </ActioinBt>
+                              </Link>
+                            </>
                           ) : userId.status === "Canceled" ? (
                             <Link className='text-reset text-decoration-none m-2'>
                               <ActioinBt className='btn btn-outline-danger text-danger'>Canceled</ActioinBt>
@@ -239,7 +309,9 @@ function OrderPage() {
                             <Link className='text-reset text-decoration-none m-2'>
                               <ActioinBt
                                 onClick={() => {
-                                  setCodeShow(true);
+                                  const updatedArray = [...returnShowArray];
+                                  updatedArray[idx] = true;
+                                  setCodeShowArray(updatedArray);
                                   setOrderToCancel({ orderId: userId.id, shopId: userId.shop, userName: userId.userData.full_name, code: userId.ob_id });
                                 }}
                                 className='btn btn-info '>
@@ -279,10 +351,20 @@ function OrderPage() {
                             <ItemText>{order.pro.gpro.product_name}</ItemText>
                           </Col>
                           <Col xs={3}>
-                            <ItemText className='m-3'>{order.product_count}{order.count_type}</ItemText>
+                            <ItemText className='m-3'>{order.product_count}{order.count_type === "count" ? (" p") : order.count_type}</ItemText>
                           </Col>
-                          <Col xs={3}>
+                          <Col xs={2}>
                             <ItemText className='m-3'>₹ {calculateTotalPrice(order.pro.price, order.product_count, order.count_type)}</ItemText>
+                          </Col>
+                          <Col xs={1}>
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              value=""
+                              id={`flexCheckDefault-${orderIdx}`}
+                              checked={order.returned}
+                              disabled
+                            />
                           </Col>
                         </Row>
                       </Items>
@@ -300,13 +382,13 @@ function OrderPage() {
                               <Row className='row w-100'>
                                 {message.shop === null ? (
                                   <Col style={{ width: "fit-content", maxWidth: "90%" }} className='d-flex'>
-                                    <img src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' width='30' height='30' />
+                                    <img src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' alt='logo' width='30' height='30' />
                                     <ChatBubbleUser className='ml-2 p-3'>{message.text}</ChatBubbleUser>
                                   </Col>
                                 ) : (
                                   <Col className='d-flex justify-content-end'>
                                     <ChatBubble className='ml-2 p-3'>{message.text}</ChatBubble>
-                                    <img src={userId.seller.profile_image} width='30' height='30' />
+                                    <img src={userId.seller.profile_image} width='30' alt='logo' height='30' />
                                   </Col>
                                 )}
                               </Row>
@@ -348,6 +430,7 @@ function OrderPage() {
               />
             )
           ))}
+
           <AcceptModel
             show={acceptShow}
             onHide={() => {
@@ -369,18 +452,28 @@ function OrderPage() {
             shop={orderToCancel.shopId}
             userName={orderToCancel.userName}
           />
-
-          <CodeModel
-            show={codeShow}
-            onHide={() => {
-              setCodeShow(false);
-              setOrderToCancel({ orderId: null, userName: '' });
-            }}
-            order={orderToCancel.orderId}
-            shop={orderToCancel.shopId}
-            userName={orderToCancel.userName}
-            code={orderToCancel.code}
-          />
+          {codeShowArray.map((show, idx) => (
+            show && (
+              <CodeModel
+                key={idx}
+                show={codeShowArray[idx]}
+                onHide={(soso) => {
+                  setFinishSetup(true)
+                  setProForThis(allfilter[idx])
+                  setNewStatus(soso)
+                  const updatedArray = [...codeShowArray];
+                  updatedArray[idx] = false;
+                  setCodeShowArray(updatedArray);
+                  setOrderToCancel({ orderId: null, userName: '' });
+                }}
+                product={allfilter[idx]}
+                order={orderToCancel.orderId}
+                shop={orderToCancel.shopId}
+                userName={orderToCancel.userName}
+                code={orderToCancel.code}
+              />
+            )
+          ))}
         </>
       ) : (<p className='text-center'>no orders availabe</p>)}
     </Page>
@@ -423,11 +516,7 @@ const Header = styled.div`
   font-weight: 800;
   color: white;
 `;
-const ChatBody = styled.div`
-  min-height: 50px;
-  max-height: 40vh;
-  overflow-y: auto;
-`
+
 const ChatContent = styled.div`
   display: flex;
   flex-direction: row;
@@ -747,18 +836,19 @@ function CodeModel(props) {
     status: 'Delivered',
   }
   const codeSubmit = () => {
-    console.log("code :",props.code, "endered :",otp);
+
+    console.log("code :", props.code, "endered :", otp);
     if (props.code === otp) {
       axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
         .then(async response => {
           console.log('Order updated successfully:', response.data);
-          props.onHide()
+          props.onHide(updatedData.status)
         })
         .catch(error => {
           console.error('There was an error updating the order:', error);
         });
     } else {
-    console.log("Ender valid code");
+      console.log("Ender valid code");
     }
   }
   return (

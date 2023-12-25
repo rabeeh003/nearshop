@@ -319,6 +319,10 @@ function CartPage() {
                                                                 }}
                                                             >Return</ActioinBt>
                                                         </Link>
+                                                    ) : shopId.status === "Replace" || shopId.status === "Returned" ? (
+                                                        <Link className='text-reset text-decoration-none m-2'>
+                                                            <ActioinBt className='btn btn-info '>Code : {shopId.ob_id}</ActioinBt>
+                                                        </Link>
                                                     ) : ""}
                                                 </Col>
                                             </Row>
@@ -468,6 +472,7 @@ function CartPage() {
                                     const updatedArray = [...returnShowArray];
                                     updatedArray[idx] = false;
                                     setReturnShowArray(updatedArray);
+                                    fofUseEffect(4)
                                 }}
                                 product={allfilter[idx]}
                                 user={orders[idx]?.seller.shop_name}
@@ -676,6 +681,7 @@ function ReturnModel({ show, onHide, product: product, user }) {
                 try {
                     const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
                     console.log('Message sent:', response.data);
+                    onHide()
                 } catch (error) {
                     console.error('Error sending message:', error);
                 }
