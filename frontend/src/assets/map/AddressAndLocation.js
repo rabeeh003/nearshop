@@ -8,7 +8,7 @@ import { Button, Form } from "react-bootstrap";
 class AddressLocationPicker extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       longval: 76.066386,
       latval: 11.043152,
@@ -33,6 +33,22 @@ class AddressLocationPicker extends Component {
   componentDidMount() {
     this.loadGoogleMapsScript();
     this.fetchUserId();
+
+    if (this.props.oldData !== null) {
+      this.setState((prevState) => ({
+        longval: this.props.oldData.lng,
+        latval: this.props.oldData.lat,
+        formData: {
+          ...prevState.formData,
+          phone_number:this.props.oldData.phone_number,
+          address:this.props.oldData.address,
+          pin_code:this.props.oldData.pin_code,
+          name:this.props.oldData.location_name,
+          lat: this.props.oldData.lat,
+          long: this.props.oldData.lng,
+        },
+      }));
+    }
   }
 
   fetchUserId() {
@@ -209,8 +225,13 @@ class AddressLocationPicker extends Component {
     };
     try {
       console.log("location for submit", newLocation);
-      axios.post("http://127.0.0.1:8000/api/u/location/", newLocation)
-      this.props.onHide();
+      if (this.props.oldData === null) {
+        axios.post("http://127.0.0.1:8000/api/u/location/", newLocation)
+        this.props.onHide();
+      } else {
+        axios.put(`http://127.0.0.1:8000/api/u/location/${this.props.oldData.id}/`, newLocation)
+        this.props.onHide();
+      }
     } catch (error) {
       console.log("error ", error);
     }
@@ -275,30 +296,6 @@ class AddressLocationPicker extends Component {
             onChange={this.handleInputChange}
           />
         </Form.Group>
-
-        {/* <Form.Group controlId="formLatitude">
-          <Form.Label>Latitude</Form.Label>
-          <Form.Control
-            type="text"
-            name="latitude"
-            placeholder="Latitude"
-            value={this.state.formData.lat}
-            onChange={this.handleInputChange}
-            disabled
-          />
-        </Form.Group>
-
-        <Form.Group controlId="formLongitude">
-          <Form.Label>Longitude</Form.Label>
-          <Form.Control
-            type="text"
-            name="longitude"
-            placeholder="Longitude"
-            value={this.state.formData.long}
-            onChange={this.handleInputChange}
-            disabled
-          />
-        </Form.Group> */}
 
         <div className="d-flex justify-content-between w-100 p-2">
           <Button variant="success" onClick={this.getCurrentLocation}>Current Location</Button>

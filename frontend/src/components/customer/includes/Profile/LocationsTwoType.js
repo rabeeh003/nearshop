@@ -14,6 +14,9 @@ function LocationsTwoType(props) {
     const [addressLocation, setAddressLocation] = useState([]);
     const [showLocationModal, setShowLocationModal] = useState(false);
     const [showAddressModal, setShowAddressModal] = useState(false);
+    const [editLocationId, setEditLocationId] = useState(null);
+    const [changing, setChanging] = useState()
+
 
     const handleAddNewClick = () => {
         setShowLocationModal(true);
@@ -115,7 +118,15 @@ function LocationsTwoType(props) {
                             addressLocation.map((loc, idx) => (
                                 <ListItem key={idx} className='d-flex justify-content-between'>
                                     <span><span className='p-2'>{idx + 1}</span> {loc.location_name}</span>
-                                    <i className="fa-solid fa-trash text-danger" onClick={() => addressHandilDelete(loc.id)}></i>
+                                    <span>
+                                    <span onClick={() => {
+                                        setEditLocationId(loc.id)
+                                        setShowAddressModal(true)
+                                    }}>
+                                        <i className="fa-solid fa-edit pe-2 text-secondary"></i>
+                                    </span>
+                                    <i className="fa-solid fa-trash text-danger ms-3" onClick={() => addressHandilDelete(loc.id)}></i>
+                                    </span>
                                 </ListItem>
                             ))
                         ) : (
@@ -143,10 +154,28 @@ function LocationsTwoType(props) {
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <AddressLocationPicker onHide={() => {
-                            fetchData()
-                            setShowAddressModal(false)
-                        }} />
+                        {/* <AddressLocationPicker oldData={null} onHide={() => {
+
+                        }} /> */}
+                        {editLocationId !== null ? (
+                            <AddressLocationPicker
+                                oldData={addressLocation.find(location => location.id === editLocationId)}
+                                onHide={() => {
+                                    setEditLocationId(null)
+                                    fetchData()
+                                    setShowAddressModal(false)
+                                }}
+                            />
+                        ) : (
+                            <AddressLocationPicker
+                                oldData={null}
+                                onHide={() => {
+                                    setChanging(1)
+                                    setShowAddressModal(false)
+                                    fetchData()
+                                }}
+                            />
+                        )}
                     </Modal.Body>
                 </Modal>
             </Accordion.Item>

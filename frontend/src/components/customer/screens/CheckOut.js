@@ -7,7 +7,7 @@ import axios from 'axios';
 // import Modal from 'react-bootstrap/Modal';
 
 function AddLocation(props) {
-    const { onHide } = props;
+    const { onHide, oldData = null } = props;
     return (
         <Modal
             className='user-select-none'
@@ -22,7 +22,7 @@ function AddLocation(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <AddressLocationPicker onHide={onHide} />
+                <AddressLocationPicker onHide={onHide} oldData={oldData} />
             </Modal.Body>
         </Modal>
     );
@@ -37,6 +37,9 @@ const BoxShadow = {
 
 function CheckOut(props) {
     const [addLocation, setAddLocation] = React.useState(false);
+    const [changing, setChanging] = React.useState(false);
+    const [editLocationId, setEditLocationId] = useState(null);
+
     const location = useLocation();
     const shopData = location.state ? location.state.shop : null;
     const products = location.state ? location.state.products : null;
@@ -96,7 +99,7 @@ function CheckOut(props) {
         };
 
         fetchLocations();
-    }, []);
+    }, [changing]);
 
     const handleLocationSelection = (locationName) => {
         setSelectedLocation(locationName);
@@ -127,7 +130,7 @@ function CheckOut(props) {
 
     const submitData = async (e) => {
         e.preventDefault();
-        if (methord !== "Cash on Delivery" && methord !== "" && selectedLocation !== null ) {
+        if (methord !== "Cash on Delivery" && methord !== "" && selectedLocation !== null) {
             const razorpayPromise = new Promise((resolve, reject) => {
                 const options = {
                     key: "rzp_test_WpAPez4PS87jin",
@@ -202,7 +205,7 @@ function CheckOut(props) {
                                 </Row>
                             </div>
                         </div>
-                        <div className='overflow-auto' style={{ height: '70vh' }}>
+                        <div className='overflow-auto' style={{ maxHeight: '70vh', height:'100%' }}>
                             {products?.map((order, orderIdx) => (
                                 <Items key={orderIdx} className='bg-light my-1' style={{ boxShadow: "1px 1px 53px #acaaca,1px 1px 13px #ffffff" }}>
 
@@ -244,10 +247,14 @@ function CheckOut(props) {
                                 {listLocation ? (
                                     listLocation.map((location, index) => (
                                         <Dropdown.Item
+                                            className='d-flex justify-content-between align-items-center'
                                             key={index}
                                             onClick={() => handleLocationSelection(location)}
                                         >
                                             {location.location_name}
+                                            <span onClick={() => setEditLocationId(location.id)}>
+                                                <i className="fa-solid fa-edit pe-2 text-secondary"></i>
+                                            </span>
                                         </Dropdown.Item>
                                     ))
                                 ) : (
@@ -257,6 +264,25 @@ function CheckOut(props) {
                                 <Dropdown.Item onClick={handleAddLocation}>
                                     <i className="fa-solid fa-plus pe-2"></i>Add New
                                 </Dropdown.Item>
+                                {editLocationId !== null ? (
+                                    <AddLocation
+                                        show={true}
+                                        oldData={listLocation.find(location => location.id === editLocationId)}
+                                        onHide={() => {
+                                            setEditLocationId(null)
+                                            setChanging(2)
+                                        }}
+                                    />
+                                ) : (
+                                    <AddLocation
+                                        show={addLocation}
+                                        oldData={null}
+                                        onHide={() => {
+                                            setAddLocation(false)
+                                            setChanging(1)
+                                        }}
+                                    />
+                                )}
                             </Dropdown.Menu>
                         </Dropdown>
                         <Form.Select name='method' onChange={e => setMethord(e.target.value)} aria-label="Payment Type">
@@ -271,7 +297,6 @@ function CheckOut(props) {
                     </div>
                 </Col>
             </Row>
-            <AddLocation show={addLocation} onHide={() => setAddLocation(false)} />
         </Page>
     )
 }

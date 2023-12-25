@@ -32,7 +32,6 @@ function CartPage() {
                 console.log('adminKey not found in localStorage');
             }
         };
-
         fetchUserId();
     }, []);
     useEffect(() => {
