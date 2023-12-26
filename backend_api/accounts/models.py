@@ -9,6 +9,7 @@ class Customer(models.Model):
     email = models.EmailField( max_length=254, unique=True)
     phone_two = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     address = models.TextField()
+    wallet = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

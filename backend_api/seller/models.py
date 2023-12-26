@@ -43,6 +43,7 @@ class Order(models.Model):
         ('Canceled', 'Canceled'),
         ('Paid', 'Paid'),
         ('Delivered', 'Delivered'),
+        ('Completed', 'Completed'),
     ]
     status = models.CharField(max_length=20, choices=status_choices)
     code = models.IntegerField(null=True, blank=True)
@@ -60,7 +61,7 @@ class Payment(models.Model):
     METHOD_CHOICES = [
         ('Credit Card', 'Credit Card'),
         ('Debit Card', 'Debit Card'),
-        ('PayPal', 'PayPal'),
+        ('Razorpay', 'Razorpay'),
         ('Cash on Delivery', 'Cash on Delivery'),
     ]
     STATUS_CHOICES = [

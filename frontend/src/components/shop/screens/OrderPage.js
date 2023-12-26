@@ -163,6 +163,7 @@ function OrderPage() {
   const [oldStatus, setOldStatus] = useState('')
   const [newStatus, setNewStatus] = useState('')
   const [proForThis, setProForThis] = useState('')
+  const [returnPrice, setReturnPrice] = useState(0)
   useEffect(() => {
     const handleReturnedCondition = async () => {
       if (proForThis && proForThis.length > 0) {
@@ -171,6 +172,7 @@ function OrderPage() {
           console.log("5 - filtered pro:", returnedProducts);
           for (const product of returnedProducts) {
             try {
+              setReturnPrice(returnPrice + (product.product_price * product.product_count))
               await axios.delete(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`);
               console.log(`Product ${product.id} deleted successfully`);
               // Perform further actions or state updates if needed
@@ -178,6 +180,7 @@ function OrderPage() {
               console.error(`Error deleting ordered product ${product.id}:`, error);
             }
           }
+          axios.put(`http://127.0.0.1:8000/api/customer/${returnedProducts[0].user}/`,{wallet:returnPrice})
         }
         if (oldStatus === "Replace") {
           const returnedProducts = proForThis.filter(product => product.returned === true);

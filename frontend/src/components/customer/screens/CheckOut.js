@@ -130,58 +130,68 @@ function CheckOut(props) {
 
     const submitData = async (e) => {
         e.preventDefault();
-        if (methord !== "Cash on Delivery" && methord !== "" && selectedLocation !== null) {
-            const razorpayPromise = new Promise((resolve, reject) => {
-                const options = {
-                    key: "rzp_test_WpAPez4PS87jin",
-                    key_secret: "niYhwwTtxw2jwlPsGjSx6OYm",
-                    amount: paymentData.price * 100,
-                    currency: "INR",
-                    name: "superkart",
-                    description: "for testing purpose",
-                    handler: function (response) {
-                        setPayment({
-                            ...paymentData,
-                            "payment_id": response.razorpay_payment_id
-                        })
-                    },
-                    prefill: {
-                        name: shopData.userData.full_name,
-                        email: shopData.userData.email,
-                        contact: shopData.userData.phone_number
-                    },
-                    notes: {
-                        address: "Razorpay Corporate office"
-                    },
-                    theme: {
-                        color: "#198754"
-                    }
-                };
-                const pay = new window.Razorpay(options);
-                pay.on('payment.failed', function (response) {
-                    reject(response.error);
-                });
-                pay.on('payment.success', function (response) {
-                    resolve(response);
-                });
-                pay.open();
-            });
-
+        console.log("_________________________");
+        console.log("----start--transation----");
+        if (
+            methord !== "Cash on Delivery" &&
+            methord !== "" &&
+            selectedLocation !== ''
+        ) {
+            console.log("start Payment. method", methord);
             try {
-                const response = await razorpayPromise;
+                const response = await new Promise((resolve, reject) => {
+                    const options = {
+                        key: "rzp_test_WpAPez4PS87jin",
+                        key_secret: "niYhwwTtxw2jwlPsGjSx6OYm",
+                        amount: paymentData.price * 100,
+                        currency: "INR",
+                        name: "superkart",
+                        description: "for testing purpose",
+                        handler: function (response) {
+                            setPayment({
+                                ...paymentData,
+                                "payment_id": response.razorpay_payment_id
+                            });
+                            resolve(response);
+                        },
+                        prefill: {
+                            name: shopData.userData.full_name,
+                            email: shopData.userData.email,
+                            contact: shopData.userData.phone_number
+                        },
+                        notes: {
+                            address: "Razorpay Corporate office"
+                        },
+                        theme: {
+                            color: "#198754"
+                        }
+                    };
+                    const pay = new window.Razorpay(options);
+
+                    pay.on('payment.failed', function (response) {
+                        reject(response.error);
+                    });
+
+                    pay.open();
+                });
+
                 setPayment({
                     ...paymentData,
                     "payment_id": response.razorpay_payment_id
                 });
-
-                console.log("paymentData : ", paymentData);
-                console.log("location : ", selectedLocation.id);
-
-                await axios.post("http://127.0.0.1:8000/api/s/payments/", paymentData);
-                await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id });
             } catch (error) {
-                console.log("error : ", error);
+                console.error("Payment error:", error);
+                // Handle the error as needed
             }
+        }
+        try {
+            console.log("paymentData : ", paymentData);
+            console.log("location : ", selectedLocation.id);
+
+            await axios.post("http://127.0.0.1:8000/api/s/payments/", paymentData);
+            await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id });
+        } catch (error) {
+            console.log("error : ", error);
         }
     };
     return (
@@ -205,7 +215,7 @@ function CheckOut(props) {
                                 </Row>
                             </div>
                         </div>
-                        <div className='overflow-auto' style={{ maxHeight: '70vh', height:'100%' }}>
+                        <div className='overflow-auto' style={{ maxHeight: '70vh', height: '100%' }}>
                             {products?.map((order, orderIdx) => (
                                 <Items key={orderIdx} className='bg-light my-1' style={{ boxShadow: "1px 1px 53px #acaaca,1px 1px 13px #ffffff" }}>
 
@@ -287,8 +297,7 @@ function CheckOut(props) {
                         </Dropdown>
                         <Form.Select name='method' onChange={e => setMethord(e.target.value)} aria-label="Payment Type">
                             <option hidden>Select Payment Type</option>
-                            <option value="razorpay">razorpay</option>
-                            <option value="UPI">UPI</option>
+                            <option value="Razorpay">Razorpay</option>
                             <option value="Cash on Delivery">Cash on Delivery</option>
                         </Form.Select>
                     </div>
