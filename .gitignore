@@ -17,5 +17,36 @@ npm-debug.log*
 yarn-error.log*
 package-lock.json
 
+# --------------------------
+# ----------django----------
 
+# Ignore Django development-related files
+*.pyc
+*.pyo
+__pycache__/
 
+# Ignore database files
+*.sqlite3
+*.db
+
+# Ignore local settings (you might adjust this according to your setup)
+local_settings.py
+
+# Ignore IDE or editor-specific files
+.vscode/
+.idea/
+*.swp
+
+# Ignore logs and other generated files
+logs/
+*.log
+
+# Ignore static files that are collected during deployment
+staticfiles/
+static/
+
+# Ignore media files (user-uploaded content)
+media/
+
+# Ignore environment-specific files
+.env

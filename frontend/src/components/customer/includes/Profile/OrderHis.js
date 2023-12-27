@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components';
 import axios from 'axios';
+import dateFormat, { masks } from "dateformat";
 
 
 const BoxShadow = {
@@ -62,7 +63,7 @@ function OrderHis(props) {
                     }
                     return (
                         <Accordion.Item eventKey={idx} style={BoxShadow} className='mb-4 rounded'>
-                            <CartDet className='p-3'><b>Date : </b>{order.updated_date}</CartDet>
+                            <CartDet className='p-3'><b>Date & Time : </b>{dateFormat(order.updated_date)}</CartDet> 
                             <Accordion.Header>
                                 <div className='d-flex flex-column w-100'>
                                     <Row className=''>

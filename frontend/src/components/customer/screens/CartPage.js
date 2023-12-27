@@ -69,11 +69,17 @@ function CartPage() {
     const allfilter = []
     // return model show
     const [returnShowArray, setReturnShowArray] = useState(Array(orders.length).fill(false));
+    const [acceptShowArray, setAcceptShowArray] = useState(Array(orders.length).fill(false));
     useEffect(() => {
         if (orders.length > 0) {
             setReturnShowArray(Array(orders.length).fill(false));
         }
-    }, [orders, acceptShow, cancelShow]);
+    }, [orders, cancelShow]);
+    useEffect(() => {
+        if (orders.length > 0) {
+            setAcceptShowArray(Array(orders.length).fill(false));
+        }
+    }, [orders, acceptShow]);
     const [orderToCancel, setOrderToCancel] = useState({ orderId: null, userId: null, userName: '' });
     const [orderToAccept, setOrderToAccept] = useState({ orderId: null, userId: null, userName: '' });
     const [orderToEdit, setOrderToEdit] = useState({ orderId: null, productId: null, userId: null, userName: '', currentCount: "", countType: '', listKey: null });
@@ -226,239 +232,247 @@ function CartPage() {
                             }
 
                             return (
-                                <Accordion.Item key={idx} eventKey={idx} style={BoxShadow} className='mb-4 rounded'>
-                                    <Accordion.Header>
-                                        <div className='d-flex flex-column w-100'>
-                                            <Row className=''>
-                                                <Col style={{ minWidth: 'fit-content' }} className="d-flex align-items-center">
-                                                    <ProIcon src={shopId.seller.profile_image} />
-                                                    <ShopName className='h5 m-2 m-sm-4'>{shopId.seller.shop_name}</ShopName>
-                                                </Col>
-                                                <Col className='d-flex justify-content-end m-3 align-items-center'>
-                                                    {shopId.status === "Ordered" ? (
-                                                        <>
-                                                            <Link className='text-reset text-decoration-none m-2'>
-                                                                <ActioinBt
-                                                                    onClick={() => {
-                                                                        setCancelShow(true);
-                                                                        setOrderToCancel({ orderId: shopId.id, userId: shopId.shop, userName: shopId.seller.shop_name });
-                                                                    }}
-                                                                    className='btn btn-danger'
-                                                                >
-                                                                    Cancel
-                                                                </ActioinBt>
-                                                            </Link>
-                                                        </>
-                                                    ) : shopId.status === "Reordered" ? (
-                                                        <>
-                                                            <Link className='text-reset text-decoration-none m-2'>
-                                                                <ActioinBt
-                                                                    onClick={() => {
-                                                                        setCancelShow(true);
-                                                                        setOrderToCancel({ orderId: shopId.id, userId: shopId.shop, userName: shopId.seller.shop_name });
-                                                                    }}
-                                                                    className='btn btn-danger'
-                                                                >
-                                                                    Cancel
-                                                                </ActioinBt>
-                                                            </Link>
-                                                            <Link className='text-reset text-decoration-none m-2'
-                                                                onClick={() => {
-                                                                    setAcceptShow(true);
-                                                                    setOrderToAccept({ orderId: shopId.id, userId: shopId.shop, userName: shopId.seller.shop_name });
-                                                                }}
-                                                            >
-                                                                <ActioinBt className='btn btn-warning' >Re order</ActioinBt>
-                                                            </Link>
-                                                        </>
-
-                                                    ) : shopId.status === "Canceled" ? (
-                                                        <Link className='text-reset text-decoration-none m-2'>
-                                                            <ActioinBt className='btn btn-outline-danger text-danger'>Rejected</ActioinBt>
-                                                        </Link>
-                                                    ) : shopId.status === "Paid" ? (
-                                                        <Link className='text-reset text-decoration-none m-2'>
-                                                            <ActioinBt className='btn btn-info '>Code : {shopId.ob_id}</ActioinBt>
-                                                        </Link>
-                                                    ) : shopId.status === "Accepted" ? (
-                                                        <>
-                                                            <Link className='text-reset text-decoration-none m-2'>
-                                                                <ActioinBt
-                                                                    onClick={() => {
-                                                                        setCancelShow(true);
-                                                                        setOrderToCancel({ orderId: shopId.id, userId: shopId.shop, userName: shopId.seller.shop_name });
-                                                                    }}
-                                                                    className='btn btn-danger'
-                                                                >
-                                                                    Cancel
-                                                                </ActioinBt>
-                                                            </Link>
-                                                            <Link className='text-reset text-decoration-none m-2'>
-                                                                <ActioinBt onClick={() => setPassingData({ shop: shopId, products: filteredProducts })} className='btn btn-info'>
-                                                                    Pay
-                                                                </ActioinBt>
-                                                            </Link>
-                                                        </>
-                                                    ) : shopId.status === "Cart" ? (
-                                                        <Link className='text-reset text-decoration-none m-2'>
-                                                            <ActioinBt className='btn btn-success '
-                                                                onClick={() => {
-                                                                    setAcceptShow(true);
-                                                                    setOrderToAccept({ orderId: shopId.id, userId: shopId.shop, userName: shopId.userData.full_name });
-                                                                }}
-                                                            >Order</ActioinBt>
-                                                        </Link>
-                                                    ) : shopId.status === "Delivered" ? (
-                                                        <Link className='text-reset text-decoration-none m-2'>
-                                                            <ActioinBt className='btn btn-warning '
-                                                                onClick={() => {
-                                                                    const updatedArray = [...returnShowArray];
-                                                                    updatedArray[idx] = true;
-                                                                    setReturnShowArray(updatedArray);
-                                                                }}
-                                                            >Return</ActioinBt>
-                                                        </Link>
-                                                    ) : shopId.status === "Replace" || shopId.status === "Returned" ? (
-                                                        <Link className='text-reset text-decoration-none m-2'>
-                                                            <ActioinBt className='btn btn-info '>Code : {shopId.ob_id}</ActioinBt>
-                                                        </Link>
-                                                    ) : ""}
-                                                </Col>
-                                            </Row>
-                                            <Row className='w-100'>
-                                                <Col className='d-flex align-items-center justify-content-around'>
-                                                    <CartDet><b>Total items : </b>{filteredProducts.length}</CartDet>
-                                                    <CartDet><b>Order status : </b>{shopId.status}</CartDet>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                    </Accordion.Header>
-                                    <Accordion.Body>
-                                        {filteredProducts?.map((order, orderIdx) => (
-                                            <Items key={orderIdx} className='bg-light my-1' style={{ boxShadow: "1px 1px 53px #acaaca,1px 1px 13px #ffffff" }}>
-
-                                                <Row className='w-100 d-flex my-1  align-items-center py-2 position-relative'>
-                                                    <span className='d-flex align-items-center bg-light rounded-circle p-1 justify-content-center ' style={{
-                                                        maxWidth: '35px',
-                                                        borderRadius: "50px",
-                                                        background: "#e0e0e0",
-                                                        boxShadow: "6px 6px 12px #acacac,-6px -6px 12px #ffffff"
-                                                    }}>{orderIdx + 1}</span>
-                                                    <Row className='d-flex align-items-center justify-content-around'>
-                                                        <Col xs={10} sm={8} md={6} className='d-flex align-items-center justify-content-around'>
-                                                            <Col className='d-md-flex align-items-center'>
-                                                                <ItemImage src={order.pro.gpro.prodect_image} />
-                                                                <ItemText>{order.pro.gpro.product_name}</ItemText>
-                                                            </Col>
-                                                            <Col xs={3}>
-                                                                <ItemText className='m-3'>₹ {calculateTotalPrice(order.pro.price, order.product_count, order.count_type)}</ItemText>
-                                                            </Col>
+                                <>
+                                    {(shopId.status === "Delivered" && new Date() - new Date(shopId.updated_date) > 60 * 60 * 1000) ? ("") : (
+                                        <Accordion.Item key={idx} eventKey={idx} style={BoxShadow} className='mb-4 rounded'>
+                                            <Accordion.Header>
+                                                <div className='d-flex flex-column w-100'>
+                                                    <Row className=''>
+                                                        <Col style={{ minWidth: 'fit-content' }} className="d-flex align-items-center">
+                                                            <ProIcon src={shopId.seller.profile_image} />
+                                                            <ShopName className='h5 m-2 m-sm-4'>{shopId.seller.shop_name}</ShopName>
                                                         </Col>
-                                                        {shopId.status === "Cart" || shopId.status === "Returned" ? (
-                                                            <Col xs={12} md={6} className='d-flex align-items-center justify-content-around'>
-                                                                <Col xs={4} md={4} className='d-flex align-items-center justify-content-center'>
-                                                                    <Form.Select aria-label="Default select example" style={{ minWidth: "70px", width: "100%", maxWidth: "90px" }}
+                                                        <Col className='d-flex justify-content-end m-3 align-items-center'>
+                                                            {shopId.status === "Ordered" ? (
+                                                                <>
+                                                                    <Link className='text-reset text-decoration-none m-2'>
+                                                                        <ActioinBt
+                                                                            onClick={() => {
+                                                                                setCancelShow(true);
+                                                                                setOrderToCancel({ orderId: shopId.id, userId: shopId.shop, userName: shopId.seller.shop_name });
+                                                                            }}
+                                                                            className='btn btn-danger'
+                                                                        >
+                                                                            Cancel
+                                                                        </ActioinBt>
+                                                                    </Link>
+                                                                </>
+                                                            ) : shopId.status === "Reordered" ? (
+                                                                <>
+                                                                    <Link className='text-reset text-decoration-none m-2'>
+                                                                        <ActioinBt
+                                                                            onClick={() => {
+                                                                                setCancelShow(true);
+                                                                                setOrderToCancel({ orderId: shopId.id, userId: shopId.shop, userName: shopId.seller.shop_name });
+                                                                            }}
+                                                                            className='btn btn-danger'
+                                                                        >
+                                                                            Cancel
+                                                                        </ActioinBt>
+                                                                    </Link>
+                                                                    <Link className='text-reset text-decoration-none m-2'
                                                                         onClick={() => {
-                                                                            setEditShow(true);
-                                                                            setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
+                                                                            const updatedArray = [...acceptShowArray];
+                                                                            updatedArray[idx] = true;
+                                                                            setAcceptShowArray(updatedArray);
                                                                         }}
                                                                     >
-                                                                        {order.count_type === 'count' ? (
-                                                                            <option hidden value="pack">Pack</option>
-                                                                        ) : (
-                                                                            <>
-                                                                                {order.count_type === 'kg' ? (
-                                                                                    <>
-                                                                                        <option hidden value="kg">kg</option>
-                                                                                        <option hidden value="g">gram</option>
-                                                                                    </>
+                                                                        <ActioinBt className='btn btn-warning' >Re order</ActioinBt>
+                                                                    </Link>
+                                                                </>
+
+                                                            ) : shopId.status === "Canceled" ? (
+                                                                <Link className='text-reset text-decoration-none m-2'>
+                                                                    <ActioinBt className='btn btn-outline-danger text-danger'>Rejected</ActioinBt>
+                                                                </Link>
+                                                            ) : shopId.status === "Paid" ? (
+                                                                <Link className='text-reset text-decoration-none m-2'>
+                                                                    <ActioinBt className='btn btn-info '>Code : {shopId.ob_id}</ActioinBt>
+                                                                </Link>
+                                                            ) : shopId.status === "Accepted" ? (
+                                                                <>
+                                                                    <Link className='text-reset text-decoration-none m-2'>
+                                                                        <ActioinBt
+                                                                            onClick={() => {
+                                                                                setCancelShow(true);
+                                                                                setOrderToCancel({ orderId: shopId.id, userId: shopId.shop, userName: shopId.seller.shop_name });
+                                                                            }}
+                                                                            className='btn btn-danger'
+                                                                        >
+                                                                            Cancel
+                                                                        </ActioinBt>
+                                                                    </Link>
+                                                                    <Link className='text-reset text-decoration-none m-2'>
+                                                                        <ActioinBt onClick={() => setPassingData({ shop: shopId, products: filteredProducts })} className='btn btn-info'>
+                                                                            Pay
+                                                                        </ActioinBt>
+                                                                    </Link>
+                                                                </>
+                                                            ) : shopId.status === "Cart" ? (
+                                                                <Link className='text-reset text-decoration-none m-2'>
+                                                                    <ActioinBt className='btn btn-success '
+                                                                        onClick={() => {
+                                                                            // setAcceptShow(true);
+                                                                            // setOrderToAccept({ orderId: shopId.id, userId: shopId.shop, userName: shopId.userData.full_name });
+                                                                            const updatedArray = [...acceptShowArray];
+                                                                            updatedArray[idx] = true;
+                                                                            setAcceptShowArray(updatedArray);
+                                                                        }}
+                                                                    >Order</ActioinBt>
+                                                                </Link>
+                                                            ) : (shopId.status === "Delivered" && new Date() - new Date(shopId.updated_date) < 60 * 60 * 1000) ? (
+                                                                <Link className='text-reset text-decoration-none m-2'>
+                                                                    <ActioinBt className='btn btn-warning '
+                                                                        onClick={() => {
+                                                                            const updatedArray = [...returnShowArray];
+                                                                            updatedArray[idx] = true;
+                                                                            setReturnShowArray(updatedArray);
+                                                                        }}
+                                                                    >Return</ActioinBt>
+                                                                </Link>
+                                                            ) : shopId.status === "Replace" || shopId.status === "Returned" ? (
+                                                                <Link className='text-reset text-decoration-none m-2'>
+                                                                    <ActioinBt className='btn btn-info '>Code : {shopId.ob_id}</ActioinBt>
+                                                                </Link>
+                                                            ) : ""}
+                                                        </Col>
+                                                    </Row>
+                                                    <Row className='w-100'>
+                                                        <Col className='d-flex align-items-center justify-content-around'>
+                                                            <CartDet><b>Total items : </b>{filteredProducts.length}</CartDet>
+                                                            <CartDet><b>Order status : </b>{shopId.status}</CartDet>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                            </Accordion.Header>
+                                            <Accordion.Body>
+                                                {filteredProducts?.map((order, orderIdx) => (
+                                                    <Items key={orderIdx} className='bg-light my-1' style={{ boxShadow: "1px 1px 53px #acaaca,1px 1px 13px #ffffff" }}>
+
+                                                        <Row className='w-100 d-flex my-1  align-items-center py-2 position-relative'>
+                                                            <span className='d-flex align-items-center bg-light rounded-circle p-1 justify-content-center ' style={{
+                                                                maxWidth: '35px',
+                                                                borderRadius: "50px",
+                                                                background: "#e0e0e0",
+                                                                boxShadow: "6px 6px 12px #acacac,-6px -6px 12px #ffffff"
+                                                            }}>{orderIdx + 1}</span>
+                                                            <Row className='d-flex align-items-center justify-content-around'>
+                                                                <Col xs={10} sm={8} md={6} className='d-flex align-items-center justify-content-around'>
+                                                                    <Col className='d-md-flex align-items-center'>
+                                                                        <ItemImage src={order.pro.gpro.prodect_image} />
+                                                                        <ItemText>{order.pro.gpro.product_name}</ItemText>
+                                                                    </Col>
+                                                                    <Col xs={3}>
+                                                                        <ItemText className='m-3'>₹ {calculateTotalPrice(order.pro.price, order.product_count, order.count_type)}</ItemText>
+                                                                    </Col>
+                                                                </Col>
+                                                                {shopId.status === "Cart" || shopId.status === "Reordered" ? (
+                                                                    <Col xs={12} md={6} className='d-flex align-items-center justify-content-around'>
+                                                                        <Col xs={4} md={4} className='d-flex align-items-center justify-content-center'>
+                                                                            <Form.Select aria-label="Default select example" style={{ minWidth: "70px", width: "100%", maxWidth: "90px" }}
+                                                                                onClick={() => {
+                                                                                    setEditShow(true);
+                                                                                    setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
+                                                                                }}
+                                                                            >
+                                                                                {order.count_type === 'count' ? (
+                                                                                    <option hidden value="pack">Pack</option>
                                                                                 ) : (
                                                                                     <>
-                                                                                        <option hidden value="g">gram</option>
-                                                                                        <option hidden value="kg">kg</option>
+                                                                                        {order.count_type === 'kg' ? (
+                                                                                            <>
+                                                                                                <option hidden value="kg">kg</option>
+                                                                                                <option hidden value="g">gram</option>
+                                                                                            </>
+                                                                                        ) : (
+                                                                                            <>
+                                                                                                <option hidden value="g">gram</option>
+                                                                                                <option hidden value="kg">kg</option>
+                                                                                            </>
+                                                                                        )}
+
                                                                                     </>
                                                                                 )}
-
-                                                                            </>
-                                                                        )}
-                                                                    </Form.Select>
-                                                                </Col>
-                                                                <Col xs={4} sm={6} className='d-flex align-items-center justify-content-center'>
-                                                                    <ItemBtn className='fa-solid fa-square-minus'
-                                                                        onClick={() => {
-                                                                            setEditShow(true);
-                                                                            setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
-                                                                        }}
-                                                                    ></ItemBtn>
-                                                                    <InputGroup.Text
-                                                                        style={{ width: "100%", maxWidth: "60px", maxHeight: "60px", textAlign: "center" }}
-                                                                        className='m-2'
-                                                                        type="number"
-                                                                        onClick={() => {
-                                                                            setEditShow(true);
-                                                                            setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
-                                                                        }}
-                                                                    >{order.product_count}</InputGroup.Text>
-                                                                    <ItemBtn className="fa-solid fa-square-plus"
-                                                                        onClick={() => {
-                                                                            setEditShow(true);
-                                                                            setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
-                                                                        }}
-                                                                    ></ItemBtn>
-                                                                </Col>
-                                                                {/* <span class="position-absolute top-50 start-100 translate-middle badge border border-light rounded-circle bg-danger p-2" style={{fontSize:"0.1rem"}}><i class="fs-6 fa-solid fa-trash text-white"></i></span> */}
-                                                                <Col xs={"auto"} class="w-auto" style={{ fontSize: "0.1rem" }}><i onClick={() => { setProductToRemove({ productId: order.id }) }} class="rounded-circle bg-danger p-2 fs-6 fa-solid fa-trash text-white"></i></Col>
-                                                            </Col>
-
-                                                        ) : (
-                                                            <Col xs={2} sm={2}>
-                                                                <ItemText className='m-3'>{order.product_count}{order.count_type}</ItemText>
-                                                            </Col>
-                                                        )}
-                                                    </Row>
-                                                </Row>
-                                            </Items>
-                                        ))}
-                                        {shopId.status !== "Cart" ? (
-                                            <Contain>
-                                                <ChatCard className='mt-5'>
-                                                    <Header>
-                                                        <span style={{ width: "100%", textAlign: 'center' }}>Chat</span>
-                                                    </Header>
-                                                    <ChatBody>
-                                                        {groupedMessages[shopId.id]?.map((message, messageIdx) => (
-                                                            <ChatContent key={messageIdx}>
-                                                                <Row className='row w-100' >
-                                                                    {message.user === null ? (
-                                                                        <Col style={{ width: "fit-content", maxWidth: "90%" }} className='d-flex'>
-                                                                            <img alt='shop-profile' src={shopId.seller.profile_image} width='30' height='30' />
-                                                                            <ChatBubble className='ml-2 p-3'>{message.text}</ChatBubble>
+                                                                            </Form.Select>
                                                                         </Col>
-                                                                    ) : (
-                                                                        <Col className='d-flex justify-content-end'>
-                                                                            <ChatBubbleUser className='ml-2 p-3'>{message.text}</ChatBubbleUser>
-                                                                            <img alt='user-profile' src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' width='30' height='30' />
+                                                                        <Col xs={4} sm={6} className='d-flex align-items-center justify-content-center'>
+                                                                            <ItemBtn className='fa-solid fa-square-minus'
+                                                                                onClick={() => {
+                                                                                    setEditShow(true);
+                                                                                    setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
+                                                                                }}
+                                                                            ></ItemBtn>
+                                                                            <InputGroup.Text
+                                                                                style={{ width: "100%", maxWidth: "60px", maxHeight: "60px", textAlign: "center" }}
+                                                                                className='m-2'
+                                                                                type="number"
+                                                                                onClick={() => {
+                                                                                    setEditShow(true);
+                                                                                    setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
+                                                                                }}
+                                                                            >{order.product_count}</InputGroup.Text>
+                                                                            <ItemBtn className="fa-solid fa-square-plus"
+                                                                                onClick={() => {
+                                                                                    setEditShow(true);
+                                                                                    setOrderToEdit({ orderId: shopId.id, userId: shopId.shop, productId: order.id, countType: order.count_type, currentCount: order.product_count, userName: order.pro.gpro.product_name, listKey: orderIdx });
+                                                                                }}
+                                                                            ></ItemBtn>
                                                                         </Col>
-                                                                    )}
-                                                                </Row>
-                                                            </ChatContent>
-                                                        ))}
-                                                    </ChatBody>
-                                                    <div className='form-group px-3 d-flex justify-content-between align-items-center'>
-                                                        <InputTextarea
-                                                            rows='1'
-                                                            style={{ width: "90%", fontSize: '1rem' }}
-                                                            placeholder='Type your message'
-                                                            value={orderMessages[shopId.id]?.text || ''}
-                                                            onChange={(e) => handleTextChange(e, shopId.id)}
-                                                        ></InputTextarea>
-                                                        <button className='btn btn-success text-white' onClick={() => sendMessage(shopId.id)}><i class="fa-solid fa-paper-plane"></i></button>
-                                                    </div>
-                                                </ChatCard>
-                                            </Contain>
-                                        ) : ''}
-                                    </Accordion.Body>
-                                </Accordion.Item>
+                                                                        {/* <span class="position-absolute top-50 start-100 translate-middle badge border border-light rounded-circle bg-danger p-2" style={{fontSize:"0.1rem"}}><i class="fs-6 fa-solid fa-trash text-white"></i></span> */}
+                                                                        <Col xs={"auto"} class="w-auto" style={{ fontSize: "0.1rem" }}><i onClick={() => { setProductToRemove({ productId: order.id }) }} class="rounded-circle bg-danger p-2 fs-6 fa-solid fa-trash text-white"></i></Col>
+                                                                    </Col>
+
+                                                                ) : (
+                                                                    <Col xs={2} sm={2}>
+                                                                        <ItemText className='m-3'>{order.product_count}{order.count_type}</ItemText>
+                                                                    </Col>
+                                                                )}
+                                                            </Row>
+                                                        </Row>
+                                                    </Items>
+                                                ))}
+                                                {shopId.status !== "Cart" ? (
+                                                    <Contain>
+                                                        <ChatCard className='mt-5'>
+                                                            <Header>
+                                                                <span style={{ width: "100%", textAlign: 'center' }}>Chat</span>
+                                                            </Header>
+                                                            <ChatBody>
+                                                                {groupedMessages[shopId.id]?.map((message, messageIdx) => (
+                                                                    <ChatContent key={messageIdx}>
+                                                                        <Row className='row w-100' >
+                                                                            {message.user === null ? (
+                                                                                <Col style={{ width: "fit-content", maxWidth: "90%" }} className='d-flex'>
+                                                                                    <img alt='shop-profile' src={shopId.seller.profile_image} width='30' height='30' />
+                                                                                    <ChatBubble className='ml-2 p-3'>{message.text}</ChatBubble>
+                                                                                </Col>
+                                                                            ) : (
+                                                                                <Col className='d-flex justify-content-end'>
+                                                                                    <ChatBubbleUser className='ml-2 p-3'>{message.text}</ChatBubbleUser>
+                                                                                    <img alt='user-profile' src='https://img.icons8.com/color/48/000000/circled-user-female-skin-type-7.png' width='30' height='30' />
+                                                                                </Col>
+                                                                            )}
+                                                                        </Row>
+                                                                    </ChatContent>
+                                                                ))}
+                                                            </ChatBody>
+                                                            <div className='form-group px-3 d-flex justify-content-between align-items-center'>
+                                                                <InputTextarea
+                                                                    rows='1'
+                                                                    style={{ width: "90%", fontSize: '1rem' }}
+                                                                    placeholder='Type your message'
+                                                                    value={orderMessages[shopId.id]?.text || ''}
+                                                                    onChange={(e) => handleTextChange(e, shopId.id)}
+                                                                ></InputTextarea>
+                                                                <button className='btn btn-success text-white' onClick={() => sendMessage(shopId.id)}><i class="fa-solid fa-paper-plane"></i></button>
+                                                            </div>
+                                                        </ChatCard>
+                                                    </Contain>
+                                                ) : ''}
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    )}
+                                </>
                             )
                         })}
                     </Accordion>
@@ -494,17 +508,24 @@ function CartPage() {
                         productId={orderToEdit.productId}
                         listKey={orderToEdit.listKey}
                     />
-                    <AcceptModel
-                        show={acceptShow}
-                        onHide={() => {
-                            setAcceptShow(false);
-                            fofUseEffect(1)
-                            setOrderToAccept({ orderId: null, userName: '' });
-                        }}
-                        order={orderToAccept.orderId}
-                        user={orderToAccept.userId}
-                        userName={orderToAccept.userName}
-                    />
+                    {acceptShowArray.map((show, idx) => (
+                        show && (
+                            <AcceptModel
+                                key={idx}
+                                show={acceptShowArray[idx]}
+                                onHide={() => {
+                                    fofUseEffect(1)
+                                    const updatedArray = [...acceptShowArray];
+                                    updatedArray[idx] = false;
+                                    setAcceptShowArray(updatedArray);
+                                }}
+                                product={allfilter[idx]}
+                                order={orders[idx]?.id}
+                                user={orders[idx]?.userData.full_name}
+                                userName={orders[idx]?.seller.shop_name}
+                            />
+                        )
+                    ))}
                     <CancelModel
                         show={cancelShow}
                         onHide={() => {
@@ -677,13 +698,15 @@ function ReturnModel({ show, onHide, product: product, user }) {
         axios.put(`http://127.0.0.1:8000/api/s/orders/${products[0].order}/`, { status: re })
             .then(async response => {
                 console.log('Order updated successfully:', response.data);
-                try {
-                    const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
-                    console.log('Message sent:', response.data);
-                    onHide()
-                } catch (error) {
-                    console.error('Error sending message:', error);
+                if (messageData.text !== "") {
+                    try {
+                        const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+                        console.log('Message sent:', response.data);
+                    } catch (error) {
+                        console.error('Error sending message:', error);
+                    }
                 }
+                onHide()
             })
             .catch(error => {
                 console.error('There was an error updating the order:', error);
@@ -789,16 +812,25 @@ function AcceptModel(props) {
                 console.log('Order updated successfully:', response.data);
                 setMessage({ ...messageData, user: response.data.user, order: response.data.id });
                 console.log("messageData :", messageData);
-                try {
-                    if (messageData.text !== '') {
+                await Promise.all(
+                    props.product.map(async (product) => {
+                        let price = product.pro.gpro.offer_price || product.pro.gpro.price;
+                        try {
+                            await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`, { product_price: price });
+                        } catch (error) {
+                            console.log("error of price adding",error)
+                        }
+                    })
+                );
+                if (messageData.text !== "") {
+                    try {
                         const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
                         console.log('Message sent:', response.data);
+                    } catch (error) {
+                        console.error('Error sending message:', error);
                     }
-                    props.onHide()
-                } catch (error) {
-                    console.error('Error sending message:', error);
-                    props.onHide()
                 }
+                props.onHide()
             })
             .catch(error => {
                 console.error('There was an error updating the order:', error);
@@ -958,14 +990,15 @@ function CancelModel(props) {
         axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
             .then(async response => {
                 console.log('Order updated successfully:', response.data);
-
-                try {
-                    const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
-                    console.log('Message sent:', response.data);
-                    props.onHide()
-                } catch (error) {
-                    console.error('Error sending message:', error);
+                if (messageData.text !== "") {
+                    try {
+                        const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+                        console.log('Message sent:', response.data);
+                    } catch (error) {
+                        console.error('Error sending message:', error);
+                    }
                 }
+                props.onHide()
             })
             .catch(error => {
                 console.error('There was an error updating the order:', error);

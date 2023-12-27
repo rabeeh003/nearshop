@@ -8,6 +8,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import userlogo from "../../../assets/images/userlogo.png"
 import OtpInput from 'react-otp-input';
 import axios from 'axios';
+import dateFormat from "dateformat";
 
 const BoxShadow = {
   boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
@@ -180,7 +181,7 @@ function OrderPage() {
               console.error(`Error deleting ordered product ${product.id}:`, error);
             }
           }
-          axios.put(`http://127.0.0.1:8000/api/customer/${returnedProducts[0].user}/`,{wallet:returnPrice})
+          axios.put(`http://127.0.0.1:8000/api/customer/${returnedProducts[0].user}/`, { wallet: returnPrice })
         }
         if (oldStatus === "Replace") {
           const returnedProducts = proForThis.filter(product => product.returned === true);
@@ -241,7 +242,7 @@ function OrderPage() {
 
               return (
                 <Accordion.Item key={idx} eventKey={idx} style={BoxShadow} className='mb-4 rounded'>
-                  <CartDet className='p-3'><b>Date : </b>{userId.updated_date}</CartDet>
+                  <CartDet className='p-3'><b>Date : </b>{dateFormat(userId.updated_date)}</CartDet>
                   <Accordion.Header>
                     <div className='d-flex flex-column w-100'>
                       <Row className=''>
@@ -632,11 +633,13 @@ function ReturnModel({ show, onHide, product, user }) {
     axios.put(`http://127.0.0.1:8000/api/s/orders/${product[0].order}/`, updatedData)
       .then(async response => {
         console.log('Order updated successfully:', response.data);
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
-          console.log('Message sent:', response.data);
-        } catch (error) {
-          console.error('Error sending message:', error);
+        if (messageData.text !== "") {
+          try {
+            const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+            console.log('Message sent:', response.data);
+          } catch (error) {
+            console.error('Error sending message:', error);
+          }
         }
       })
       .catch(error => {
@@ -715,12 +718,13 @@ function AcceptModel(props) {
     axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
       .then(async response => {
         console.log('Order updated successfully:', response.data);
-
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
-          console.log('Message sent:', response.data);
-        } catch (error) {
-          console.error('Error sending message:', error);
+        if (messageData.text !== "") {
+          try {
+            const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+            console.log('Message sent:', response.data);
+          } catch (error) {
+            console.error('Error sending message:', error);
+          }
         }
       })
       .catch(error => {
@@ -795,12 +799,13 @@ function CancelModel(props) {
     axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
       .then(async response => {
         console.log('Order updated successfully:', response.data);
-
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
-          console.log('Message sent:', response.data);
-        } catch (error) {
-          console.error('Error sending message:', error);
+        if (messageData.text !== "") {
+          try {
+            const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+            console.log('Message sent:', response.data);
+          } catch (error) {
+            console.error('Error sending message:', error);
+          }
         }
       })
       .catch(error => {
