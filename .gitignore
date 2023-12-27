@@ -50,4 +50,4 @@ media/
 
 # Ignore environment-specific files
 .env
-v-env/
+/v-env
