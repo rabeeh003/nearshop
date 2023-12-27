@@ -13,7 +13,7 @@ Thumbs.db
 
 # Ignore Node.js dependencies
 node_modules/
-npm-debug.log*
+npm-debug.log* 
 yarn-error.log*
 package-lock.json
 
