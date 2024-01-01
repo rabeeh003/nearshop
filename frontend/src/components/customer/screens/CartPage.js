@@ -17,6 +17,8 @@ function CartPage() {
     const [cancelShow, setCancelShow] = React.useState(false);
     const [loadUseEffect, fofUseEffect] = useState(0)
 
+    const [selectedOption, setSelectedOption] = useState('cart');
+
     const [userId, setUserId] = useState();
     const [orders, setOrders] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
@@ -40,8 +42,12 @@ function CartPage() {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/s/orders/');
                 console.log("responce from orders : ", response);
-                const ord = response.data.filter(order => order.user === userId && order.status !== 'Billed');
-
+                let ord
+                if (selectedOption === "cart") {
+                    ord = response.data.filter(order => order.user === userId && order.status !== 'Billed' && order.status === "Cart");
+                } else {
+                    ord = response.data.filter(order => order.user === userId && order.status !== 'Billed' && order.status !== "Cart");
+                }
                 console.log("api data :", ord);
                 setOrders(ord)
 
@@ -64,7 +70,7 @@ function CartPage() {
         }
 
         fetchOrder()
-    }, [userId, loadUseEffect]);
+    }, [userId, loadUseEffect, selectedOption]);
 
     const allfilter = []
     // return model show
@@ -202,11 +208,38 @@ function CartPage() {
 
     return (
         <Page className='user-select-nones'>
+            <NavTab className='row px-3 w-100'>
+                <div className='col m-1'>
+                    <input
+                        type="radio"
+                        className="btn-check"
+                        name="options-outlined"
+                        id="cart-select"
+                        checked={selectedOption === 'cart'}
+                        onChange={() => setSelectedOption('cart')}
+                    />
+                    <label className={"btn btn-outline-success w-100"} htmlFor="cart-select">
+                        Cart
+                    </label>
+                </div>
+                <div className='col m-1 '>
+                    <input
+                        type="radio"
+                        className="btn-check"
+                        name="options-outlined"
+                        id="order-select"
+                        checked={selectedOption === 'order'}
+                        onChange={() => setSelectedOption('order')}
+                    />
+                    <label className={"btn btn-outline-success w-100"} htmlFor="order-select">
+                        Order
+                    </label>
+                </div>
+            </NavTab>
             {orders.length > 0 ? (
                 <>
-                    <Accordion defaultActiveKey={['0']} alwaysOpen>
+                    <Accordion style={{width:"90%"}} defaultActiveKey={['0']} alwaysOpen>
                         {orders.map((shopId, idx) => {
-
                             const justfilter = filteredData.filter(order => order.order === shopId.id);
                             const filteredProducts = justfilter.slice().sort((a, b) => a.id - b.id);
                             allfilter.push(filteredProducts)
@@ -544,15 +577,22 @@ function CartPage() {
 }
 
 const Page = styled.div`
-padding: 10px 20px;
-max-width: 90vw;
-margin: auto;
-align-items: center;
-@media screen and (max-width: 578px) {
-  height: 100%;
-  margin-bottom: 50px;
-  max-width: 98vw;
-}
+    padding: 10px 20px;
+    max-width: 90vw;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @media screen and (max-width: 578px) {
+        height: 100%;
+        margin-bottom: 50px;
+        max-width: 98vw;
+    }
+`
+const NavTab = styled.div`
+    padding:10px;
+    width:100%;
 `
 const Contain = styled.div`
   display: flex;
@@ -818,7 +858,7 @@ function AcceptModel(props) {
                         try {
                             await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`, { product_price: price });
                         } catch (error) {
-                            console.log("error of price adding",error)
+                            console.log("error of price adding", error)
                         }
                     })
                 );
