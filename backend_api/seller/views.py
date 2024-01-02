@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
+from django.shortcuts import render, get_object_or_404, redirect
+from datetime import date
 
 class SellerProductView(ListCreateAPIView):
     permission_classes = [AllowAny]
@@ -57,6 +59,8 @@ class SellerProductEditView(UpdateAPIView):
 class AllProduct(ListAPIView):
     queryset = seller_products.objects.all()
     serializer_class = SellerAllProduct
+
+
 
 class ProductDetails(RetrieveAPIView):
     queryset = seller_products.objects.all()

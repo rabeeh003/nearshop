@@ -107,7 +107,7 @@ const Invoice = () => {
           </table>
         </div>
         <div className="total mt-4">
-          <h2>Total: ${totelpr}</h2>
+          <h2>Total: ₹{totelpr}</h2>
         </div>
       </div>
       <div className="text-center mt-4">

@@ -16,7 +16,7 @@ function Billing() {
     const handleModalClose = () => setShowModal(false)
     let location = useLocation();
     const addpro = location.state?.product || ""
-    const [count, setCount] = useState(null)
+    const [count, setCount] = useState(1)
     const [type, setype] = useState('')
     const [phone, setPhone] = useState('')
     const [totel, setTotel] = useState('0')
@@ -155,7 +155,7 @@ function Billing() {
                 }
             });
 
-            setCount('');
+            setCount(1);
         }
         console.log("---------  Product to list ---------");
         console.log("addpro : ", addpro);
@@ -196,7 +196,7 @@ function Billing() {
         };
         setBillData(updateBilldata);
 
-    }, [phone, disc])
+    }, [phone, disc,totel])
 
     useEffect(() => {
         const fetchShopId = () => {
