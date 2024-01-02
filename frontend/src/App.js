@@ -35,6 +35,7 @@ import OwnerLogin from './components/owner/screen/login'
 import OwnerHome from './components/owner/screen/home'
 import CreateShop from './components/owner/screen/CreateShop'
 import ONavs from './components/owner/ONavs'
+import Invoice from './components/customer/includes/Profile/Invoice';
 function App() {
   return (
     <>
@@ -47,7 +48,10 @@ function App() {
               <Route index element={<CartPage />} />
               <Route path='checkout' element={<CustomerPrivetRoute><CheckOut /></CustomerPrivetRoute>} />
             </Route>
-            <Route path='user' element={<CustomerPrivetRoute><UserProfile /></CustomerPrivetRoute>} />
+            <Route path='user'>
+              <Route index element={<CustomerPrivetRoute><UserProfile /></CustomerPrivetRoute>} />
+              <Route path='invoice' element={<CustomerPrivetRoute><Invoice /></CustomerPrivetRoute>} />
+            </Route>
             <Route path='/:shop_id' element={<ShopPage />} />
             <Route path='login' element={<CustomerLoginRoute><UserLogin /></CustomerLoginRoute>} />
             <Route path='signup' element={<CustomerLoginRoute><UserSignup /></CustomerLoginRoute>} />

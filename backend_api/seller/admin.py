@@ -29,6 +29,6 @@ admin.site.register(Payment)
 admin.site.register(Message)
 
 class OrderProductTable(admin.ModelAdmin):
-    list_display = ('id',"order", 'shop_id', "user_id","product","date_time")
+    list_display = ('id',"order","order_id", 'shop_id', "user_id","product","product_price","date_time")
 
 admin.site.register(OrderProducts, OrderProductTable)

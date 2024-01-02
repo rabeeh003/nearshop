@@ -854,9 +854,16 @@ function AcceptModel(props) {
                 console.log("messageData :", messageData);
                 await Promise.all(
                     props.product.map(async (product) => {
-                        let price = product.pro.gpro.offer_price || product.pro.gpro.price;
+                        console.log("product :",product);
+                        let price = 0
+                        if (product.pro.offer_price > 0) {
+                            price = product.pro.offer_price    
+                        }else{
+                            price = product.pro.price
+                        }
+                        console.log("price : ",price);
                         try {
-                            await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`, { product_price: price });
+                            await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`, { "product_price": price });
                         } catch (error) {
                             console.log("error of price adding", error)
                         }
