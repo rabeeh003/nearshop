@@ -14,35 +14,43 @@ function SearchSuggestions({ show, onHide }) {
 
     useEffect(() => {
         const fetchShopId = () => {
-          const adminKeyString = localStorage.getItem('adminKey');
-          if (adminKeyString) {
-            const adminKey = JSON.parse(adminKeyString);
-            setShopId(adminKey.id);
-            console.log('shopid in search : ', shopId);
-          } else {
-            console.log('adminKey not found in localStorage');
-          }
-        };
-    
-        fetchShopId();
-    
-      }, [shopId]);
-    
-      useEffect(() => {
-        const fetchShopProducts = async () => {
-          try {
-            if (shopId) {
-              const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts?shop_id=${shopId}`);
-              setAllProducts(response.data.filter(product => product.shop_id === shopId && product.offer_price == null));
-              console.log('search product : ', allProducts);
+            const adminKeyString = localStorage.getItem('adminKey');
+            if (adminKeyString) {
+                const adminKey = JSON.parse(adminKeyString);
+                setShopId(adminKey.id);
+                console.log('shopid in search : ', shopId);
+            } else {
+                console.log('adminKey not found in localStorage');
             }
-          } catch (error) {
-            console.error('Error fetching shop products:', error);
-          }
         };
-    
+
+        fetchShopId();
+
+    }, [shopId]);
+
+    useEffect(() => {
+        const fetchShopProducts = async () => {
+            try {
+                if (shopId) {
+                    const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts?shop_id=${shopId}`);
+                    const day = new Date().toJSON().slice(0, 10);
+                    const filteredProducts = response.data.filter(product => {
+                        return (
+                            product.shop_id === shopId &&
+                            (product.offer_price == null && (product.offer_end === null || day >= product.offer_end))
+                        );
+                    });
+
+                    setAllProducts(filteredProducts);
+                    console.log('search product : ', allProducts);
+                }
+            } catch (error) {
+                console.error('Error fetching shop products:', error);
+            }
+        };
+
         fetchShopProducts();
-      }, [shopId]);
+    }, [shopId]);
 
     useEffect(() => {
         if (productName.trim() !== '') {
@@ -53,7 +61,7 @@ function SearchSuggestions({ show, onHide }) {
 
             const result = fuse.search(productName);
             setSuggestedProducts(result.map((res) => res.item));
-            console.log("suggestedProducts : ",suggestedProducts);
+            console.log("suggestedProducts : ", suggestedProducts);
         } else {
             setSuggestedProducts([]);
         }
@@ -65,7 +73,7 @@ function SearchSuggestions({ show, onHide }) {
     };
 
     const handleAddProductClick = (product) => {
-        console.log("product.id from search model :",product);
+        console.log("product.id from search model :", product);
         onHide();
         navigate(``, { state: { product: product } });
     };

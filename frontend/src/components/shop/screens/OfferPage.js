@@ -15,6 +15,7 @@ function OfferPage() {
   const [currentData, setCurrentData] = useState();
   const [shopId, setShopId] = useState();
   const [product, setProducts] = useState(null);
+  const [getNeed, setGetNeed] = useState(0)
 
   // Get the next day
   const today = new Date();
@@ -51,21 +52,41 @@ function OfferPage() {
   };
 
   const handleSubmit = async () => {
+    if (FormData.offer_price !== null && FormData.offer_start !== FormData.offer_end) {
+
+      try {
+        console.log("subitting data : ", FormData);
+        const url = `http://127.0.0.1:8000/api/s/editproduct/${currentData.id}/update/`;
+        await axios.patch(url, FormData);
+        console.log('Product updated successfully');
+        setFormData({
+          "offer_price": null,
+          "offer_start": today.toISOString().split('T')[0],
+          "offer_end": nextDay.toISOString().split('T')[0],
+        });
+        setCurrentData(null)
+        setGetNeed(1)
+      } catch (error) {
+        console.error('Error updating product:', error);
+      }
+    }
+  };
+  const removeOffer = async (data) => {
     try {
-      console.log("subitting data : ", FormData);
-      const url = `http://127.0.0.1:8000/api/s/editproduct/${currentData.id}/update/`;
-      await axios.patch(url, FormData);
-      console.log('Product updated successfully');
-      setFormData({
+      const removeee = {
         "offer_price": null,
-        "offer_start": today.toISOString().split('T')[0],
-        "offer_end": nextDay.toISOString().split('T')[0],
-      });
-      currentData(null)
+        "offer_start": null,
+        "offer_end": null,
+      };
+      console.log("removeee data : ", removeee);
+      const url = `http://127.0.0.1:8000/api/s/editproduct/${data.id}/update/`;
+      await axios.patch(url, removeee);
+      setGetNeed(2)
     } catch (error) {
       console.error('Error updating product:', error);
     }
   };
+
 
   useEffect(() => {
     const setPro = () => {
@@ -93,7 +114,21 @@ function OfferPage() {
       try {
         if (shopId) {
           const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts?shop_id=${shopId}`);
-          setProducts(response.data.filter(product => product.shop_id === shopId && product.offer_price !== null));
+          console.log("====================");
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+
+          // Format yesterday as a string for comparison
+          const formattedYesterday = yesterday.toISOString().slice(0, 10);
+          console.log("yesterday = ", formattedYesterday);
+          const filteredProducts = response.data.filter(product => {
+            return (
+              product.shop_id === shopId &&
+              product.offer_price > 0 &&
+              (formattedYesterday < product.offer_end)
+            );
+          });
+          setProducts(filteredProducts);
         }
       } catch (error) {
         console.error('Error fetching shop products:', error);
@@ -102,7 +137,7 @@ function OfferPage() {
 
     fetchShopId();
     fetchShopProducts();
-  }, [shopId]);
+  }, [shopId, getNeed]);
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -208,7 +243,7 @@ function OfferPage() {
             </Col>
           </Col>
           <Col className='my-2'>
-            <Button onClick={handleSubmit} variant='info' style={{ height: '55px', width: '100%' }}>Add Offer</Button>
+            <Button onClick={handleSubmit} variant='info' style={{ height: '55px', width: '100%', color:"white" }}>Add</Button>
           </Col>
         </Row>
         {/* <Row className=' mt-3 p-3' style={{ borderRadius: '10px', height: '60vh', backgroundColor: 'whitesmoke' }}>
@@ -241,7 +276,7 @@ function OfferPage() {
           </Col>
           {product ? (
             product.map((product, index) => (
-              <Col xs={12} className='d-flex pt-2 py-3' style={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <Col xs={12} key={index} className='d-flex pt-2 py-3' style={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
                 <HeadTest>{index + 1}</HeadTest>
                 <HeadTest>{product.gpro.product_name}</HeadTest>
                 <HeadTest>{product.price}</HeadTest>
@@ -250,7 +285,9 @@ function OfferPage() {
                 <HeadTest>{formatDate(product.offer_end)}</HeadTest>
                 <HeadTest >
                   <i onClick={() => setEditData(index)} class="fa-solid fa-pen-to-square me-1 text-info"></i>
-                  <i class="fa-regular fa-circle-xmark me-3"></i>
+                  <i onClick={() => {
+                    removeOffer(product)
+                  }} class="fa-regular fa-circle-xmark me-3"></i>
                 </HeadTest>
               </Col>
             ))

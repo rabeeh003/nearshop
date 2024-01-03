@@ -87,7 +87,8 @@ function OfferCard() {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts/`);
-                const filteredProducts = response.data.filter(product => product.offer_price !== null);
+                const day = new Date().toJSON().slice(0, 10);
+                const filteredProducts = response.data.filter(product => product.offer_price !== null && day <= product.offer_end && day >= product.offer_start);
 
                 // Map to group products by their name
                 const productMap = new Map();
@@ -95,7 +96,7 @@ function OfferCard() {
                     const productName = product.gpro.product_name;
                     if (!productMap.has(productName)) {
                         productMap.set(productName, []);
-                    }
+                    }else{}
                     productMap.get(productName).push(product);
                 });
 
