@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import { DropdownButton, Navbar } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import styled from 'styled-components'
+import { Link } from 'react-router-dom';
 // import { useState } from 'react';
 
 // Navbar Code start
@@ -19,7 +20,9 @@ function NavBar() {
             <Navbar className="bg-primary fixed-top user-select-none">
                 <Container fluid className='d-flex justify-content-md-around justify-content-between '>
                     <div>
-                        <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                        <Link to={'/owner'} >
+                            <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                        </Link>
                     </div>
                     <div>
                         <Navbar.Collapse className="justify-content-end">

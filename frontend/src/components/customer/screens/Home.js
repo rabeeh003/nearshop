@@ -9,8 +9,8 @@ function Home() {
   return (
     <Homes>
       <Banner />
-      <OfferCard />
       <CategoryCard />
+      <OfferCard />
       <ShopCard />
     </Homes>
   )

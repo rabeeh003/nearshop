@@ -14,7 +14,7 @@ class seller_products(models.Model):
 
     shop_id = models.ForeignKey(Shop, on_delete=models.CASCADE)
     product_id = models.ForeignKey(global_productes, on_delete=models.CASCADE)
-    price = models.IntegerField()
+    price = models.FloatField()
     product_status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default="avb"
     )

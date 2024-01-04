@@ -36,6 +36,7 @@ import OwnerHome from './components/owner/screen/home'
 import CreateShop from './components/owner/screen/CreateShop'
 import ONavs from './components/owner/ONavs'
 import Invoice from './components/customer/includes/Profile/Invoice';
+import CategoryOfferPage from './components/shop/screens/CatagoryOfferPage';
 function App() {
   return (
     <>
@@ -64,6 +65,7 @@ function App() {
             <Route path='addprodect' element={<PrivateRoute><AddProdect/></PrivateRoute>} />
             <Route path='editprodect' element={<PrivateRoute><EditProdect/></PrivateRoute>} />
             <Route path='offer' element={<PrivateRoute><OfferPage/></PrivateRoute>} />
+            <Route path='catagory_offer' element={<PrivateRoute><CategoryOfferPage/></PrivateRoute>} />
             <Route path='chart' element={<PrivateRoute><Chart/></PrivateRoute>} />
             <Route path='login' element={<LoginRoute><ShopLogin/></LoginRoute>} />
             <Route path='signup' element={<LoginRoute><OwnerSignup/></LoginRoute>} />

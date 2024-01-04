@@ -129,7 +129,9 @@ function NavBar() {
             <Navbar className="bg-green fixed-top user-select-none">
                 <Container fluid className='d-flex justify-content-around'>
                     <div>
-                        <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                        <Link to={"/"} className='nav-link'>
+                            <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                        </Link>
                     </div>
                     <div>
                         <Navbar.Collapse className="justify-content-end">

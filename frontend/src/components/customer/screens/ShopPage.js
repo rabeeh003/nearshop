@@ -174,6 +174,10 @@ function ShopPage() {
     const [reviewShow, setReview] = useState(false);
     const [userId, setUserId] = useState()
 
+    const today = new Date();
+    today.setDate(today.getDate() - 1);
+    const yesterday = today.toJSON().slice(0, 10);
+
     useEffect(() => {
         const fetchUserId = () => {
             const userKeyString = localStorage.getItem('userKey');
@@ -273,7 +277,7 @@ function ShopPage() {
                 }
             });
 
-            const offerProducts = allData.seller_products.filter(product => product.offer_price >= 1);
+            const offerProducts = allData.seller_products.filter(product => product.offer_price !== null && yesterday <= product.offer_end && yesterday >= product.offer_start );
 
             if (!updatedCategories['offer']) {
                 updatedCategories['offer'] = offerProducts;
@@ -402,6 +406,7 @@ function ShopPage() {
         setFilteredProducts(allCategories[categoryName] || []);
         console.log("onclick selectedCategory : ", selectedCategory);
     };
+    
 
     return (
         <>
@@ -470,7 +475,7 @@ function ShopPage() {
                                             <Card.Body className='text-center mt-2'>
                                                 <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>
                                                 <Card.Text style={{ fontSize: '15px' }}>
-                                                    {product.offer_price ? (
+                                                    {product.offer_price > 1 && product.offer_start <= yesterday  && product.offer_end >= yesterday  ? (
                                                         <span>
                                                             Price: <span className="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
                                                         </span>
@@ -501,8 +506,8 @@ function ShopPage() {
                         />
                     </Container>
                 </Page>
-            ):(
-                <NotFont/>
+            ) : (
+                <NotFont />
             )}
         </>
     )

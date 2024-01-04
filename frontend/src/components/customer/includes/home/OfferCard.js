@@ -19,7 +19,7 @@ function MyVerticallyCenteredModal(props) {
             centered
         >
             <Modal.Header closeButton>
-            <img className="me-2" alt='logo' style={{width:"40px",height:"40px", borderRadius:"50%", objectFit:'cover', border:'1px solid black'}} src={product.seller?.profile_image} /> 
+                <img className="me-2" alt='logo' style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: 'cover', border: '1px solid black' }} src={product.seller?.profile_image} />
                 <Modal.Title id="contained-modal-title-vcenter">
                     {product.seller?.shop_name}
                 </Modal.Title>
@@ -87,7 +87,10 @@ function OfferCard() {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts/`);
-                const day = new Date().toJSON().slice(0, 10);
+                const today = new Date();
+                const day = today.toJSON().slice(0, 10);
+                console.log("--------Day and Day + 2-------------");
+                console.log("Day: " + day, "Day + 2: " + (day + 2));
                 const filteredProducts = response.data.filter(product => product.offer_price !== null && day <= product.offer_end && day >= product.offer_start);
 
                 // Map to group products by their name
@@ -96,7 +99,7 @@ function OfferCard() {
                     const productName = product.gpro.product_name;
                     if (!productMap.has(productName)) {
                         productMap.set(productName, []);
-                    }else{}
+                    } else { }
                     productMap.get(productName).push(product);
                 });
 

@@ -47,9 +47,11 @@ function NavBar() {
         <>
             <Navbar className="bg-admin fixed-top user-select-none">
                 <Container fluid className='d-flex justify-content-md-around justify-content-between '>
-                    <div>
+                    <div className='d-flex'>
                         <Togle onClick={handleShow} ><i class="fa-solid fa-bars-staggered clr-white fs-5 "></i></Togle>
-                        <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                        <Link to={'/shop'} className='nav-link' >
+                            <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                        </Link>
                     </div>
                     <div>
                         <Navbar.Collapse className="justify-content-end">
