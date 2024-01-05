@@ -144,3 +144,27 @@ class OrderProductDetailView(generics.RetrieveUpdateDestroyAPIView):
         
         self.perform_update(serializer)
         return Response(serializer.data)
+    
+
+# seller reports.
+
+class SellerReport(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        shop_id = request.GET.get('shop_id')
+
+        # Filter orders by user ID and status
+        orders = Order.objects.filter(shop=shop_id, status__in=['Delivered', 'Billed'])
+
+        # Filter payment details by shop ID
+        payment_details = Payment.objects.filter(shop=shop_id)
+
+        # Serialize the data
+        order_serializer = OrderSerializer(orders, many=True)
+        payment_serializer = PaymentSerializer(payment_details, many=True)
+
+        return Response({
+            'orders': order_serializer.data,
+            'payment_details': payment_serializer.data
+        })

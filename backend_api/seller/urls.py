@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import SellerProductView, AllProduct, ProductDetails, SellerProductEditView, ShopDetailAPIView
+from .views import SellerProductView, AllProduct, ProductDetails, SellerProductEditView, ShopDetailAPIView, SellerReport
 from .views import (
     OrderListCreateView, OrderDetailView,
     PaymentListCreateView, PaymentDetailView,
@@ -25,6 +25,6 @@ urlpatterns = [
     path('messages/<int:pk>/', MessageDetailView.as_view(), name='message-detail'),
     path('orderproduct/', OrderProductListCreateView.as_view(), name='orderproduct'),
     path('orderproduct/<int:pk>/', OrderProductDetailView.as_view(), name='orderproduct-detail'),
-    # path('cartorder/', CombinedDataView.as_view(),name='cartorder')
+    path('seller-report/', SellerReport.as_view(), name='seller-report')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

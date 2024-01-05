@@ -174,9 +174,8 @@ function ShopPage() {
     const [reviewShow, setReview] = useState(false);
     const [userId, setUserId] = useState()
 
-    const today = new Date();
-    today.setDate(today.getDate() - 1);
-    const yesterday = today.toJSON().slice(0, 10);
+    let today = new Date();
+    today = today.toJSON().slice(0, 10);
 
     useEffect(() => {
         const fetchUserId = () => {
@@ -277,7 +276,11 @@ function ShopPage() {
                 }
             });
 
-            const offerProducts = allData.seller_products.filter(product => product.offer_price !== null && yesterday <= product.offer_end && yesterday >= product.offer_start );
+            const offerProducts = allData.seller_products.filter(product =>
+                product.offer_price !== null &&
+                new Date(today) >= new Date(product.offer_start) &&
+                new Date(today) <= new Date(product.offer_end)
+            );
 
             if (!updatedCategories['offer']) {
                 updatedCategories['offer'] = offerProducts;
@@ -384,7 +387,7 @@ function ShopPage() {
                 ) || "";
                 console.log("affter filtering products data : ", filterdOPD);
 
-                if (filterdOPD == '') {
+                if (filterdOPD === '') {
                     console.log("just print products : ", updateOrderProductData);
                     console.log("just print products : ", oPData);
                     await axios.post("http://127.0.0.1:8000/api/s/orderproduct/", updateOrderProductData).then(res => {
@@ -406,7 +409,7 @@ function ShopPage() {
         setFilteredProducts(allCategories[categoryName] || []);
         console.log("onclick selectedCategory : ", selectedCategory);
     };
-    
+
 
     return (
         <>
@@ -475,7 +478,9 @@ function ShopPage() {
                                             <Card.Body className='text-center mt-2'>
                                                 <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>
                                                 <Card.Text style={{ fontSize: '15px' }}>
-                                                    {product.offer_price > 1 && product.offer_start <= yesterday  && product.offer_end >= yesterday  ? (
+                                                    {product.offer_price !== null &&
+                                                        new Date(today) >= new Date(product.offer_start) &&
+                                                        new Date(today) <= new Date(product.offer_end) ? (
                                                         <span>
                                                             Price: <span className="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
                                                         </span>
