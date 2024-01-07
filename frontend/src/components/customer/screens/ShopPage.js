@@ -328,7 +328,7 @@ function ShopPage() {
     })
 
     const addToCart = async (product) => {
-        console.log("_____start_____");
+        console.log("_____add to cart start_____");
         console.log("passed data : ", product);
         console.log("user id  : ", userId, ", shop id :", product.seller.id);
         const updateOrderData = {
@@ -387,12 +387,14 @@ function ShopPage() {
                 ) || "";
                 console.log("affter filtering products data : ", filterdOPD);
 
-                if (filterdOPD === '') {
+                if (filterdOPD.length === 0) {
                     console.log("just print products : ", updateOrderProductData);
                     console.log("just print products : ", oPData);
-                    await axios.post("http://127.0.0.1:8000/api/s/orderproduct/", updateOrderProductData).then(res => {
-                        console.log("submitted, res :", res.data);
-                    }).catch(err => console.log(err))
+                    await axios.post("http://127.0.0.1:8000/api/s/orderproduct/", updateOrderProductData)
+                        .then(res => {
+                            console.log("submitted, res :", res.data);
+                        })
+                        .catch(err => console.log(err));
                 }
 
             } catch (error) {

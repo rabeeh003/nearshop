@@ -187,9 +187,10 @@ function CheckOut(props) {
         try {
             console.log("paymentData : ", paymentData);
             console.log("location : ", selectedLocation.id);
+            
 
             await axios.post("http://127.0.0.1:8000/api/s/payments/", paymentData);
-            await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id });
+            await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id, "total_price":total });
         } catch (error) {
             console.log("error : ", error);
         }

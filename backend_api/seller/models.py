@@ -58,7 +58,7 @@ class Order(models.Model):
         ("Completed", "Completed"),
     ]
     status = models.CharField(max_length=20, choices=status_choices)
-    code = models.IntegerField(null=True, blank=True)
+    code = models.FloatField(null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     products = models.ManyToManyField(

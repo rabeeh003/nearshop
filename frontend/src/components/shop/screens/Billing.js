@@ -47,7 +47,7 @@ function Billing() {
 
     const submitBill = async () => {
         const dataToUpdate = {};
-        const propertiesToCheck = ['name', 'status', 'customer_phone', 'shop'];
+        const propertiesToCheck = ['name', 'status', 'customer_phone', 'shop', 'total_price'];
         propertiesToCheck.forEach(property => {
             if (billData[property] !== null) {
                 dataToUpdate[property] = billData[property];
@@ -82,6 +82,8 @@ function Billing() {
                                 "customer_phone": "+91",
                                 "shop": null,
                             })
+                            setGrand(null)
+                            setTotel(null)
                             setBillpro([])
                             setProCount([])
                         })
@@ -194,9 +196,10 @@ function Billing() {
             "customer_phone": phone,
             "total_price": grand
         };
+        console.log("==========================");
+        console.log("total price : ",grand);
         setBillData(updateBilldata);
-
-    }, [phone, disc,totel])
+    }, [phone, disc, totel])
 
     useEffect(() => {
         const fetchShopId = () => {
