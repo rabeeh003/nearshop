@@ -20,7 +20,7 @@ class seller_products(models.Model):
     )
     added_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
-    offer_price = models.IntegerField(blank=True, null=True)
+    offer_price = models.FloatField(blank=True, null=True)
     offer_count = models.CharField(max_length=10, blank=True, null=True)
     offer_start = models.DateField(blank=True, null=True)
     offer_end = models.DateField(blank=True, null=True)

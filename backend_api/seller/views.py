@@ -1,6 +1,7 @@
 import string
 import random
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView , UpdateAPIView
+from rest_framework.decorators import api_view
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
@@ -145,6 +146,17 @@ class OrderProductDetailView(generics.RetrieveUpdateDestroyAPIView):
         self.perform_update(serializer)
         return Response(serializer.data)
     
+
+class GetProductByShop(ListAPIView):
+    permission_classes = [AllowAny]  # Or specify appropriate permissions here
+    serializer_class = OrderProductSerializer
+
+    queryset = OrderProducts.objects.all()  # Set the queryset explicitly
+
+    def get(self, request, *args, **kwargs):
+        shop_id = request.GET.get('shop')
+        repro = OrderProducts.objects.filter(shop=shop_id)
+        return self.list(request, *args, **kwargs)
 
 # seller reports.
 

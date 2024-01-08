@@ -21,7 +21,7 @@ class ProductTable(admin.ModelAdmin):
 admin.site.register(seller_products, ProductTable)
 
 class OrderTable(admin.ModelAdmin):
-    list_display = ('id', 'shop_id', "user_id", "name", "status")
+    list_display = ('id', 'shop_id', "user_id", "name", "status", "total_price")
 
 admin.site.register(Order, OrderTable)
 

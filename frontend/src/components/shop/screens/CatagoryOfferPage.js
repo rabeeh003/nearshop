@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 
 function CategoryOfferPage() {
   const location = useLocation();
-  const [currentData, setCurrentData] = useState();
   const [shopId, setShopId] = useState();
   const [product, setProducts] = useState(null);
   const [allProducts, setAllProducts] = useState(null);
@@ -15,7 +14,7 @@ function CategoryOfferPage() {
   const [selectedCategory, setSelectedCategory] = useState({});
   const [filterType, setFilterType] = useState(true);
   const [offerCount, setOfferCount] = useState(0);
-  const [getNeed, setGetNeed] = useState(0)
+  const [getNeed, setGetNeed] = useState(100)
 
   // Get the next day
   const today = new Date();
@@ -28,20 +27,7 @@ function CategoryOfferPage() {
     "offer_end": nextDay.toISOString().split('T')[0],
   });
 
-  const setEditData = (id) => {
-    const selectedProduct = product.find((prod, index) => index === id);
-    if (selectedProduct) {
-      setCurrentData(selectedProduct);
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        offer_price: selectedProduct.offer_price,
-        offer_start: selectedProduct.offer_start,
-        offer_end: selectedProduct.offer_end
-      }));
-      console.log('current data ', currentData);
-      console.log('Form data ', FormData);
-    }
-  };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,67 +37,70 @@ function CategoryOfferPage() {
     }));
   };
 
+  // fetch shop id
+  const fetchShopId = async () => {
+    const adminKeyString = localStorage.getItem('adminKey');
+    if (adminKeyString) {
+      const adminKey = JSON.parse(adminKeyString);
+      setShopId(adminKey.id);
+    } else {
+      console.log('adminKey not found in localStorage');
+    }
+  };
+
+  // fetch shop products
+
+  const fetchShopProducts = async () => {
+    try {
+      if (shopId) {
+        const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts?shop_id=${shopId}`);
+        console.log("====================");
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        // Format yesterday as a string for comparison
+        const formattedYesterday = yesterday.toISOString().slice(0, 10);
+        console.log("yesterday = ", formattedYesterday);
+        const filteredProducts = response.data.filter(product => {
+          return (
+            product.shop_id === shopId &&
+            product.product_status === 'avb'
+          );
+        });
+        setAllProducts(filteredProducts);
+        console.log("filteredProducts", filteredProducts);
+        // catagory filter
+        const getUniqueCategories = () => {
+          const categories = new Set();
+          if (filteredProducts && filteredProducts.length > 0) {
+            filteredProducts.forEach(item => {
+              if (item.cat && item.cat.category_name && item.cat.category_image) {
+                const category = item.cat.category_name;
+                categories.add(category);
+              } else {
+                console.warn("Missing category data for item:", item); // Log a warning if data is missing
+              }
+            });
+          } else {
+            console.warn("filteredProducts array is empty or undefined."); // Log a warning if array is empty
+          }
+
+          return Array.from(categories);
+        };
+
+        const uniqueCategories = getUniqueCategories();
+        console.log("uniqueCategories", uniqueCategories);
+        setCatagory(uniqueCategories);
+      }
+    } catch (error) {
+      console.error('Error fetching shop products:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchShopId = async () => {
-      const adminKeyString = localStorage.getItem('adminKey');
-      if (adminKeyString) {
-        const adminKey = JSON.parse(adminKeyString);
-        setShopId(adminKey.id);
-      } else {
-        console.log('adminKey not found in localStorage');
-      }
-    };
-
-    const fetchShopProducts = async () => {
-      try {
-        if (shopId) {
-          const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts?shop_id=${shopId}`);
-          console.log("====================");
-          const yesterday = new Date();
-          yesterday.setDate(yesterday.getDate() - 1);
-
-          // Format yesterday as a string for comparison
-          const formattedYesterday = yesterday.toISOString().slice(0, 10);
-          console.log("yesterday = ", formattedYesterday);
-          const filteredProducts = response.data.filter(product => {
-            return (
-              product.shop_id === shopId &&
-              product.product_status === 'avb'
-            );
-          });
-          setAllProducts(filteredProducts);
-          console.log("filteredProducts", filteredProducts);
-          // catagory filter
-          const getUniqueCategories = () => {
-            const categories = new Set();
-            if (filteredProducts && filteredProducts.length > 0) {
-              filteredProducts.forEach(item => {
-                if (item.cat && item.cat.category_name && item.cat.category_image) {
-                  const category = item.cat.category_name;
-                  categories.add(category);
-                } else {
-                  console.warn("Missing category data for item:", item); // Log a warning if data is missing
-                }
-              });
-            } else {
-              console.warn("filteredProducts array is empty or undefined."); // Log a warning if array is empty
-            }
-
-            return Array.from(categories);
-          };
-
-          const uniqueCategories = getUniqueCategories();
-          console.log("uniqueCategories", uniqueCategories);
-          setCatagory(uniqueCategories);
-        }
-      } catch (error) {
-        console.error('Error fetching shop products:', error);
-      }
-    };
-
     fetchShopId();
     fetchShopProducts();
-  }, [shopId, getNeed]);
+  }, [shopId, offerCount]);
 
   useEffect(() => {
     if (allProducts) {
@@ -154,26 +143,35 @@ function CategoryOfferPage() {
     return null;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (product !== null && offerCount !== 0 && FormData.offer_start !== FormData.offer_end) {
+      console.log(getNeed);
+      console.log("============== apply offer =================");
       try {
-        product.forEach(async(prod) => {
+        const promises = product.map(async (prod) => {
           const discountedPrice = prod.price - (prod.price * (offerCount / 100));
-          console.log("off",discountedPrice);
-          setFormData({
+          const updateData = {
             "offer_price": discountedPrice,
-          });
-          console.log("subitting data : ", {"offer_price": discountedPrice, "offer_start": FormData.offer_start, "offer_end": FormData.offer_});
+            "offer_start": FormData.offer_start,
+            "offer_end": FormData.offer_end
+          };
+          console.log("updateData", updateData);
           const url = `http://127.0.0.1:8000/api/s/editproduct/${prod.id}/update/`;
-          await axios.patch(url, {"offer_price": discountedPrice, "offer_start": FormData.offer_start, "offer_end": FormData.offer_end});
-          console.log('Product updated successfully');
-          setFormData({
-            "offer_price": null,
-          });
-        })
-        setGetNeed(getNeed + 1)
-        setOfferCount(0)
-        setCurrentData(null)
+  
+          try {
+            const updatedProduct = await axios.patch(url, updateData);
+            console.log('Product updated successfully:', updatedProduct.data);
+            return updatedProduct;
+          } catch (error) {
+            console.error('Error updating product:', error);
+            throw error; // Propagate the error to the outer catch block
+          }
+        });
+  
+        await Promise.all(promises);
+  
+        setOfferCount(0);
+        setGetNeed(getNeed + 1);
       } catch (error) {
         console.error('Error updating product:', error);
       }
@@ -181,6 +179,7 @@ function CategoryOfferPage() {
   };
 
   const removeOffer = async (data) => {
+    console.log("=========== removeOffer =================");
       const removeee = {
         "offer_price": null,
         "offer_start": null,

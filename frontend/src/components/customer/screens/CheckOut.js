@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import AddressLocationPicker from '../../../assets/map/AddressAndLocation';
 import axios from 'axios';
-// import Modal from 'react-bootstrap/Modal';
+
 
 function AddLocation(props) {
     const { onHide, oldData = null } = props;
@@ -47,6 +47,8 @@ function CheckOut(props) {
     console.log("props ", props);
     const [total, setTotal] = useState(0);
 
+    const navigate = useNavigate()
+
 
     function calculateTotalPrice(price, count, type) {
         const numericPrice = parseInt(price);
@@ -73,7 +75,8 @@ function CheckOut(props) {
         products?.forEach((order) => {
             totalPrice += calculateTotalPrice(order.pro.price, order.product_count, order.count_type);
         });
-        setTotal(totalPrice);
+        const roundedTotalPrice = Math.round(totalPrice * 100) / 100;
+        setTotal(roundedTotalPrice);
     }, [products]);
 
 
@@ -187,10 +190,11 @@ function CheckOut(props) {
         try {
             console.log("paymentData : ", paymentData);
             console.log("location : ", selectedLocation.id);
-            
+
 
             await axios.post("http://127.0.0.1:8000/api/s/payments/", paymentData);
-            await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id, "total_price":total });
+            await axios.put(`http://127.0.0.1:8000/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id, "total_price": total });
+            navigate("/cart")
         } catch (error) {
             console.log("error : ", error);
         }
@@ -312,13 +316,13 @@ function CheckOut(props) {
 }
 
 const Page = styled.div`
-    padding: 10px 20px;
-    max-width: 90vw;
-    margin: auto;
-    align-items: center;
-    @media screen and (max-width: 578px) {
-        max-width: 98vw;
-    }
+  max-width: 90vw;
+  margin: auto;
+  @media screen and (max-width: 578px) {
+    max-height: 100%;
+    margin-bottom: 90px;
+    max-width: 98vw;
+  }
 `
 const ProIcon = styled.img`
     width: 50px;

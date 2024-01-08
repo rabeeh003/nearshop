@@ -18,6 +18,7 @@ function OrderPage() {
   // const [returnShow, setReturnShow] = React.useState(false);
   const [acceptShow, setAcceptShow] = React.useState(false);
   const [cancelShow, setCancelShow] = React.useState(false);
+  const [loadUseEffect, fofUseEffect] = useState(0)
 
   const [shopId, setShopId] = useState();
   const [orders, setOrders] = useState([]);
@@ -41,7 +42,7 @@ function OrderPage() {
       try {
         const response = await axios.get('http://127.0.0.1:8000/api/s/orders/');
         console.log("responce from orders : ", response);
-        const ord = response.data.filter(order => order.shop === shopId && order.status !== 'Cart' && order.status !== 'Billed');
+        const ord = response.data.filter(order => order.shop === shopId && order.status !== 'Cart' && order.status !== 'Billed' && order.status !== 'Delivered');
 
         console.log("api data :", ord);
         setOrders(ord)
@@ -68,7 +69,7 @@ function OrderPage() {
 
     fetchOrder()
     // fetchOrderProducts()
-  }, [shopId]);
+  }, [shopId, loadUseEffect]);
   const allfilter = []
   const [returnShowArray, setReturnShowArray] = useState(Array(orders.length).fill(false));
   const [codeShowArray, setCodeShowArray] = useState(Array(orders.length).fill(false));
@@ -176,7 +177,6 @@ function OrderPage() {
               setReturnPrice(returnPrice + (product.product_price * product.product_count))
               await axios.delete(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`);
               console.log(`Product ${product.id} deleted successfully`);
-              // Perform further actions or state updates if needed
             } catch (error) {
               console.error(`Error deleting ordered product ${product.id}:`, error);
             }
@@ -189,7 +189,6 @@ function OrderPage() {
             try {
               await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`, { returned: false });
               console.log(`Product ${product.id} - 'returned' status changed to false`);
-              // Perform further actions or state updates if needed
             } catch (error) {
               console.error(`Error updating product ${product.id}:`, error);
             }
@@ -438,6 +437,7 @@ function OrderPage() {
           <AcceptModel
             show={acceptShow}
             onHide={() => {
+              fofUseEffect(1)
               setAcceptShow(false);
               setOrderToAccept({ orderId: null, userName: '' });
             }}
@@ -450,6 +450,7 @@ function OrderPage() {
             show={cancelShow}
             onHide={() => {
               setCancelShow(false);
+              fofUseEffect(1)
               setOrderToCancel({ orderId: null, userName: '' });
             }}
             order={orderToCancel.orderId}
@@ -637,6 +638,7 @@ function ReturnModel({ show, onHide, product, user }) {
           try {
             const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
             console.log('Message sent:', response.data);
+            onHide()
           } catch (error) {
             console.error('Error sending message:', error);
           }
@@ -726,6 +728,7 @@ function AcceptModel(props) {
             console.error('Error sending message:', error);
           }
         }
+        props.onHide()
       })
       .catch(error => {
         console.error('There was an error updating the order:', error);
@@ -807,6 +810,7 @@ function CancelModel(props) {
             console.error('Error sending message:', error);
           }
         }
+        props.onHide()
       })
       .catch(error => {
         console.error('There was an error updating the order:', error);

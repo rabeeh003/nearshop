@@ -17,6 +17,7 @@ import {
 // import BarChart from '../includes/chart/BarChart';
 import AllYearBar from '../includes/chart/AllYearBar'
 import axios from 'axios';
+import CollapsibleTable from '../includes/chart/DataTable';
 
 function Chart() {
   const [shopId, setShopId] = useState(null);
@@ -157,7 +158,7 @@ function Chart() {
             </Button>
           </Col> */}
           <label htmlFor="year">Select a Year:</label>
-          <select style={{width:'200px'}} className='p-1 text-center' id="year" onChange={handleYearChange} value={selectedYear}>
+          <select style={{ width: '200px' }} className='p-1 text-center' id="year" onChange={handleYearChange} value={selectedYear}>
             {years.map((year) => (
               <option key={year} value={year}>
                 {year}
@@ -214,12 +215,17 @@ function Chart() {
               </ResponsiveContainer>
             )}</Col>
         </Row>
-        {/* <span className="h4">All Years</span> */}
-        {/* <Row className="d-flex justify-content-center">
-          <Col xs={12} lg={6}>
-            <AllYearBar />
+        <Row className='d-flex justify-content-center algin-items-center mt-3 p-5 bg-light'>
+          <Col lg={9}>
+            <h3 className='text-center'>Sales Report</h3>
           </Col>
-        </Row> */}
+        </Row>
+        <Row className='d-flex justify-content-center algin-items-center pt-5 bg-light' style={{height:"80vh"}}>
+          <Col xs={12} lg={9}>
+            <CollapsibleTable />
+          </Col>
+        </Row>
+       
       </Container>
     </Page>
   )
