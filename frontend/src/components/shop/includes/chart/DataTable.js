@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import dateFormat from "dateformat";
+import moment from 'moment';
 
 function Row(props) {
     const { row, ind } = props;
@@ -37,7 +38,7 @@ function Row(props) {
         }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         setTot(totalAmount)
         setDisc(tot - parseInt(row.total))
     })
@@ -114,7 +115,19 @@ function Row(props) {
 
 export default function CollapsibleTable() {
     const [orderList, setOrderList] = useState([]);
-    // const [allProducts, setAllProducts] = useState([]);
+    // year
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const startYear = 2023;
+    const currentYear = new Date().getFullYear();
+    const years = [];
+
+    for (let year = currentYear; year >= startYear; year--) {
+        years.push(year);
+    }
+
+    const handleYearChange = (event) => {
+        setSelectedYear(parseInt(event.target.value));
+    };
 
     // get shopId
     const [shopId, setShopId] = useState();
@@ -137,7 +150,7 @@ export default function CollapsibleTable() {
     useEffect(() => {
         if (orderList !== null)
             fetchData(shopId)
-    }, [shopId])
+    }, [shopId, selectedYear])
     async function fetchData(shopId) {
         try {
             console.log("------------- start fetching ----------------");
@@ -151,7 +164,13 @@ export default function CollapsibleTable() {
 
             // Fetch orders
             const ordersResponse = await axios.get('http://127.0.0.1:8000/api/s/orders/');
-            const filteredOrders = ordersResponse.data.filter(order => order.shop === shopId && (order.status === 'Delivered' || order.status === 'Billed'));
+            const filteredOrders = ordersResponse.data.filter(order => {
+                // Use moment.js to extract year
+                const year = moment(order.updated_date).year();
+                return order.shop === shopId &&
+                    (order.status === 'Delivered' || order.status === 'Billed') &&
+                    year === selectedYear;
+            });
             console.log("Filtered orders", filteredOrders);
 
             // Prepare order list with empty products array
@@ -201,34 +220,46 @@ export default function CollapsibleTable() {
     const displayedRows = orderList.slice(indexOfFirstRow, indexOfLastRow);
 
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell />
-                        <TableCell>No   </TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell align="right">Date</TableCell>
-                        <TableCell align="right">Type</TableCell>
-                        {/* <TableCell align="right">Discount</TableCell> */}
-                        <TableCell align="right">Total</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {displayedRows.map((order, index) => (
-                        <Row key={order.id} row={order} ind={index} />
+        <>
+            <div className='d-flex flex-column justify-content-center align-items-center pb-3'>
+                <label htmlFor="year">Select a Year:</label>
+                <select className='px-3 py-1 text-center' id="year" onChange={handleYearChange} value={selectedYear}>
+                    {years.map((year) => (
+                        <option key={year} value={year}>
+                            {year}
+                        </option>
                     ))}
-                </TableBody>
-            </Table>
-            <TablePagination
-                rowsPerPageOptions={[3, 5, 10]} // Define your rows per page options
-                component="div"
-                count={orderList.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </TableContainer>
+                </select>
+            </div>
+            <TableContainer component={Paper}>
+                <Table aria-label="collapsible table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell />
+                            <TableCell>No   </TableCell>
+                            <TableCell>Name</TableCell>
+                            <TableCell align="right">Date</TableCell>
+                            <TableCell align="right">Type</TableCell>
+                            {/* <TableCell align="right">Discount</TableCell> */}
+                            <TableCell align="right">Total</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {displayedRows.map((order, index) => (
+                            <Row key={order.id} row={order} ind={index} />
+                        ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[3, 5, 10]} // Define your rows per page options
+                    component="div"
+                    count={orderList.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </TableContainer>
+        </>
     );
 }
