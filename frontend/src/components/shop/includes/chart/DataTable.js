@@ -116,21 +116,21 @@ function Row(props) {
 }
 const toDataURL = (url) => {
     const promise = new Promise((resolve, reject) => {
-      var xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        var reader = new FileReader();
-        reader.readAsDataURL(xhr.response);
-        reader.onloadend = function () {
-          resolve({ base64Url: reader.result });
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            var reader = new FileReader();
+            reader.readAsDataURL(xhr.response);
+            reader.onloadend = function () {
+                resolve({ base64Url: reader.result });
+            };
         };
-      };
-      xhr.open("GET", url);
-      xhr.responseType = "blob";
-      xhr.send();
+        xhr.open("GET", url);
+        xhr.responseType = "blob";
+        xhr.send();
     });
-  
+
     return promise;
-  };
+};
 export default function CollapsibleTable() {
     const [orderList, setOrderList] = useState([]);
 
@@ -176,7 +176,13 @@ export default function CollapsibleTable() {
                 header: "Price",
                 key: "price",
                 width: 15,
-            }
+            },
+            {
+                header: "Products",
+                key: "Products",
+                width: 50,
+                height: 150 
+            },
         ];
 
         const promise = Promise.all(
@@ -187,10 +193,12 @@ export default function CollapsibleTable() {
                     title: order?.name,
                     brand: order?.type,
                     price: order?.total,
+                    Products: generateNestedContent(order.products),
                 });
 
             })
         );
+
 
         promise.then(() => {
             const priceCol = sheet.getColumn(5);
@@ -222,7 +230,15 @@ export default function CollapsibleTable() {
         });
     };
 
-
+    const generateNestedContent = (products) => {
+        let content = "No\tProduct Name\t\tPrice\t\t\tCount\n"; // Table headers
+    
+        products.forEach((product, index) => {
+            content += `${index+1}\t${product.pro.gpro.product_name}\t\t${product.product_price}\t\t\t${product.product_count}${product.count_type}\n`;
+        });
+    
+        return content;
+    };
 
     // year
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
