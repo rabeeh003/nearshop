@@ -19,6 +19,7 @@ import {
 import axios from 'axios';
 import dateFormat from "dateformat";
 import moment from 'moment';
+import {CSVLink} from "react-csv";
 
 function Row(props) {
     const { row, ind } = props;
@@ -230,6 +231,7 @@ export default function CollapsibleTable() {
                         </option>
                     ))}
                 </select>
+                <CSVLink data={orderList}>Download</CSVLink>
             </div>
             <TableContainer component={Paper}>
                 <Table aria-label="collapsible table">
