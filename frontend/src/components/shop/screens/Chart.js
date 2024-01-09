@@ -220,7 +220,7 @@ function Chart() {
             <h3 className='text-center'>Sales Report</h3>
           </Col>
         </Row>
-        <Row className='d-flex justify-content-center algin-items-center pt-1 bg-light' style={{height:"80vh"}}>
+        <Row className='d-flex justify-content-center algin-items-center pt-1 pb-5 mb-5 bg-light' style={{height:"100%"}}>
           <Col xs={12} lg={9}>
             <CollapsibleTable year={selectedYear} />
           </Col>

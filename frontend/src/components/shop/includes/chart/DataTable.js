@@ -1,3 +1,5 @@
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
@@ -6,6 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import xlpng from '../../../../assets/images/xl.png';
+import pdfpng from '../../../../assets/images/pdf.png';
 import {
     Table,
     TableBody,
@@ -20,11 +24,15 @@ import axios from 'axios';
 import dateFormat from "dateformat";
 import moment from 'moment';
 import { CSVLink } from "react-csv";
+import { Button, Form } from 'react-bootstrap';
 const ExcelJS = require("exceljs");
 
+
+
 function Row(props) {
-    const { row, ind } = props;
-    const [open, setOpen] = React.useState(false);
+    const { row, ind, op } = props;
+    const [open, setOpen] = React.useState(op);
+    console.log("open", open);
     const [disc, setDisc] = React.useState(0)
     const [tot, setTot] = React.useState(0)
 
@@ -133,8 +141,11 @@ const toDataURL = (url) => {
 };
 export default function CollapsibleTable() {
     const [orderList, setOrderList] = useState([]);
+    const [op, setOp] = useState(false);
+    console.log("opp", op);
+    const invoicePageRef = React.useRef(null);
 
-    // exsporint code
+    // exsel exsporing code
     const exportExcelFile = () => {
         const workbook = new ExcelJS.Workbook();
         const sheet = workbook.addWorksheet("My Sheet");
@@ -181,7 +192,7 @@ export default function CollapsibleTable() {
                 header: "Products",
                 key: "Products",
                 width: 50,
-                height: 150 
+                height: 150
             },
         ];
 
@@ -232,13 +243,39 @@ export default function CollapsibleTable() {
 
     const generateNestedContent = (products) => {
         let content = "No\tProduct Name\t\tPrice\t\t\tCount\n"; // Table headers
-    
+
         products.forEach((product, index) => {
-            content += `${index+1}\t${product.pro.gpro.product_name}\t\t${product.product_price}\t\t\t${product.product_count}${product.count_type}\n`;
+            content += `${index + 1}\t${product.pro.gpro.product_name}\t\t${product.product_price}\t\t\t${product.product_count}${product.count_type}\n`;
         });
-    
+
         return content;
     };
+
+    // pdf export code
+    // const exportPDFFile = () => {
+    //     const element = document.getElementById('table-container'); // Replace 'table-container' with your table's ID
+    //     if (!element) {
+    //         return; // Exit if element is not found
+    //     }
+
+    //     html2canvas(element).then((canvas) => {
+    //         const imgData = canvas.toDataURL('image/png');
+    //         const pdf = new jsPDF('p', 'mm', 'a4');
+    //         const imgWidth = 210;
+    //         const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    //         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    //         pdf.save('sales_report.pdf');
+    //     });
+    // };
+
+    // pdf print code
+    function printInvoicePage() {
+        const printContents = invoicePageRef.current.innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
 
     // year
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -273,8 +310,8 @@ export default function CollapsibleTable() {
 
     //  Data featching
     useEffect(() => {
-        if (orderList !== null)
-            fetchData(shopId)
+        // if (orderList !== null)
+        fetchData(shopId)
     }, [shopId, selectedYear])
     async function fetchData(shopId) {
         try {
@@ -329,21 +366,34 @@ export default function CollapsibleTable() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    // Handle page change
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
-    // Handle rows per page change
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        const value = event.target.value;
+        if (value === 'All') {
+            setRowsPerPage(orderList.length);
+            setPage(0);
+        } else {
+            setRowsPerPage(parseInt(value, 10));
+            setPage(0);
+        }
     };
 
     const indexOfLastRow = (page + 1) * rowsPerPage;
     const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-    const displayedRows = orderList.slice(indexOfFirstRow, indexOfLastRow);
+    const [displayedRows, setDisplayedRows] = useState([]);
 
+    const updateDisplayedRows = () => {
+        const updatedRows = orderList.slice(indexOfFirstRow, indexOfLastRow);
+        setDisplayedRows(updatedRows);
+    };
+    useEffect(() => {
+
+        updateDisplayedRows(); // Initial update
+
+    }, [orderList, indexOfFirstRow, indexOfLastRow]);
     return (
         <>
             <div className='d-flex flex-column justify-content-center align-items-center pb-3'>
@@ -355,43 +405,74 @@ export default function CollapsibleTable() {
                         </option>
                     ))}
                 </select>
-                <CSVLink data={orderList}>Download</CSVLink>
-                <button
-                    className="btn btn-primary float-end mt-2 mb-2"
-                    onClick={exportExcelFile}
-                >
-                    Export
-                </button>
+                {/* <CSVLink data={orderList}>Download</CSVLink> */}
+                <Form.Check
+                    type="switch"
+                    // id="custom-switch"
+                    label="show product details"
+                    onClick={() => {
+                        setOp(!op)
+                        console.log("op", op);
+                        // fetchData(shopId)
+                        // updateDisplayedRows()
+                    }}
+                // checked={op}
+                ></Form.Check>
             </div>
-            <TableContainer component={Paper}>
-                <Table aria-label="collapsible table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell />
-                            <TableCell>No   </TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell align="right">Date</TableCell>
-                            <TableCell align="right">Type</TableCell>
-                            {/* <TableCell align="right">Discount</TableCell> */}
-                            <TableCell align="right">Total</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {displayedRows.map((order, index) => (
-                            <Row key={order.id} row={order} ind={index} />
-                        ))}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    rowsPerPageOptions={[3, 5, 10]} // Define your rows per page options
-                    component="div"
-                    count={orderList.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+            <div id='invoicePage' ref={invoicePageRef}>
+                <TableContainer id='table-container' component={Paper}>
+                    <Table aria-label="collapsible table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell />
+                                <TableCell>No   </TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell align="right">Date</TableCell>
+                                <TableCell align="right">Type</TableCell>
+                                {/* <TableCell align="right">Discount</TableCell> */}
+                                <TableCell align="right">Total</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {op === true ? (
+                                displayedRows.map((order, index) => (
+                                    <Row key={order.id} row={order} ind={index} op={true} />
+                                ))
+                            ) : ""}
+                            {op === false ? (
+                                displayedRows.map((order, index) => (
+                                    <Row key={order.id} row={order} ind={index} op={false} />
+                                ))
+                            ) : ''}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[3, 5, 10, 'All']}
+                        component="div"
+                        count={orderList.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </TableContainer>
+            </div>
+            <p className='text-center mt-5'>Exsport as</p>
+            <div className='d-flex justify-content-center align-items-center mt-5'>
+                <img
+                    src={xlpng}
+                    width={50}
+                    className="float-end mt-2 me-5"
+                    onClick={exportExcelFile}
                 />
-            </TableContainer>
+                <img
+                    src={pdfpng}
+                    width={50}
+                    className="float-end mt-2 ms-5"
+                    // onClick={exportPDFFile}
+                    onClick={printInvoicePage}
+                />
+            </div>
         </>
     );
 }
