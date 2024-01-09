@@ -64,7 +64,7 @@ class Order(models.Model):
     products = models.ManyToManyField(
         seller_products, related_name="orders", null=True, blank=True
     )
-    total_price = models.IntegerField(null=True, blank=True)
+    total_price = models.FloatField(null=True, blank=True)
     ob_id = models.CharField(default="0", max_length=20, null=True, blank=True)
     customer_phone = models.CharField(max_length=15, null=True, blank=True)
     location = models.ForeignKey(

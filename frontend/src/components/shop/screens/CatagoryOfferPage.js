@@ -190,9 +190,9 @@ function CategoryOfferPage() {
           product.forEach(async(prod) => {
             const url = `http://127.0.0.1:8000/api/s/editproduct/${prod.id}/update/`;
             await axios.patch(url, removeee);
+            setGetNeed(getNeed + 1)
             console.log('Remove product successfully');
           })
-          setGetNeed(getNeed + 1)
         } catch (error) {
           console.error('Error updating product:', error);
         }

@@ -17,6 +17,7 @@ import {
     TablePagination,
 } from '@mui/material';
 import axios from 'axios';
+import dateFormat from "dateformat";
 
 function Row(props) {
     const { row, ind } = props;
@@ -32,7 +33,7 @@ function Row(props) {
             return (price / count).toFixed(2); // Calculate total price when not 'gram'
         } else {
             let one = price / count; // Calculate price per gram
-            return (one * 1000).toFixed(2); // Return price per gram
+            return (one * 100).toFixed(2); // Return price per gram
         }
     };
 
@@ -57,10 +58,10 @@ function Row(props) {
                     {ind + 1}
                 </TableCell>
                 <TableCell >{row.name}</TableCell>
-                <TableCell align="right">{row.date}</TableCell>
+                <TableCell align="right">{dateFormat(row.date)}</TableCell>
                 <TableCell align="right">{row.type}</TableCell>
-                <TableCell align="right">{disc}</TableCell>
-                <TableCell align="right">{tot}</TableCell>
+                {/* <TableCell align="right">{disc}</TableCell> */}
+                <TableCell align="right">{row.total}</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -150,7 +151,7 @@ export default function CollapsibleTable() {
 
             // Fetch orders
             const ordersResponse = await axios.get('http://127.0.0.1:8000/api/s/orders/');
-            const filteredOrders = ordersResponse.data.filter(order => order.shop === shopId);
+            const filteredOrders = ordersResponse.data.filter(order => order.shop === shopId && (order.status === 'Delivered' || order.status === 'Billed'));
             console.log("Filtered orders", filteredOrders);
 
             // Prepare order list with empty products array
@@ -209,7 +210,7 @@ export default function CollapsibleTable() {
                         <TableCell>Name</TableCell>
                         <TableCell align="right">Date</TableCell>
                         <TableCell align="right">Type</TableCell>
-                        <TableCell align="right">Discount</TableCell>
+                        {/* <TableCell align="right">Discount</TableCell> */}
                         <TableCell align="right">Total</TableCell>
                     </TableRow>
                 </TableHead>
