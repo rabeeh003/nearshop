@@ -19,7 +19,8 @@ import {
 import axios from 'axios';
 import dateFormat from "dateformat";
 import moment from 'moment';
-import {CSVLink} from "react-csv";
+import { CSVLink } from "react-csv";
+const ExcelJS = require("exceljs");
 
 function Row(props) {
     const { row, ind } = props;
@@ -113,9 +114,116 @@ function Row(props) {
         </React.Fragment>
     );
 }
-
+const toDataURL = (url) => {
+    const promise = new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        var reader = new FileReader();
+        reader.readAsDataURL(xhr.response);
+        reader.onloadend = function () {
+          resolve({ base64Url: reader.result });
+        };
+      };
+      xhr.open("GET", url);
+      xhr.responseType = "blob";
+      xhr.send();
+    });
+  
+    return promise;
+  };
 export default function CollapsibleTable() {
     const [orderList, setOrderList] = useState([]);
+
+    // exsporint code
+    const exportExcelFile = () => {
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet("My Sheet");
+        sheet.properties.defaultRowHeight = 80;
+
+        sheet.getRow(1).border = {
+            top: { style: "thick", color: { argb: "FFFF0000" } },
+            left: { style: "thick", color: { argb: "000000FF" } },
+            bottom: { style: "thick", color: { argb: "F08080" } },
+            right: { style: "thick", color: { argb: "FF00FF00" } },
+        };
+
+        sheet.getRow(1).fill = {
+            type: "pattern",
+            pattern: "darkVertical",
+            fgColor: { argb: "FFFF00" },
+        };
+
+        sheet.getRow(1).font = {
+            name: "Comic Sans MS",
+            family: 4,
+            size: 16,
+            bold: true,
+        };
+
+        sheet.columns = [
+            {
+                header: "Id",
+                key: "id",
+                width: 10,
+            },
+            { header: "Title", key: "title", width: 32 },
+            {
+                header: "Brand",
+                key: "brand",
+                width: 20,
+            },
+            {
+                header: "Price",
+                key: "price",
+                width: 15,
+            }
+        ];
+
+        const promise = Promise.all(
+            orderList?.map(async (order, index) => {
+                const rowNumber = index + 1;
+                sheet.addRow({
+                    id: order?.date,
+                    title: order?.name,
+                    brand: order?.type,
+                    price: order?.total,
+                });
+
+            })
+        );
+
+        promise.then(() => {
+            const priceCol = sheet.getColumn(5);
+
+            // iterate over all current cells in this column
+            priceCol.eachCell((cell) => {
+                const cellValue = sheet.getCell(cell?.address).value;
+                // add a condition to set styling
+                if (cellValue > 50 && cellValue < 1000) {
+                    sheet.getCell(cell?.address).fill = {
+                        type: "pattern",
+                        pattern: "solid",
+                        fgColor: { argb: "FF0000" },
+                    };
+                }
+            });
+
+            workbook.xlsx.writeBuffer().then(function (data) {
+                const blob = new Blob([data], {
+                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                });
+                const url = window.URL.createObjectURL(blob);
+                const anchor = document.createElement("a");
+                anchor.href = url;
+                anchor.download = "sales_report.xlsx";
+                anchor.click();
+                window.URL.revokeObjectURL(url);
+            });
+        });
+    };
+
+
+
     // year
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const startYear = 2023;
@@ -232,6 +340,12 @@ export default function CollapsibleTable() {
                     ))}
                 </select>
                 <CSVLink data={orderList}>Download</CSVLink>
+                <button
+                    className="btn btn-primary float-end mt-2 mb-2"
+                    onClick={exportExcelFile}
+                >
+                    Export
+                </button>
             </div>
             <TableContainer component={Paper}>
                 <Table aria-label="collapsible table">
