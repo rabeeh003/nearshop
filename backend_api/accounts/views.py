@@ -84,6 +84,16 @@ class shopsall(RetrieveAPIView):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
 
+class getOneShop(RetrieveAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ShopSerializer
+
+    def get_queryset(self):
+        return Shop.objects.all()
+
+    def get_object(self):
+        shop_id = self.kwargs.get('pk')
+        return self.get_queryset().filter(id=shop_id).first()
 
 class shop_update(UpdateAPIView):
     permission_classes = [AllowAny]
