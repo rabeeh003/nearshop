@@ -100,6 +100,7 @@ function LocationModel(props) {
 
 function MyVerticallyCenteredModal(props) {
     const { product } = props.show;
+    const { addToCart, onHide } = props;
     { console.log("sel pro : ", product); }
     return (
         <Modal
@@ -137,7 +138,10 @@ function MyVerticallyCenteredModal(props) {
                 ) : ("")}
             </Modal.Body>
             <Modal.Footer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Button variant="success" style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                <Button variant="success" onClick={() => {
+                    addToCart(product)
+                    onHide()
+                }} style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -310,6 +314,7 @@ function ShopPage() {
 
         }
     }, [allData]);
+    
     const [orderId, setOrderId] = useState()
     const [oData, setOData] = useState({
         "name": "online",
@@ -328,81 +333,83 @@ function ShopPage() {
     })
 
     const addToCart = async (product) => {
-        console.log("_____add to cart start_____");
-        console.log("passed data : ", product);
-        console.log("user id  : ", userId, ", shop id :", product.seller.id);
-        const updateOrderData = {
-            ...oData,
-            "shop": product.seller.id,
-            "user": userId,
-        };
-        setOData(updateOrderData);
+        if (product) {
+            console.log("_____add to cart start_____");
+            console.log("passed data : ", product);
+            console.log("user id  : ", userId, ", shop id :", product.seller.id);
+            const updateOrderData = {
+                ...oData,
+                "shop": product.seller.id,
+                "user": userId,
+            };
+            setOData(updateOrderData);
 
-        if (updateOrderData.user !== '' && updateOrderData.shop !== '') {
-            try {
-                console.log("---- check and create order ----");
-                const response = await axios.get("http://127.0.0.1:8000/api/s/orders/");
-                const existingData = response.data?.filter(item => item.user === userId) || [];
-                console.log("existing data : ", existingData);
+            if (updateOrderData.user !== '' && updateOrderData.shop !== '') {
+                try {
+                    console.log("---- check and create order ----");
+                    const response = await axios.get("http://127.0.0.1:8000/api/s/orders/");
+                    const existingData = response.data?.filter(item => item.user === userId) || [];
+                    console.log("existing data : ", existingData);
 
-                const matchingIndex = existingData.findIndex(item => {
-                    return item.shop === updateOrderData.shop && item.status === 'Cart';
-                });
+                    const matchingIndex = existingData.findIndex(item => {
+                        return item.shop === updateOrderData.shop && item.status === 'Cart';
+                    });
 
-                if (matchingIndex !== -1) {
-                    console.log("maching index : ", existingData[matchingIndex])
-                    setOrderId(existingData[matchingIndex].id)
-                    console.log("order id : ", orderId);
-
-                } else {
-                    console.log("ready to push : ", updateOrderData);
-                    await axios.post("http://127.0.0.1:8000/api/s/orders/", updateOrderData).then(res => {
-                        console.log("res : ", res.data);
-                        setOrderId(res.data.id)
+                    if (matchingIndex !== -1) {
+                        console.log("maching index : ", existingData[matchingIndex])
+                        setOrderId(existingData[matchingIndex].id)
                         console.log("order id : ", orderId);
-                    })
-                }
-                console.log("order created");
-                console.log("order id : ", orderId);
-                console.log("----- product adding -----");
-                const updateOrderProductData = {
-                    ...oPData,
-                    "shop": product.seller.id,
-                    "user": userId,
-                    "order": orderId,
-                    "product": product.id,
-                    "product_count": 1,
-                    "count_type": product.gpro.weight_type
-                };
-                setOPData(updateOrderProductData);
-                console.log("updated opd : ", updateOrderProductData);
-                const oProductD = await axios.get("http://127.0.0.1:8000/api/s/orderproduct/")
-                console.log("get the oProductD for check :", oProductD)
-                console.log("user id", userId);
-                const filterdOPD = oProductD.data.filter(item =>
-                    item.user === userId &&
-                    item.shop === updateOrderProductData.shop &&
-                    item.product === updateOrderProductData.product &&
-                    item.orderdata.status === "Cart"
-                ) || "";
-                console.log("affter filtering products data : ", filterdOPD);
 
-                if (filterdOPD.length === 0) {
-                    console.log("just print products : ", updateOrderProductData);
-                    console.log("just print products : ", oPData);
-                    await axios.post("http://127.0.0.1:8000/api/s/orderproduct/", updateOrderProductData)
-                        .then(res => {
-                            console.log("submitted, res :", res.data);
+                    } else {
+                        console.log("ready to push : ", updateOrderData);
+                        await axios.post("http://127.0.0.1:8000/api/s/orders/", updateOrderData).then(res => {
+                            console.log("res : ", res.data);
+                            setOrderId(res.data.id)
+                            console.log("order id : ", orderId);
                         })
-                        .catch(err => console.log(err));
-                }
+                    }
+                    console.log("order created");
+                    console.log("order id : ", orderId);
+                    console.log("----- product adding -----");
+                    const updateOrderProductData = {
+                        ...oPData,
+                        "shop": product.seller.id,
+                        "user": userId,
+                        "order": orderId,
+                        "product": product.id,
+                        "product_count": 1,
+                        "count_type": product.gpro.weight_type
+                    };
+                    setOPData(updateOrderProductData);
+                    console.log("updated opd : ", updateOrderProductData);
+                    const oProductD = await axios.get("http://127.0.0.1:8000/api/s/orderproduct/")
+                    console.log("get the oProductD for check :", oProductD)
+                    console.log("user id", userId);
+                    const filterdOPD = oProductD.data.filter(item =>
+                        item.user === userId &&
+                        item.shop === updateOrderProductData.shop &&
+                        item.product === updateOrderProductData.product &&
+                        item.orderdata.status === "Cart"
+                    ) || "";
+                    console.log("affter filtering products data : ", filterdOPD);
 
-            } catch (error) {
-                // Handle errors here
-                alert('Something went wrong');
+                    if (filterdOPD.length === 0) {
+                        console.log("just print products : ", updateOrderProductData);
+                        console.log("just print products : ", oPData);
+                        await axios.post("http://127.0.0.1:8000/api/s/orderproduct/", updateOrderProductData)
+                            .then(res => {
+                                console.log("submitted, res :", res.data);
+                            })
+                            .catch(err => console.log(err));
+                    }
+
+                } catch (error) {
+                    // Handle errors here
+                    alert('Something went wrong');
+                }
+            } else {
+                alert('Something is missing'); // Handle the case where user or shop is empty
             }
-        } else {
-            alert('Something is missing'); // Handle the case where user or shop is empty
         }
     }
 
@@ -502,6 +509,7 @@ function ShopPage() {
                         <MyVerticallyCenteredModal
                             show={modalShow}
                             onHide={() => setModalShow(false)}
+                            addToCart={addToCart}
                         />
                         <LocationModel
                             show={locShow}

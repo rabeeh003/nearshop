@@ -9,7 +9,8 @@ import Container from 'react-bootstrap/Container';
 import axios from 'axios';
 
 function MyVerticallyCenteredModal(props) {
-    const { product } = props;
+    // const { product } = props;
+    const { addToCart, onHide, product } = props;
     return (
         <Modal
             className='user-select-none'
@@ -48,7 +49,10 @@ function MyVerticallyCenteredModal(props) {
                 </PDetiles>
             </Modal.Body>
             <Modal.Footer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Button variant="success" style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                <Button variant="success" onClick={() => {
+                    addToCart(product)
+                    onHide()
+                }} style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -82,6 +86,24 @@ const Textarea = styled.textarea`
 function OfferCard() {
     const [modalShow, setModalShow] = useState(false);
     const [products, setProducts] = useState([]);
+    const [userId, setUserId] = useState(null)
+
+    useEffect(() => {
+        const fetchUserId = () => {
+            const userKeyString = localStorage.getItem('userKey');
+            if (userKeyString) {
+                const userKey = JSON.parse(userKeyString);
+                setUserId(userKey.id);
+                console.log('user id : ', userId);
+            } else {
+                console.log('adminKey not found in localStorage');
+            }
+        };
+
+        if (userId === null) {
+            fetchUserId()
+        }
+    })
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -131,6 +153,106 @@ function OfferCard() {
         fetchProducts();
     }, []);
 
+    //  ADD TO CART
+
+    const [orderId, setOrderId] = useState()
+    const [oData, setOData] = useState({
+        "name": "online",
+        "status": "Cart",
+        "shop": '',
+        "user": userId,
+    })
+
+    const [oPData, setOPData] = useState({
+        "user": '',
+        "shop": '',
+        "order": '',
+        "product": '',
+        "product_count": '',
+        "count_type": '',
+    })
+
+    const addToCart = async (product) => {
+        if (product) {
+            console.log("_____add to cart start_____");
+            console.log("passed data : ", product);
+            console.log("user id  : ", userId, ", shop id :", product.seller.id);
+            const updateOrderData = {
+                ...oData,
+                "shop": product.seller.id,
+                "user": userId,
+            };
+            setOData(updateOrderData);
+
+            if (updateOrderData.user !== '' && updateOrderData.shop !== '') {
+                try {
+                    console.log("---- check and create order ----");
+                    const response = await axios.get("http://127.0.0.1:8000/api/s/orders/");
+                    const existingData = response.data?.filter(item => item.user === userId) || [];
+                    console.log("existing data : ", existingData);
+
+                    const matchingIndex = existingData.findIndex(item => {
+                        return item.shop === updateOrderData.shop && item.status === 'Cart';
+                    });
+
+                    if (matchingIndex !== -1) {
+                        console.log("maching index : ", existingData[matchingIndex])
+                        setOrderId(existingData[matchingIndex].id)
+                        console.log("order id : ", orderId);
+
+                    } else {
+                        console.log("ready to push : ", updateOrderData);
+                        await axios.post("http://127.0.0.1:8000/api/s/orders/", updateOrderData).then(res => {
+                            console.log("res : ", res.data);
+                            setOrderId(res.data.id)
+                            console.log("order id : ", orderId);
+                        })
+                    }
+                    console.log("order created");
+                    console.log("order id : ", orderId);
+                    console.log("----- product adding -----");
+                    const updateOrderProductData = {
+                        ...oPData,
+                        "shop": product.seller.id,
+                        "user": userId,
+                        "order": orderId,
+                        "product": product.id,
+                        "product_count": 1,
+                        "count_type": product.gpro.weight_type
+                    };
+                    setOPData(updateOrderProductData);
+                    console.log("updated opd : ", updateOrderProductData);
+                    const oProductD = await axios.get("http://127.0.0.1:8000/api/s/orderproduct/")
+                    console.log("get the oProductD for check :", oProductD)
+                    console.log("user id", userId);
+                    const filterdOPD = oProductD.data.filter(item =>
+                        item.user === userId &&
+                        item.shop === updateOrderProductData.shop &&
+                        item.product === updateOrderProductData.product &&
+                        item.orderdata.status === "Cart"
+                    ) || "";
+                    console.log("affter filtering products data : ", filterdOPD);
+
+                    if (filterdOPD.length === 0) {
+                        console.log("just print products : ", updateOrderProductData);
+                        console.log("just print products : ", oPData);
+                        await axios.post("http://127.0.0.1:8000/api/s/orderproduct/", updateOrderProductData)
+                            .then(res => {
+                                console.log("submitted, res :", res.data);
+                            })
+                            .catch(err => console.log(err));
+                    }
+
+                } catch (error) {
+                    // Handle errors here
+                    alert('Something went wrong');
+                }
+            } else {
+                alert('Something is missing'); // Handle the case where user or shop is empty
+            }
+        }
+    }
+
     return (
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }}>
@@ -151,7 +273,7 @@ function OfferCard() {
                                 <Card.Text style={{ fontSize: '15px' }}>
                                     Price: <span class="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
                                 </Card.Text>
-                                <Button variant="" className='btn-outline-success' style={{ width: "120px", fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                <Button variant="" onClick={() => addToCart(product)} className='btn-outline-success' style={{ width: "120px", fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
                             </Card.Body>
                         </OfCard>
                     </Col>
@@ -161,6 +283,7 @@ function OfferCard() {
                 product={modalShow}
                 show={modalShow !== false}
                 onHide={() => setModalShow(false)}
+                addToCart={addToCart}
             />
         </Container>
     )
