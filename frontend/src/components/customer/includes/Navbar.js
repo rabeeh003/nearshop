@@ -73,12 +73,18 @@ function NavBar() {
         console.log('set add locatin is true');
     };
 
+    useEffect(() => {
+        const currentLocation = JSON.parse(localStorage.getItem("currentLocation")) || {};
+        setSelectedLocation(currentLocation.name);   
+    },listLocation)
+
     function handleShow(breakpoint) {
         setFullscreen(breakpoint);
         setShow(true);
     }
     const handleLocationSelection = (locationName) => {
-        setSelectedLocation(locationName);
+        localStorage.setItem("currentLocation", JSON.stringify(locationName));
+        setSelectedLocation(locationName.name);
     };
 
     useEffect(() => {
@@ -135,9 +141,9 @@ function NavBar() {
                     </div>
                     <div>
                         <Navbar.Collapse className="justify-content-end">
-                            <Nav>
+                            {/* <Nav>
                                 <Nav.Link onClick={() => handleShow(true)} style={{ fontSize: "20px" }} variant=""><i class="clr-white fa-solid fa-magnifying-glass"></i></Nav.Link>
-                            </Nav>
+                            </Nav> */}
                             <IconsDiv>
                                 <Nav>
                                     <Link title='Home' className='nav-link' to="/"> <i class="fa-solid fa-house clr-white"></i></Link>
@@ -157,7 +163,7 @@ function NavBar() {
                                             listLocation.map((location, index) => (
                                                 <Dropdown.Item
                                                     key={index}
-                                                    onClick={() => handleLocationSelection(location.name)}
+                                                    onClick={() => handleLocationSelection(location)}
                                                 >
                                                     {location.name}
                                                 </Dropdown.Item>
