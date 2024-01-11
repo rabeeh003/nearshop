@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 // import LineChart from '../includes/chart/LineChart';
 import {
   LineChart,
@@ -14,16 +14,15 @@ import {
   Bar,
   ResponsiveContainer,
 } from 'recharts';
-// import BarChart from '../includes/chart/BarChart';
-import AllYearBar from '../includes/chart/AllYearBar'
+
 import axios from 'axios';
 import CollapsibleTable from '../includes/chart/DataTable';
 
 function Chart() {
   const [shopId, setShopId] = useState(null);
   const [orderData, setOrderData] = useState(null);
-  const [paymentData, setPaymentData] = useState(null);
-  const [doAgain, setDoAgain] = useState(null);
+  // const [paymentData, setPaymentData] = useState(null);
+  // const [doAgain, setDoAgain] = useState(null);
 
   const [deliveryData, setDeliveryData] = useState(null);
   const [billData, setBillData] = useState(null);
@@ -59,20 +58,21 @@ function Chart() {
 
   // fetch data from API
   const fetchData = (shopId) => {
-    axios.get(`http://127.0.0.1:8000/api/s/seller-report/?shop_id=${shopId}`)
-      .then((res) => {
-        console.log(res.data);
-        setDoAgain(1)
-        if (res.data.orders) {
-          setOrderData(res.data.orders);
-        }
-        if (res.data.payment_details) {
-          setPaymentData(res.data.payment_details);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    if (shopId !== null) {
+      axios.get(`http://127.0.0.1:8000/api/s/seller-report/?shop_id=${shopId}`)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.orders) {
+            setOrderData(res.data.orders);
+          }
+          // if (res.data.payment_details) {
+          //   setPaymentData(res.data.payment_details);
+          // }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   };
 
   useEffect(() => {
@@ -220,12 +220,12 @@ function Chart() {
             <h3 className='text-center'>Sales Report</h3>
           </Col>
         </Row>
-        <Row className='d-flex justify-content-center algin-items-center pt-1 pb-5 mb-5 bg-light' style={{height:"100%"}}>
+        <Row className='d-flex justify-content-center algin-items-center pt-1 pb-5 mb-5 bg-light' style={{ height: "100%" }}>
           <Col xs={12} lg={9}>
             <CollapsibleTable year={selectedYear} />
           </Col>
         </Row>
-       
+
       </Container>
     </Page>
   )
