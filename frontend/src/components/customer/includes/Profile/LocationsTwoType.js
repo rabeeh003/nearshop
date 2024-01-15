@@ -15,7 +15,6 @@ function LocationsTwoType(props) {
     const [showLocationModal, setShowLocationModal] = useState(false);
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [editLocationId, setEditLocationId] = useState(null);
-    const [changing, setChanging] = useState()
 
 
     const handleAddNewClick = () => {
@@ -40,7 +39,7 @@ function LocationsTwoType(props) {
         }
     };
 
-    useEffect(() => {
+    useEffect((fetchData) => {
         fetchData();
     }, [props.userId]);
 
@@ -170,7 +169,6 @@ function LocationsTwoType(props) {
                             <AddressLocationPicker
                                 oldData={null}
                                 onHide={() => {
-                                    setChanging(1)
                                     setShowAddressModal(false)
                                     fetchData()
                                 }}

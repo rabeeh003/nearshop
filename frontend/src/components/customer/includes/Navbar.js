@@ -46,7 +46,7 @@ function AddLocation(props) {
         >
             <Modal.Header className='bg-success' style={{ color: 'white' }} closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    <i class="fa-solid fa-map"></i> Add Location
+                    <i className="fa-solid fa-map"></i> Add Location
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -60,7 +60,6 @@ function AddLocation(props) {
 function NavBar() {
     const [showNoti, setShowNoti] = React.useState(false);
     const [addLocation, setAddLocation] = React.useState(false);
-    const [fullscreen, setFullscreen] = useState(true);
     const [show, setShow] = useState(false);
     const [userKey] = useState(localStorage.getItem('userKey'));
     const [userId, setUserId] = useState();
@@ -75,13 +74,9 @@ function NavBar() {
 
     useEffect(() => {
         const currentLocation = JSON.parse(localStorage.getItem("currentLocation")) || {};
-        setSelectedLocation(currentLocation.name);   
-    },listLocation)
+        setSelectedLocation(currentLocation.name);
+    })
 
-    function handleShow(breakpoint) {
-        setFullscreen(breakpoint);
-        setShow(true);
-    }
     const handleLocationSelection = (locationName) => {
         localStorage.setItem("currentLocation", JSON.stringify(locationName));
         setSelectedLocation(locationName.name);
@@ -146,12 +141,12 @@ function NavBar() {
                             </Nav> */}
                             <IconsDiv>
                                 <Nav>
-                                    <Link title='Home' className='nav-link' to="/"> <i class="fa-solid fa-house clr-white"></i></Link>
-                                    <Link title='Category' className='nav-link' to="/category/grocery"><i class="fa-solid fa-border-all clr-white"></i></Link>
-                                    <Link title='Cart' className='nav-link' to="/cart"><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
+                                    <Link title='Home' className='nav-link' to="/"> <i className="fa-solid fa-house clr-white"></i></Link>
+                                    <Link title='Category' className='nav-link' to="/category/grocery"><i className="fa-solid fa-border-all clr-white"></i></Link>
+                                    <Link title='Cart' className='nav-link' to="/cart"><i className="fa-solid fa-cart-shopping clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
-                            <Nav onClick={() => setShowNoti(true)}><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav>
+                            <Nav onClick={() => setShowNoti(true)}><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i className="fa-solid fa-bell clr-white"></i></Link></Nav>
                             <Navbar.Text className='mx-2 d-flex'>
                                 <Dropdown>
                                     <Dropdown.Toggle variant="light" id="dropdown-location">
@@ -189,10 +184,10 @@ function NavBar() {
                                         {userKey ? (
                                             <>
                                                 <Link to={'/user'}>
-                                                    <DropItem className='btn'><i class="fa-solid fa-user pe-2"></i>Profile</DropItem>
+                                                    <DropItem className='btn'><i className="fa-solid fa-user pe-2"></i>Profile</DropItem>
                                                 </Link>
                                                 <Link to={''}>
-                                                    <DropItem className='btn'><i class="fa-solid fa-gear pe-2"></i>Settings</DropItem>
+                                                    <DropItem className='btn'><i className="fa-solid fa-gear pe-2"></i>Settings</DropItem>
                                                 </Link>
                                                 <Dropdown.Divider />
                                                 <DropItem onClick={logout} className='btn'>Logout</DropItem>
@@ -223,7 +218,7 @@ function NavBar() {
                 </Container >
             </Navbar >
             {/* this Model used for search */}
-            <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
+            <Modal show={show} onHide={() => setShow(false)}>
                 <Modal.Header closeButton className='bg-green' variant="light">
                     <span className='fw-500 fs-4 clr-white'>Search</span>
                     <Navbar.Text className='ms-5'>
@@ -251,7 +246,7 @@ function NavBar() {
                             className="me-2"
                             aria-label="Search"
                         />
-                        <Button variant="outline-success"><i class="fa-solid fa-magnifying-glass"></i></Button>
+                        <Button variant="outline-success"><i className="fa-solid fa-magnifying-glass"></i></Button>
                     </Form>
                 </Modal.Body>
             </Modal>

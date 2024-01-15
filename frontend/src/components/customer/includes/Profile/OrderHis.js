@@ -4,8 +4,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components';
 import axios from 'axios';
-import dateFormat, { masks } from "dateformat";
-import { Link, useNavigate } from 'react-router-dom';
+import dateFormat from "dateformat";
+import { useNavigate } from 'react-router-dom';
 
 
 const BoxShadow = {
@@ -22,7 +22,7 @@ function OrderHis(props) {
         navigate('invoice', { state: {"orderData":orderData, "products":thisOrderProducts} });
     };
 
-    useEffect(() => {
+    useEffect((orderHistory) => {
         const fetchData = async () => {
             try {
                 const res = await axios.get("http://127.0.0.1:8000/api/s/orders/");

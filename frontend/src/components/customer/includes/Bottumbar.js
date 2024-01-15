@@ -20,13 +20,13 @@ function Bottumbar() {
                     <Offcanvas.Body>
                         <OfIcon>
                             <Link to="user" onClick={handleClose} className='nav-link'>
-                                <OfItem title='Profile' className='clr-white'><i class="clr-white fa-solid fa-user pe-2"></i>Profile</OfItem>
+                                <OfItem title='Profile' className='clr-white'><i className="clr-white fa-solid fa-user pe-2"></i>Profile</OfItem>
                             </Link>
                             <Link to="/settings" onClick={handleClose} className='nav-link'>
-                                <OfItem title='cart' className='clr-white' href="#features"><i class="clr-white fa-solid fa-gear pe-2"></i>Settings</OfItem>
+                                <OfItem title='cart' className='clr-white' href="#features"><i className="clr-white fa-solid fa-gear pe-2"></i>Settings</OfItem>
                             </Link>
                             <Link to="" onClick={handleClose} className='nav-link'>
-                                <OfItem title='cart' className='clr-white' onClick={handleShow} href="#features"><i class="clr-white fa-solid fa-right-from-bracket pe-2"></i>Logout</OfItem>
+                                <OfItem title='cart' className='clr-white' onClick={handleShow} href="#features"><i className="clr-white fa-solid fa-right-from-bracket pe-2"></i>Logout</OfItem>
                             </Link>
                         </OfIcon>
                     </Offcanvas.Body>
