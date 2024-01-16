@@ -74,7 +74,7 @@ const UserSignup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         console.log(formData)
-        await axios.post('http://127.0.0.1:8000/api/signup/', formData)
+        await axios.post('http://www.nearbazar.shop/api/signup/', formData)
             .then(responce => {
                 navigate('/login');
             })

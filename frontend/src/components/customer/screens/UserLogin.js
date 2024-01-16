@@ -22,7 +22,7 @@ function UserLogin() {
 
   const checkPhone = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/signin/', { phone_number: phone });
+      const response = await axios.post('http://www.nearbazar.shop/api/signin/', { phone_number: phone });
       console.log(response);
       setTryser(response.data)
       setNumberError('');

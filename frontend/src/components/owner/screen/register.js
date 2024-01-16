@@ -57,7 +57,7 @@ function ShopSignup() {
     }
     try {
       const { confirmPassword, ...dataToSend } = formData;
-      const response = await axios.post('http://127.0.0.1:8000/api/register/', dataToSend);
+      const response = await axios.post('http://www.nearbazar.shop/api/register/', dataToSend);
       console.log(response);
       navigate('/owner/login');
     } catch (error) {

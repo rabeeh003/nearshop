@@ -12,7 +12,7 @@ function Category() {
 
     const fetchShopDetails = async (shopId) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/shopsall/${shopId}`);
+            const response = await axios.get(`http://www.nearbazar.shop/api/shopsall/${shopId}`);
             return response.data; // Assuming the response contains shop details
         } catch (error) {
             console.error(`Error fetching shop details for shop ID ${shopId}:`, error);
@@ -23,8 +23,8 @@ function Category() {
     useEffect(() => {
         const fetchShopsByCategory = async () => {
             try {
-                const productsResponse = await axios.get('http://127.0.0.1:8000/api/s/shopproducts/');
-                const categoriesResponse = await axios.get('http://127.0.0.1:8000/api/p/gcategory/');
+                const productsResponse = await axios.get('http://www.nearbazar.shop/api/s/shopproducts/');
+                const categoriesResponse = await axios.get('http://www.nearbazar.shop/api/p/gcategory/');
 
                 const filteredCategory = categoriesResponse.data.find(cat => cat.category_name === categoryName);
 

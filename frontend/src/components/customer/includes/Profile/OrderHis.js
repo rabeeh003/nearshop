@@ -25,11 +25,11 @@ function OrderHis(props) {
     useEffect((orderHistory) => {
         const fetchData = async () => {
             try {
-                const res = await axios.get("http://127.0.0.1:8000/api/s/orders/");
+                const res = await axios.get("http://www.nearbazar.shop/api/s/orders/");
                 const userOrder = res.data.filter(order => order.user === props.userId && order.status === "Delivered");
                 setOrderHistory(userOrder);
                 try {
-                    const responce = await axios.get('http://127.0.0.1:8000/api/s/orderproduct/');
+                    const responce = await axios.get('http://www.nearbazar.shop/api/s/orderproduct/');
                     const orderProduct = responce.data.filter(product => userOrder.some(orderObj => orderObj.id === product.order));
                     console.log("ordered product :", orderProduct);
                     setProductOrderHistory(orderProduct)

@@ -318,7 +318,7 @@ export default function CollapsibleTable() {
         try {
             console.log("------------- start fetching ----------------");
             // Fetch all products
-            const allProductsResponse = await axios.get(`http://127.0.0.1:8000/api/s/getproductbyshop/?shop=${shopId}`)
+            const allProductsResponse = await axios.get(`http://www.nearbazar.shop/api/s/getproductbyshop/?shop=${shopId}`)
 
             const allProducts = allProductsResponse.data;
             console.log("All products", allProductsResponse.data);
@@ -326,7 +326,7 @@ export default function CollapsibleTable() {
             const fetchOrderProducts = (order) => allProducts.filter(product => product.order === order.id);
 
             // Fetch orders
-            const ordersResponse = await axios.get('http://127.0.0.1:8000/api/s/orders/');
+            const ordersResponse = await axios.get('http://www.nearbazar.shop/api/s/orders/');
             const filteredOrders = ordersResponse.data.filter(order => {
                 // Use moment.js to extract year
                 const year = moment(order.updated_date).year();

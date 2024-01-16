@@ -40,7 +40,7 @@ function OrderPage() {
 
     const fetchOrder = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/s/orders/');
+        const response = await axios.get('http://www.nearbazar.shop/api/s/orders/');
         console.log("responce from orders : ", response);
         const ord = response.data.filter(order => order.shop === shopId && order.status !== 'Cart' && order.status !== 'Billed' && order.status !== 'Delivered');
 
@@ -49,7 +49,7 @@ function OrderPage() {
 
         try {
           console.log("start fech order pro");
-          const res = await axios.get('http://127.0.0.1:8000/api/s/orderproduct/');
+          const res = await axios.get('http://www.nearbazar.shop/api/s/orderproduct/');
           console.log("responce from orderproducts : ", res.data);
           const filterd = res.data.filter(order => ord.some(orderObj => orderObj.id === order.order));
           console.log("filtered products :", filterd);
@@ -104,7 +104,7 @@ function OrderPage() {
     }
     console.log("Message to send : ", messageToSend);
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/s/messages/", messageToSend);
+      const res = await axios.post("http://www.nearbazar.shop/api/s/messages/", messageToSend);
       console.log("message sended : ", res);
       setOrderMessages({ ...orderMessages, [orderId]: { ...orderMessages[orderId], text: '' } });
     } catch (error) {
@@ -117,7 +117,7 @@ function OrderPage() {
   // Inside your component...
   useEffect(() => {
     // Axios call to fetch messages
-    axios.get('http://127.0.0.1:8000/api/s/messages/')
+    axios.get('http://www.nearbazar.shop/api/s/messages/')
       .then(response => {
         const messages = response.data;
         const updatedGroupedMessages = {};
@@ -175,19 +175,19 @@ function OrderPage() {
           for (const product of returnedProducts) {
             try {
               setReturnPrice(returnPrice + (product.product_price * product.product_count))
-              await axios.delete(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`);
+              await axios.delete(`http://www.nearbazar.shop/api/s/orderproduct/${product.id}/`);
               console.log(`Product ${product.id} deleted successfully`);
             } catch (error) {
               console.error(`Error deleting ordered product ${product.id}:`, error);
             }
           }
-          axios.put(`http://127.0.0.1:8000/api/customer/${returnedProducts[0].user}/`, { wallet: returnPrice })
+          axios.put(`http://www.nearbazar.shop/api/customer/${returnedProducts[0].user}/`, { wallet: returnPrice })
         }
         if (oldStatus === "Replace") {
           const returnedProducts = proForThis.filter(product => product.returned === true);
           for (const product of returnedProducts) {
             try {
-              await axios.put(`http://127.0.0.1:8000/api/s/orderproduct/${product.id}/`, { returned: false });
+              await axios.put(`http://www.nearbazar.shop/api/s/orderproduct/${product.id}/`, { returned: false });
               console.log(`Product ${product.id} - 'returned' status changed to false`);
             } catch (error) {
               console.error(`Error updating product ${product.id}:`, error);
@@ -631,12 +631,12 @@ function ReturnModel({ show, onHide, product, user }) {
   };
   const returnOrder = () => {
     console.log("set return : ", updatedData, ", messageData :", messageData);
-    axios.put(`http://127.0.0.1:8000/api/s/orders/${product[0].order}/`, updatedData)
+    axios.put(`http://www.nearbazar.shop/api/s/orders/${product[0].order}/`, updatedData)
       .then(async response => {
         console.log('Order updated successfully:', response.data);
         if (messageData.text !== "") {
           try {
-            const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+            const response = await axios.post('http://www.nearbazar.shop/api/s/messages/', messageData);
             console.log('Message sent:', response.data);
             onHide()
           } catch (error) {
@@ -717,12 +717,12 @@ function AcceptModel(props) {
   };
   const AcceptOrder = () => {
     console.log("set return : ", updatedData, ", messageData :", messageData);
-    axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
+    axios.put(`http://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
       .then(async response => {
         console.log('Order updated successfully:', response.data);
         if (messageData.text !== "") {
           try {
-            const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+            const response = await axios.post('http://www.nearbazar.shop/api/s/messages/', messageData);
             console.log('Message sent:', response.data);
           } catch (error) {
             console.error('Error sending message:', error);
@@ -799,12 +799,12 @@ function CancelModel(props) {
   };
   const cancelOrder = () => {
     console.log("set return : ", updatedData, ", messageData :", messageData);
-    axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
+    axios.put(`http://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
       .then(async response => {
         console.log('Order updated successfully:', response.data);
         if (messageData.text !== "") {
           try {
-            const response = await axios.post('http://127.0.0.1:8000/api/s/messages/', messageData);
+            const response = await axios.post('http://www.nearbazar.shop/api/s/messages/', messageData);
             console.log('Message sent:', response.data);
           } catch (error) {
             console.error('Error sending message:', error);
@@ -851,7 +851,7 @@ function CodeModel(props) {
 
     console.log("code :", props.code, "endered :", otp);
     if (props.code === otp) {
-      axios.put(`http://127.0.0.1:8000/api/s/orders/${props.order}/`, updatedData)
+      axios.put(`http://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
         .then(async response => {
           console.log('Order updated successfully:', response.data);
           props.onHide(updatedData.status)

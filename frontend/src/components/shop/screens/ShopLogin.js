@@ -23,7 +23,7 @@ function ShopLogin() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/shop_login/', formData);
+            const response = await axios.post('http://www.nearbazar.shop/api/shop_login/', formData);
             console.log(response.data);
             setCheckErr('');
             localStorage.setItem('adminKey', JSON.stringify(response.data));

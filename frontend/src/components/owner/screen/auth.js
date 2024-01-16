@@ -21,7 +21,7 @@ const GoogleAuth = () => {
       console.log(loggedInUser.email);
       try {
         console.log("mail :", loggedInUser.email);
-        await axios.post('http://127.0.0.1:8000/api/shop_mail_check/', { "mail": loggedInUser.email });
+        await axios.post('http://www.nearbazar.shop/api/shop_mail_check/', { "mail": loggedInUser.email });
         navigate('/owner/login');
       } catch (error) {
         navigate('/owner/signup', { state: { passedData: loggedInUser.email } });

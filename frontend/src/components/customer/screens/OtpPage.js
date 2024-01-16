@@ -20,7 +20,7 @@ function OtpPage() {
     try {
       console.log(phone);
       console.log('start');
-      const response = await axios.post('http://127.0.0.1:8000/api/signin/', { phone_number: phone });
+      const response = await axios.post('http://www.nearbazar.shop/api/signin/', { phone_number: phone });
       console.log('checked');
       if (response.data.exists) {
         // If the phone number is already registered

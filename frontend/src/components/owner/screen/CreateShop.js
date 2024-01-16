@@ -119,7 +119,7 @@ function CreateShop() {
 
         try {
             console.log(formDataToSend);
-            await axios.post('http://127.0.0.1:8000/api/shop_register/', formDataToSend, {
+            await axios.post('http://www.nearbazar.shop/api/shop_register/', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

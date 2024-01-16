@@ -56,7 +56,7 @@ function OfferPage() {
 
       try {
         console.log("subitting data : ", FormData);
-        const url = `http://127.0.0.1:8000/api/s/editproduct/${currentData.id}/update/`;
+        const url = `http://www.nearbazar.shop/api/s/editproduct/${currentData.id}/update/`;
         await axios.patch(url, FormData);
         console.log('Product updated successfully');
         setFormData({
@@ -79,7 +79,7 @@ function OfferPage() {
         "offer_end": null,
       };
       console.log("removeee data : ", removeee);
-      const url = `http://127.0.0.1:8000/api/s/editproduct/${data.id}/update/`;
+      const url = `http://www.nearbazar.shop/api/s/editproduct/${data.id}/update/`;
       await axios.patch(url, removeee);
       setGetNeed(2)
     } catch (error) {
@@ -113,7 +113,7 @@ function OfferPage() {
     const fetchShopProducts = async () => {
       try {
         if (shopId) {
-          const response = await axios.get(`http://127.0.0.1:8000/api/s/shopproducts?shop_id=${shopId}`);
+          const response = await axios.get(`http://www.nearbazar.shop/api/s/shopproducts?shop_id=${shopId}`);
           console.log("====================");
           const yesterday = new Date();
           yesterday.setDate(yesterday.getDate() - 1);

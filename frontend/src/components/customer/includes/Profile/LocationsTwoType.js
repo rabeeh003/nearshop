@@ -31,7 +31,7 @@ function LocationsTwoType(props) {
             setSearchLocation(allSearchLocations);
         }
         try {
-            const allAddress = await axios.get("http://127.0.0.1:8000/api/u/location/");
+            const allAddress = await axios.get("http://www.nearbazar.shop/api/u/location/");
             const filterAddress = allAddress.data.filter(add => add.customer_id === props.userId);
             setAddressLocation(filterAddress);
         } catch (error) {
@@ -54,7 +54,7 @@ function LocationsTwoType(props) {
 
     const addressHandilDelete = async (locid) => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/u/location/${locid}/`);
+            await axios.delete(`http://www.nearbazar.shop/api/u/location/${locid}/`);
             fetchData()
         } catch (error) {
             console.log("delete error", error);
