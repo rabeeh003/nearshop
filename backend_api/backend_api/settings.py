@@ -26,15 +26,25 @@ SECRET_KEY = 'django-insecure-$wb@c9uur9(y%2)$5*eopzkkuq#qvik5jr_^axh+-#21x3erzj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['nearbazar.shop', 'www.nearbazar.shop']
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CORS_ALLOW_CREDENTIALS = True 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
     "http://localhost:3000",
+    'https://www.nearbazar.shop',
+    'https://nearbazar.shop',
 ]
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False
 
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = [
+	'https://nearbazar.shop',
+	'https://www.nearbazar.shop'
+]
 
 # CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
 
@@ -68,6 +78,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CSRF_COOKIE_SAMESITE = 'None'
 
 ROOT_URLCONF = 'backend_api.urls'
 
