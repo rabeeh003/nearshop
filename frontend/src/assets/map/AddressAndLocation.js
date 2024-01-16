@@ -226,10 +226,10 @@ class AddressLocationPicker extends Component {
     try {
       console.log("location for submit", newLocation);
       if (this.props.oldData === null) {
-        axios.post("http://www.nearbazar.shop/api/u/location/", newLocation)
+        axios.post("https://www.nearbazar.shop/api/u/location/", newLocation)
         this.props.onHide();
       } else {
-        axios.put(`http://www.nearbazar.shop/api/u/location/${this.props.oldData.id}/`, newLocation)
+        axios.put(`https://www.nearbazar.shop/api/u/location/${this.props.oldData.id}/`, newLocation)
         this.props.onHide();
       }
     } catch (error) {

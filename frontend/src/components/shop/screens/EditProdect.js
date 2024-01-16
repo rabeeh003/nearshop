@@ -52,7 +52,7 @@ function EditProdect() {
       
       console.log("Data to update : ", dataToUpdate);
       if (Object.keys(dataToUpdate).length > 0) {
-        const url = `http://www.nearbazar.shop/api/s/editproduct/${currentData.id}/update/`;
+        const url = `https://www.nearbazar.shop/api/s/editproduct/${currentData.id}/update/`;
         await axios.patch(url, dataToUpdate);
         console.log('Product updated successfully');
         setDonw(don+1)
@@ -84,7 +84,7 @@ function EditProdect() {
     const fetchShopProducts = async () => {
       try {
         if (shopId) {
-          const response = await axios.get(`http://www.nearbazar.shop/api/s/shopproducts?shop_id=${shopId}`);
+          const response = await axios.get(`https://www.nearbazar.shop/api/s/shopproducts?shop_id=${shopId}`);
           setProduct(response.data.filter(product => product.shop_id === shopId));
           console.log('product : ', response.data);
         }

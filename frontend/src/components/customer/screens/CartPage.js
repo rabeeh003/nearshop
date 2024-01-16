@@ -40,7 +40,7 @@ function CartPage() {
 
         const fetchOrder = async () => {
             try {
-                const response = await axios.get('http://www.nearbazar.shop/api/s/orders/');
+                const response = await axios.get('https://www.nearbazar.shop/api/s/orders/');
                 console.log("responce from orders : ", response);
                 let ord
                 if (selectedOption === "cart") {
@@ -53,7 +53,7 @@ function CartPage() {
 
                 try {
                     console.log("start fech order pro");
-                    const res = await axios.get('http://www.nearbazar.shop/api/s/orderproduct/');
+                    const res = await axios.get('https://www.nearbazar.shop/api/s/orderproduct/');
                     console.log("responce from orderproducts : ", res.data);
                     const filterd = res.data.filter(order => ord.some(orderObj => orderObj.id === order.order));
                     console.log("filtered products :", filterd);
@@ -106,7 +106,7 @@ function CartPage() {
         }
         console.log("Message to send : ", messageToSend);
         try {
-            const res = await axios.post("http://www.nearbazar.shop/api/s/messages/", messageToSend);
+            const res = await axios.post("https://www.nearbazar.shop/api/s/messages/", messageToSend);
             console.log("message sended : ", res);
             setOrderMessages({ ...orderMessages, [orderId]: { ...orderMessages[orderId], text: '' } });
         } catch (error) {
@@ -117,7 +117,7 @@ function CartPage() {
     const [groupedMessages, setGroupedMessages] = useState({});
 
     useEffect(() => {
-        axios.get('http://www.nearbazar.shop/api/s/messages/')
+        axios.get('https://www.nearbazar.shop/api/s/messages/')
             .then(response => {
                 const messages = response.data;
                 const updatedGroupedMessages = {};
@@ -173,7 +173,7 @@ function CartPage() {
         const removeProduct = async () => {
             try {
                 if (productToRemove.productId !== null) {
-                    const response = await axios.delete(`http://www.nearbazar.shop/api/s/orderproduct/${productToRemove.productId}`);
+                    const response = await axios.delete(`https://www.nearbazar.shop/api/s/orderproduct/${productToRemove.productId}`);
                     console.log('Delete response:', response);
 
                     const index = filteredData.findIndex(item => item.id === productToRemove.productId);
@@ -735,12 +735,12 @@ function ReturnModel({ show, onHide, product: product, user }) {
     };
     const returnOrder = (re) => {
         console.log("set return : ", re, ", messageData :", messageData);
-        axios.put(`http://www.nearbazar.shop/api/s/orders/${products[0].order}/`, { status: re })
+        axios.put(`https://www.nearbazar.shop/api/s/orders/${products[0].order}/`, { status: re })
             .then(async response => {
                 console.log('Order updated successfully:', response.data);
                 if (messageData.text !== "") {
                     try {
-                        const response = await axios.post('http://www.nearbazar.shop/api/s/messages/', messageData);
+                        const response = await axios.post('https://www.nearbazar.shop/api/s/messages/', messageData);
                         console.log('Message sent:', response.data);
                     } catch (error) {
                         console.error('Error sending message:', error);
@@ -756,7 +756,7 @@ function ReturnModel({ show, onHide, product: product, user }) {
         const updatedProducts = [...products];
         updatedProducts[idx].returned = !updatedProducts[idx].returned;
         try {
-            await axios.put(`http://www.nearbazar.shop/api/s/orderproduct/${updatedProducts[idx].id}/`, { returned: updatedProducts[idx].returned })
+            await axios.put(`https://www.nearbazar.shop/api/s/orderproduct/${updatedProducts[idx].id}/`, { returned: updatedProducts[idx].returned })
             setProducts(updatedProducts);
             console.log("updatedProducts on checked", updatedProducts);
         } catch (error) {
@@ -847,7 +847,7 @@ function AcceptModel(props) {
     };
     const AcceptOrder = () => {
         console.log("set return : ", updatedData, ", messageData :", messageData);
-        axios.put(`http://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
+        axios.put(`https://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
             .then(async response => {
                 console.log('Order updated successfully:', response.data);
                 setMessage({ ...messageData, user: response.data.user, order: response.data.id });
@@ -863,7 +863,7 @@ function AcceptModel(props) {
                         }
                         console.log("price : ",price);
                         try {
-                            await axios.put(`http://www.nearbazar.shop/api/s/orderproduct/${product.id}/`, { "product_price": price });
+                            await axios.put(`https://www.nearbazar.shop/api/s/orderproduct/${product.id}/`, { "product_price": price });
                         } catch (error) {
                             console.log("error of price adding", error)
                         }
@@ -871,7 +871,7 @@ function AcceptModel(props) {
                 );
                 if (messageData.text !== "") {
                     try {
-                        const response = await axios.post('http://www.nearbazar.shop/api/s/messages/', messageData);
+                        const response = await axios.post('https://www.nearbazar.shop/api/s/messages/', messageData);
                         console.log('Message sent:', response.data);
                     } catch (error) {
                         console.error('Error sending message:', error);
@@ -944,7 +944,7 @@ function EditModel(props) {
 
         try {
             console.log("updating ......  : ", data);
-            const response = await axios.put(`http://www.nearbazar.shop/api/s/orderproduct/${props.productId}/`, data);
+            const response = await axios.put(`https://www.nearbazar.shop/api/s/orderproduct/${props.productId}/`, data);
             console.log('Product count updated:', response.data);
             props.onUpdateSuccess(response.data, props.listKey);
             setCount(null);
@@ -1034,12 +1034,12 @@ function CancelModel(props) {
     };
     const cancelOrder = () => {
         console.log("set return : ", updatedData, ", messageData :", messageData);
-        axios.put(`http://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
+        axios.put(`https://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
             .then(async response => {
                 console.log('Order updated successfully:', response.data);
                 if (messageData.text !== "") {
                     try {
-                        const response = await axios.post('http://www.nearbazar.shop/api/s/messages/', messageData);
+                        const response = await axios.post('https://www.nearbazar.shop/api/s/messages/', messageData);
                         console.log('Message sent:', response.data);
                     } catch (error) {
                         console.error('Error sending message:', error);

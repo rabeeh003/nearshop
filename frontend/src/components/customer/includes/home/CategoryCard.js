@@ -13,7 +13,7 @@ function CategoryCard() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://www.nearbazar.shop/api/p/gcategory/');
+                const response = await axios.get('https://www.nearbazar.shop/api/p/gcategory/');
                 setCategories(response.data);
             } catch (error) {
                 console.error('Error fetching categories:', error);

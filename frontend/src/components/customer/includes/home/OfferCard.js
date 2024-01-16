@@ -108,7 +108,7 @@ function OfferCard() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://www.nearbazar.shop/api/s/shopproducts/`);
+                const response = await axios.get(`https://www.nearbazar.shop/api/s/shopproducts/`);
                 const today = new Date();
                 const day = today.toJSON().slice(0, 10);
                 console.log("--------Day and Day + 2-------------");
@@ -187,7 +187,7 @@ function OfferCard() {
             if (updateOrderData.user !== '' && updateOrderData.shop !== '') {
                 try {
                     console.log("---- check and create order ----");
-                    const response = await axios.get("http://www.nearbazar.shop/api/s/orders/");
+                    const response = await axios.get("https://www.nearbazar.shop/api/s/orders/");
                     const existingData = response.data?.filter(item => item.user === userId) || [];
                     console.log("existing data : ", existingData);
 
@@ -202,7 +202,7 @@ function OfferCard() {
 
                     } else {
                         console.log("ready to push : ", updateOrderData);
-                        await axios.post("http://www.nearbazar.shop/api/s/orders/", updateOrderData).then(res => {
+                        await axios.post("https://www.nearbazar.shop/api/s/orders/", updateOrderData).then(res => {
                             console.log("res : ", res.data);
                             setOrderId(res.data.id)
                             console.log("order id : ", orderId);
@@ -222,7 +222,7 @@ function OfferCard() {
                     };
                     setOPData(updateOrderProductData);
                     console.log("updated opd : ", updateOrderProductData);
-                    const oProductD = await axios.get("http://www.nearbazar.shop/api/s/orderproduct/")
+                    const oProductD = await axios.get("https://www.nearbazar.shop/api/s/orderproduct/")
                     console.log("get the oProductD for check :", oProductD)
                     console.log("user id", userId);
                     const filterdOPD = oProductD.data.filter(item =>
@@ -236,7 +236,7 @@ function OfferCard() {
                     if (filterdOPD.length === 0) {
                         console.log("just print products : ", updateOrderProductData);
                         console.log("just print products : ", oPData);
-                        await axios.post("http://www.nearbazar.shop/api/s/orderproduct/", updateOrderProductData)
+                        await axios.post("https://www.nearbazar.shop/api/s/orderproduct/", updateOrderProductData)
                             .then(res => {
                                 console.log("submitted, res :", res.data);
                             })

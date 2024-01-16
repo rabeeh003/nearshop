@@ -59,7 +59,7 @@ function Chart() {
   // fetch data from API
   const fetchData = (shopId) => {
     if (shopId !== null) {
-      axios.get(`http://www.nearbazar.shop/api/s/seller-report/?shop_id=${shopId}`)
+      axios.get(`https://www.nearbazar.shop/api/s/seller-report/?shop_id=${shopId}`)
         .then((res) => {
           console.log(res.data);
           if (res.data.orders) {

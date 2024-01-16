@@ -39,7 +39,7 @@ function AddProdect() {
 
     const handleSubmit = async () => {
         try {
-            await axios.post('http://www.nearbazar.shop/api/s/addproduct/', FormData);
+            await axios.post('https://www.nearbazar.shop/api/s/addproduct/', FormData);
             setProError('')
             setAddedData(addedData+1)
         } catch (error) {
@@ -67,7 +67,7 @@ function AddProdect() {
         const fetchProductDetails = async () => {
             try {
                 if (productId) {
-                    const response = await axios.get(`http://www.nearbazar.shop/api/p/gpro/${productId}`);
+                    const response = await axios.get(`https://www.nearbazar.shop/api/p/gpro/${productId}`);
                     setProduct(response.data);
                     setProError('')
 
@@ -76,7 +76,7 @@ function AddProdect() {
                         product_id: productId
                     }));
 
-                    const categoriesResponse = await axios.get('http://www.nearbazar.shop/api/p/gcategory');
+                    const categoriesResponse = await axios.get('https://www.nearbazar.shop/api/p/gcategory');
                     setCategories(categoriesResponse.data);
                 }
             } catch (error) {
@@ -86,7 +86,7 @@ function AddProdect() {
         const fetchShopProducts = async () => {
             try {
                 if (shopId) {
-                    const response = await axios.get('http://www.nearbazar.shop/api/s/shopproducts');
+                    const response = await axios.get('https://www.nearbazar.shop/api/s/shopproducts');
                     setShoppro(response.data.filter(product => product.shop_id === shopId));
                     console.log(shoppro);
                 }
@@ -115,7 +115,7 @@ function AddProdect() {
                                 <Image
                                     variant="top"
                                     style={{ objectFit: 'cover', width: "90%", borderRadius: "10px", maxHeight: '90%' }}
-                                    src={`http://www.nearbazar.shop${product ? product.prodect_image : ''}`}
+                                    src={`https://www.nearbazar.shop${product ? product.prodect_image : ''}`}
                                 />
                                 // <img variant="top" style={{ objectFit: 'cover', imageRendering: 'auto', borderRadius: "10px", maxHeight: '90%' }} src={product.prodect_image} />
                             )}

@@ -24,7 +24,7 @@ function OwnerLogin() {
 
 
         try {
-            const response = await axios.post('http://www.nearbazar.shop/api/owner_login/', formData);
+            const response = await axios.post('https://www.nearbazar.shop/api/owner_login/', formData);
 
             console.log(response.data);
             setCheckErr('');

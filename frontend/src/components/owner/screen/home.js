@@ -53,7 +53,7 @@ function OwnerHome() {
                 }
             });
             if (Object.keys(updatedData).length > 0) {
-                await axios.put(`http://www.nearbazar.shop/api/shop_update/${selectedShop.id}/`, updatedData);
+                await axios.put(`https://www.nearbazar.shop/api/shop_update/${selectedShop.id}/`, updatedData);
 
                 const updatedShops = shops.map((s) => (s.id === selectedShop.id ? { ...s, ...updatedData } : s));
                 setShops(updatedShops);
@@ -74,7 +74,7 @@ function OwnerHome() {
                     const ownerKeyObj = JSON.parse(ownerKey);
                     const ownerMail = ownerKeyObj.mail;
                     setOwnerKey(ownerMail);
-                    const response = await axios.get('http://www.nearbazar.shop/api/shop_register/');
+                    const response = await axios.get('https://www.nearbazar.shop/api/shop_register/');
                     const filteredShops = response.data.filter(shop => shop.shop_owner === ownerMail);
                     setShops(filteredShops);
                 }

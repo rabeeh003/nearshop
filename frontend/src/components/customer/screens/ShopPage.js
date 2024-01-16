@@ -118,7 +118,7 @@ function MyVerticallyCenteredModal(props) {
                     <PDetiles>
                         <div style={{ width: "45%" }}>
                             <ProImage>
-                                <Card.Img style={{ objectFit: 'fill' }} variant="top" src={`http://www.nearbazar.shop${product.gpro.prodect_image}`} />
+                                <Card.Img style={{ objectFit: 'fill' }} variant="top" src={`https://www.nearbazar.shop${product.gpro.prodect_image}`} />
                             </ProImage>
 
                         </div>
@@ -233,7 +233,7 @@ function ShopPage() {
         const parts = url.split('/');
         const shopId = parts[parts.length - 1];
 
-        axios.get(`http://www.nearbazar.shop/api/s/shop/${shopId}/`)
+        axios.get(`https://www.nearbazar.shop/api/s/shop/${shopId}/`)
             .then(response => {
                 console.log("Shop Data:", response.data);
                 setAllData(response.data);
@@ -243,7 +243,7 @@ function ShopPage() {
                 console.error('Error fetching shop data:', error);
             });
 
-        axios.get('http://www.nearbazar.shop/api/p/gcategory/')
+        axios.get('https://www.nearbazar.shop/api/p/gcategory/')
             .then(response => {
                 console.log("Categories:", response.data);
                 const categoriesDict = {};
@@ -347,7 +347,7 @@ function ShopPage() {
             if (updateOrderData.user !== '' && updateOrderData.shop !== '') {
                 try {
                     console.log("---- check and create order ----");
-                    const response = await axios.get("http://www.nearbazar.shop/api/s/orders/");
+                    const response = await axios.get("https://www.nearbazar.shop/api/s/orders/");
                     const existingData = response.data?.filter(item => item.user === userId) || [];
                     console.log("existing data : ", existingData);
 
@@ -362,7 +362,7 @@ function ShopPage() {
 
                     } else {
                         console.log("ready to push : ", updateOrderData);
-                        await axios.post("http://www.nearbazar.shop/api/s/orders/", updateOrderData).then(res => {
+                        await axios.post("https://www.nearbazar.shop/api/s/orders/", updateOrderData).then(res => {
                             console.log("res : ", res.data);
                             setOrderId(res.data.id)
                             console.log("order id : ", orderId);
@@ -382,7 +382,7 @@ function ShopPage() {
                     };
                     setOPData(updateOrderProductData);
                     console.log("updated opd : ", updateOrderProductData);
-                    const oProductD = await axios.get("http://www.nearbazar.shop/api/s/orderproduct/")
+                    const oProductD = await axios.get("https://www.nearbazar.shop/api/s/orderproduct/")
                     console.log("get the oProductD for check :", oProductD)
                     console.log("user id", userId);
                     const filterdOPD = oProductD.data.filter(item =>
@@ -396,7 +396,7 @@ function ShopPage() {
                     if (filterdOPD.length === 0) {
                         console.log("just print products : ", updateOrderProductData);
                         console.log("just print products : ", oPData);
-                        await axios.post("http://www.nearbazar.shop/api/s/orderproduct/", updateOrderProductData)
+                        await axios.post("https://www.nearbazar.shop/api/s/orderproduct/", updateOrderProductData)
                             .then(res => {
                                 console.log("submitted, res :", res.data);
                             })
@@ -482,7 +482,7 @@ function ShopPage() {
                                             <CardImage>
                                                 {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
                                                 {/* <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i>{product.seller.shop_name}</Badge> */}
-                                                <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={`http://www.nearbazar.shop${product.gpro.prodect_image}`} />
+                                                <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={`https://www.nearbazar.shop${product.gpro.prodect_image}`} />
                                             </CardImage>
                                             <Card.Body className='text-center mt-2'>
                                                 <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>

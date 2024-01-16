@@ -59,7 +59,7 @@ function UserProfile() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://www.nearbazar.shop/api/customer/${userId}/`);
+                const response = await axios.get(`https://www.nearbazar.shop/api/customer/${userId}/`);
                 setSignUpData(response.data);
                 setEditData({
                     ...editData,
@@ -80,7 +80,7 @@ function UserProfile() {
     }, [userId]);
     const updateUser = async () => {
         try {
-            const response = await axios.put(`http://www.nearbazar.shop/api/customer/${userId}/`, editData);
+            const response = await axios.put(`https://www.nearbazar.shop/api/customer/${userId}/`, editData);
             console.log('User data updated:', response.data);
             handleClose()
         } catch (error) {
@@ -91,7 +91,7 @@ function UserProfile() {
     useEffect(() => {
         const fetchPaymentData = async () => {
             try {
-                const paymentData = await axios.get("http://www.nearbazar.shop/api/s/payments/");
+                const paymentData = await axios.get("https://www.nearbazar.shop/api/s/payments/");
                 console.log("paymentData", paymentData);
                 const filterPayment = paymentData.data.filter(pay => pay.user === userId);
                 console.log("filterPayment", filterPayment.data);

@@ -15,7 +15,7 @@ function SearchSuggestions({ show, onHide }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://www.nearbazar.shop/api/p/gpro/');
+                const response = await axios.get('https://www.nearbazar.shop/api/p/gpro/');
                 setAllProducts(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -23,7 +23,7 @@ function SearchSuggestions({ show, onHide }) {
         };
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://www.nearbazar.shop/api/p/gcategory/');
+                const response = await axios.get('https://www.nearbazar.shop/api/p/gcategory/');
                 setCategories(response.data);
             } catch (error) {
                 console.error('Error fetching categories:', error);

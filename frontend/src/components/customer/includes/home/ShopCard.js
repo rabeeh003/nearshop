@@ -10,7 +10,7 @@ function ShopCard() {
     useEffect(() => {
         const fetchShops = async () => {
             try {
-                const response = await axios.get('http://www.nearbazar.shop/api/shop_register/');
+                const response = await axios.get('https://www.nearbazar.shop/api/shop_register/');
                 setShops(response.data);
             } catch (error) {
                 console.error('Error fetching shops:', error);

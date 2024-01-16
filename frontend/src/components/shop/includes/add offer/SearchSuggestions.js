@@ -32,7 +32,7 @@ function SearchSuggestions({ show, onHide }) {
         const fetchShopProducts = async () => {
             try {
                 if (shopId) {
-                    const response = await axios.get(`http://www.nearbazar.shop/api/s/shopproducts?shop_id=${shopId}`);
+                    const response = await axios.get(`https://www.nearbazar.shop/api/s/shopproducts?shop_id=${shopId}`);
                     const day = new Date().toJSON().slice(0, 10);
                     const filteredProducts = response.data.filter(product => {
                         return (

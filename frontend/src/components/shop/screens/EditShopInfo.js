@@ -19,7 +19,7 @@ function EditShopInfo() {
     //  shop data fetch
     const fetchShopData = async (shopId) => {
         try {
-            const response = await axios.get(`http://www.nearbazar.shop/api/getOneShop/${shopId}/`); // Replace '1' with the shop ID you want to retrieve
+            const response = await axios.get(`https://www.nearbazar.shop/api/getOneShop/${shopId}/`); // Replace '1' with the shop ID you want to retrieve
             setShopData(response.data);
             setFormData({
                 ...formData,
@@ -86,7 +86,7 @@ function EditShopInfo() {
         if (formDataToSend !== null) {
             try {
                 console.log("updateData",formDataToSend );
-                await axios.put(`http://www.nearbazar.shop/api/shop_update/${shopData.id}/`, formDataToSend, {
+                await axios.put(`https://www.nearbazar.shop/api/shop_update/${shopData.id}/`, formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

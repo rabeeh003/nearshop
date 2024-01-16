@@ -93,7 +93,7 @@ function CheckOut(props) {
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                const response = await axios.get('http://www.nearbazar.shop/api/u/location/');
+                const response = await axios.get('https://www.nearbazar.shop/api/u/location/');
                 const filterRes = response.data.filter(loc => loc.customer_id === shopData.user)
                 setListLocation(filterRes);
             } catch (error) {
@@ -192,8 +192,8 @@ function CheckOut(props) {
             console.log("location : ", selectedLocation.id);
 
 
-            await axios.post("http://www.nearbazar.shop/api/s/payments/", paymentData);
-            await axios.put(`http://www.nearbazar.shop/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id, "total_price": total });
+            await axios.post("https://www.nearbazar.shop/api/s/payments/", paymentData);
+            await axios.put(`https://www.nearbazar.shop/api/s/orders/${shopData.id}/`, { "status": "Paid", "location": selectedLocation.id, "total_price": total });
             navigate("/cart")
         } catch (error) {
             console.log("error : ", error);

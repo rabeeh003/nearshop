@@ -56,7 +56,7 @@ function Billing() {
         console.log("-------= start post =-------");
         console.log("--> BillData : ", billData);
         console.log("--> dataToUpdate : ", dataToUpdate);
-        await axios.post('http://www.nearbazar.shop/api/s/orders/', dataToUpdate)
+        await axios.post('https://www.nearbazar.shop/api/s/orders/', dataToUpdate)
             .then(async (response) => {
                 console.log('Response:', response.data);
                 console.log("-------= product data post =-------");
@@ -70,7 +70,7 @@ function Billing() {
                 }));
                 console.log("product to upload : ", allProduct);
                 allProduct.forEach(productData => {
-                    axios.post('http://www.nearbazar.shop/api/s/orderproduct/', productData)
+                    axios.post('https://www.nearbazar.shop/api/s/orderproduct/', productData)
                         .then(response => {
                             console.log('Product added successfully:', response.data);
                             setCType([])
@@ -220,7 +220,7 @@ function Billing() {
         const fetchShopProducts = async () => {
             try {
                 if (shopId) {
-                    const response = await axios.get('http://www.nearbazar.shop/api/s/shopproducts');
+                    const response = await axios.get('https://www.nearbazar.shop/api/s/shopproducts');
                     setShoppro(response.data.filter(product => product.shop_id === shopId));
                     console.log(shoppro);
                 }
