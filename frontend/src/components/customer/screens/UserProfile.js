@@ -39,45 +39,48 @@ function UserProfile() {
     };
 
     const [signUpData, setSignUpData] = useState([]);
-    const [userId, setUserId] = useState();
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
         const fetchShopId = () => {
             const adminKeyString = localStorage.getItem('userKey');
             if (adminKeyString) {
                 const userKey = JSON.parse(adminKeyString);
+                console.log('user id : ', userKey.id);
                 setUserId(userKey.id);
-                console.log('user id : ', userId);
             } else {
                 console.log('adminKey not found in localStorage');
             }
         };
 
         fetchShopId();
+    }, []);
 
-    });
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchthem = async () => {
             try {
-                const response = await axios.get(`https://www.nearbazar.shop/api/customer/${userId}/`);
-                setSignUpData(response.data);
-                setEditData({
-                    ...editData,
-                    full_name: response.data.full_name,
-                    phone_number: response.data.phone_number,
-                    phone_two: response.data.phone_two,
-                    email: response.data.email,
-                    address: response.data.address
-                });
-                console.log(response.data);
+                if (userId !== null) {
+                    const response = await axios.get(`https://www.nearbazar.shop/api/customer/${userId}/`);
+                    setSignUpData(response.data);
+                    setEditData({
+                        ...editData,
+                        full_name: response.data.full_name,
+                        phone_number: response.data.phone_number,
+                        phone_two: response.data.phone_two,
+                        email: response.data.email,
+                        address: response.data.address
+                    });
+                    console.log(response.data);
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-        if (userId) {
-            fetchData();
-        }
-    }, [userId]);
+
+        fetchthem();
+    }, [userId, setEditData]);
+
+    
     const updateUser = async () => {
         try {
             const response = await axios.put(`https://www.nearbazar.shop/api/customer/${userId}/`, editData);

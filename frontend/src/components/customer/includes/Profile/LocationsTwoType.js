@@ -39,8 +39,8 @@ function LocationsTwoType(props) {
         }
     };
 
-    useEffect((fetchData) => {
-        fetchData();
+    useEffect(() => {
+        fetchData(props.userId);
     }, [props.userId]);
 
     const locationHandleDelete = (idx) => {

@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function Category() {
-    const { categoryName } = useParams('grocery');
+    const { categoryName } = useParams('Vegetables');
     const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(true);
 
