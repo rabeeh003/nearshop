@@ -102,7 +102,7 @@ function OtpPage() {
                 {/* Didn't receive code? <Link to={-1}>Request again</Link> */}
               </ResendLink>
             </CardBody>
-            <p className='mt-4 text-center'>Don't have an account ? <Link to={'/login'} className='ms-2'>Signup</Link></p>
+            <p className='mt-4 text-center'>I have an account ? <Link to={'/login'} className='ms-2'>Signin</Link></p>
           </Card>
         </div>
       </div>
