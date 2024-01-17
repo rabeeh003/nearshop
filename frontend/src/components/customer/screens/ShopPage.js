@@ -202,7 +202,7 @@ function ShopPage() {
     }
 
     const copyToClipboard = () => {
-        const copyText = `http://localhost:3000/${allData.shop_id}`;
+        const copyText = `https://nearshop.online/${allData.shop_id}`;
 
         navigator.clipboard.writeText(copyText).then(() => {
             // alert('Copied to clipboard: ' + copyText);
@@ -221,11 +221,11 @@ function ShopPage() {
     const categoriesOrder = [
         "offer",
         'grocery',
-        'vegetable',
-        'fruits',
-        'packes',
-        'bakery',
-        'drinks',
+        'Vegetables',
+        'Fruits',
+        'Groceries',
+        "Packed",
+        "Backes",
     ];
 
     useEffect(() => {

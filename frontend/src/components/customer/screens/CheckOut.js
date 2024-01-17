@@ -148,7 +148,7 @@ function CheckOut(props) {
                         key_secret: "niYhwwTtxw2jwlPsGjSx6OYm",
                         amount: paymentData.price * 100,
                         currency: "INR",
-                        name: "superkart",
+                        name: "Near Shop",
                         description: "for testing purpose",
                         handler: function (response) {
                             setPayment({

@@ -21,7 +21,7 @@ function NavBar() {
                 <Container fluid className='d-flex justify-content-md-around justify-content-between '>
                     <div>
                         <Link to={'/owner'} >
-                            <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                            <span className='fw-500 fs-4 clr-white'><b>Near Shop</b></span>
                         </Link>
                     </div>
                     <div>

@@ -131,7 +131,7 @@ function NavBar() {
                 <Container fluid className='d-flex justify-content-around'>
                     <div>
                         <Link to={"/"} className='nav-link'>
-                            <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                            <span className='fw-500 fs-4 clr-white'><b>Near Shop</b></span>
                         </Link>
                     </div>
                     <div>
@@ -150,6 +150,7 @@ function NavBar() {
                             <Navbar.Text className='mx-2 d-flex'>
                                 <Dropdown>
                                     <Dropdown.Toggle variant="light" id="dropdown-location">
+                                    <i class="fa-solid fa-map-location-dot text-success pe-2"></i>
                                         {selectedLocation}
                                     </Dropdown.Toggle>
 

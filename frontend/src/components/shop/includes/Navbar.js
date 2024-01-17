@@ -50,7 +50,7 @@ function NavBar() {
                     <div className='d-flex'>
                         <Togle onClick={handleShow} ><i class="fa-solid fa-bars-staggered clr-white fs-5 "></i></Togle>
                         <Link to={'/shop'} className='nav-link' >
-                            <span className='fw-500 fs-4 clr-white'><b>Superkart</b></span>
+                            <span className='fw-500 fs-4 clr-white'><b>Near Shop</b></span>
                         </Link>
                     </div>
                     <div>
