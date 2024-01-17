@@ -2,7 +2,7 @@ import LogGif from '../../../assets/images/otp_gif.gif'
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
@@ -69,7 +69,7 @@ function OtpPage() {
               <GifImage src={LogGif} alt='image' />
             </Col>
             <CardBody className="card-body">
-              <h4>Verify</h4>
+              <h4>Verify for Signup</h4>
               <p>Enter Your Number :</p>
               <Col className='d-flex justify-content-center'>
                 <PhoneInput
@@ -102,6 +102,7 @@ function OtpPage() {
                 {/* Didn't receive code? <Link to={-1}>Request again</Link> */}
               </ResendLink>
             </CardBody>
+            <p className='mt-4 text-center'>Don't have an account ? <Link to={'/login'} className='ms-2'>Signup</Link></p>
           </Card>
         </div>
       </div>
@@ -112,6 +113,7 @@ function OtpPage() {
 const Page = styled.div`
   max-width: 90vw;
   height: 60vh;
+
   margin: auto;
   @media screen and (max-width: 578px) {
     height: 100vh;

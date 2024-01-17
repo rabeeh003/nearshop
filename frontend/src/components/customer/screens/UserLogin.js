@@ -6,7 +6,7 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import { auth } from '../../../config/firebase'
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 function UserLogin() {
@@ -92,6 +92,8 @@ function UserLogin() {
               <VerifyButton onClick={(e)=>verifyOtp(e)} className="btn btn-success" disabled={!otp}>
                 Verify
               </VerifyButton>
+            <p className='mt-4'>Don't have an account ? <Link to={'/signup'} className='ms-2'>Signup</Link></p>
+
             </Col>
           </Row>
         </Form>

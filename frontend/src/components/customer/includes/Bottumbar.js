@@ -5,11 +5,16 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { Link } from 'react-router-dom';
 
 function Bottumbar() {
+    const [userKey] = useState(localStorage.getItem('userKey'));
     const [show, setShow] = useState(false);
-
+    
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const logout = () => {
+        localStorage.removeItem('userKey')
+        window.location.reload(false)
+    }
     return (
         <>
             <Offcanvas show={show} onHide={handleClose} placement='end'>
@@ -22,12 +27,23 @@ function Bottumbar() {
                             <Link to="user" onClick={handleClose} className='nav-link'>
                                 <OfItem title='Profile' className='clr-white'><i className="clr-white fa-solid fa-user pe-2"></i>Profile</OfItem>
                             </Link>
-                            <Link to="/settings" onClick={handleClose} className='nav-link'>
+                            {/* <Link to="/settings" onClick={handleClose} className='nav-link'>
                                 <OfItem title='cart' className='clr-white' href="#features"><i className="clr-white fa-solid fa-gear pe-2"></i>Settings</OfItem>
-                            </Link>
-                            <Link to="" onClick={handleClose} className='nav-link'>
-                                <OfItem title='cart' className='clr-white' onClick={handleShow} href="#features"><i className="clr-white fa-solid fa-right-from-bracket pe-2"></i>Logout</OfItem>
-                            </Link>
+                            </Link> */}
+                            {userKey ? (
+                                <>
+                                    <OfItem onClick={logout} className='btn'>Logout</OfItem>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to={'login'} onClick={handleClose} className='nav-link'>
+                                        <OfItem  className='clr-white'><i class="fa-solid fa-right-to-bracket pe-2"></i>Login</OfItem>
+                                    </Link>
+                                    <Link to={'signup'} onClick={handleClose} className='nav-link'>
+                                        <OfItem  className='clr-white'><i className="clr-white fa-solid fa-plus pe-2"></i>Signup</OfItem>
+                                    </Link>
+                                </>
+                            )}
                         </OfIcon>
                     </Offcanvas.Body>
                 </div>
