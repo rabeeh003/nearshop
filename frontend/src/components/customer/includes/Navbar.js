@@ -142,7 +142,7 @@ function NavBar() {
                             <IconsDiv>
                                 <Nav>
                                     <Link title='Home' className='nav-link' to="/"> <i className="fa-solid fa-house clr-white"></i></Link>
-                                    <Link title='Category' className='nav-link' to="/category/grocery"><i className="fa-solid fa-border-all clr-white"></i></Link>
+                                    <Link title='Category' className='nav-link' to="/category/Vegetables"><i className="fa-solid fa-border-all clr-white"></i></Link>
                                     <Link title='Cart' className='nav-link' to="/cart"><i className="fa-solid fa-cart-shopping clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
