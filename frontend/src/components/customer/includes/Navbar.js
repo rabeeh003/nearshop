@@ -80,6 +80,7 @@ function NavBar() {
     const handleLocationSelection = (locationName) => {
         localStorage.setItem("currentLocation", JSON.stringify(locationName));
         setSelectedLocation(locationName.name);
+        window.location.reload();
     };
 
     useEffect(() => {

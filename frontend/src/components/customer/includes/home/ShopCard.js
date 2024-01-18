@@ -3,15 +3,24 @@ import { Card, Button, Container, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import filterShops from "../Location/locationFilter";
 
 function ShopCard() {
     const [shops, setShops] = useState([]);
+    // currentLocation
+    const loc = JSON.parse(localStorage.getItem('currentLocation'));
+    const userLat = parseFloat(loc.lat);
+    const userLng = parseFloat(loc.long);
+    console.log("loc user ", userLat, userLng);
 
     useEffect(() => {
         const fetchShops = async () => {
             try {
                 const response = await axios.get('https://www.nearbazar.shop/api/shop_register/');
-                setShops(response.data);
+                console.log("All Shop", response.data);
+                const filteredShops = filterShops(userLat, userLng, response.data, 10);
+                console.log("nearShop", filteredShops);
+                setShops(filteredShops);
             } catch (error) {
                 console.error('Error fetching shops:', error);
             }
