@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import {PrivateRoute, LoginRoute, CustomerPrivetRoute, CustomerLoginRoute, OwnerLoginRoute, OwnerPrivateRoute} from './utils/PriveteRoute';
 
@@ -38,6 +38,26 @@ import ONavs from './components/owner/ONavs'
 import Invoice from './components/customer/includes/Profile/Invoice';
 import CategoryOfferPage from './components/shop/screens/CatagoryOfferPage';
 function App() {
+  useEffect(() => {
+    // Check if the browser supports the Windows app installation method
+    if (window.navigator.msApplication && window.navigator.msApplication.install) {
+      // Use with caution, as this is specific to Windows apps
+      window.navigator.msApplication.install();
+    }
+
+    // Check if the browser supports the Chrome webNavigation API
+    // if (chrome && chrome.webNavigation && chrome.webNavigation.register) {
+    //   // Use with caution, as this is specific to Chrome
+    //   chrome.webNavigation.register({
+    //     urls: ["*://*/*"],
+    //     onCommitted: function(details) {
+    //       chrome.webNavigation.setAppInstaller({
+    //         appId: "my-app-id"
+    //       });
+    //     }
+    //   });
+    // }
+  }, []);
   return (
     <>
       <Router>

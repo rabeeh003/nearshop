@@ -2,22 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <link rel="manifest" href="./manifest.json">
     <link rel="icon" href="%PUBLIC_URL%/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fff" />
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+      name="near shop"
+      content="find the best offers for you"
     />
-    <script src="http://localhost:8097"></script>
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
+    <!-- <script src="https://localhost:8097"></script> -->
+    <link rel="apple-touch-icon" href="images/icon-192x192.png" />
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>Supercart</title>
+    <title>near shop</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script src="https://kit.fontawesome.com/84fec9b035.js" crossorigin="anonymous"></script>
+    <script> 
+      if("serviceWorker" in navigator){
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./service-worker.js")
+          .then(()=> console.log("success"))
+          .catch((err)=> console.log("error",err))
+        }
+        )
+      }
+    </script>
   </body>
 </html>
