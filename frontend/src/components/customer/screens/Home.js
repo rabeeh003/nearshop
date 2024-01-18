@@ -4,14 +4,22 @@ import Banner from '../includes/home/Banner'
 import OfferCard from '../includes/home/OfferCard'
 import CategoryCard from '../includes/home/CategoryCard'
 import ShopCard from '../includes/home/ShopCard'
+import BaseHome from '../includes/home/BaseHome'
 
 function Home() {
+  const loc = JSON.parse(localStorage.getItem('currentLocation'));
   return (
     <Homes>
       <Banner />
-      <CategoryCard />
-      <OfferCard />
-      <ShopCard />
+      {loc ? (
+        <>
+          <CategoryCard />
+          <OfferCard />
+          <ShopCard />
+        </>
+      ) : (
+        <BaseHome />
+      )}
     </Homes>
   )
 }
