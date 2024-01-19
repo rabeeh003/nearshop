@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function Category() {
+    const loc = JSON.parse(localStorage.getItem('currentLocation'));
     const { categoryName } = useParams('Vegetables');
     const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -55,7 +56,19 @@ function Category() {
     }, [categoryName]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return (
+            loc !== null ? (
+                <div class="text-center pt-5">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            ) : (
+                <div class="text-center pt-5">
+                    <span >Add location</span>
+                </div>
+            )
+        );
     }
     return (
         <Cato>

@@ -29,7 +29,7 @@ function ShopCard() {
         fetchShops();
     }, []);
 
-    return (
+    return ( shops?.length <= 0 ? <p className='text-center pt-5'>sorry, currently our service not available for this location. Choose other location.</p> :
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '20px' }} className='mt-2'>
                 <span className='h5'><b>Near Shops</b></span>

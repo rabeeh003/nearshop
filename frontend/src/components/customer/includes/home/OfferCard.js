@@ -7,10 +7,27 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import filterShops from '../Location/locationFilter';
+import OfferLocationFilter from '../Location/OfferLocationFilter';
+// import 'react-toastify/dist/ReactToastify.css';
+
 
 function MyVerticallyCenteredModal(props) {
     // const { product } = props;
-    const { addToCart, onHide, product } = props;
+    const notify = () => toast.warn('Login is required !', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        // transition: Bounce,
+    });
+    const { addToCart, onHide, product, userId } = props;
+
     return (
         <Modal
             className='user-select-none'
@@ -50,9 +67,15 @@ function MyVerticallyCenteredModal(props) {
             </Modal.Body>
             <Modal.Footer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Button variant="success" onClick={() => {
-                    addToCart(product)
-                    onHide()
+                    if (userId !== null) {
+                        addToCart(product)
+                        onHide()
+                    } else {
+                        console.log("sign is required");
+                        notify()
+                    }
                 }} style={{ width: '150px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                <ToastContainer />
             </Modal.Footer>
         </Modal>
     );
@@ -84,9 +107,22 @@ const Textarea = styled.textarea`
 `
 
 function OfferCard() {
+    // const user = JSON.parse(localStorage.getItem('userKey')); // simple way for get uset id but i use a big waist code for this.
     const [modalShow, setModalShow] = useState(false);
     const [products, setProducts] = useState([]);
     const [userId, setUserId] = useState(null)
+    
+    const notify = () => toast.warn('Login is required !', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        // transition: Bounce,
+    });
 
     useEffect(() => {
         const fetchUserId = () => {
@@ -105,6 +141,11 @@ function OfferCard() {
         }
     })
 
+    const loc = JSON.parse(localStorage.getItem('currentLocation'));
+    const userLat = parseFloat(loc.lat);
+    const userLng = parseFloat(loc.long);
+    console.log("loc user ", userLat, userLng);
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -113,7 +154,9 @@ function OfferCard() {
                 const day = today.toJSON().slice(0, 10);
                 console.log("--------Day and Day + 2-------------");
                 console.log("Day: " + day, "Day + 2: " + (day + 2));
-                const filteredProducts = response.data.filter(product => product.offer_price !== null && day <= product.offer_end && day >= product.offer_start);
+                const filteredShops = response.data.filter(product => product.offer_price !== null && day <= product.offer_end && day >= product.offer_start);
+                console.log("filtered shops :", filteredShops);
+                const filteredProducts = OfferLocationFilter(userLat, userLng, filteredShops, 10);
 
                 // Map to group products by their name
                 const productMap = new Map();
@@ -250,13 +293,15 @@ function OfferCard() {
             } else {
                 alert('Something is missing'); // Handle the case where user or shop is empty
             }
+        } else {
+
         }
     }
 
-    return (
+    return ( products.length <= 0 ? "" :
         <Container fluid className='user-select-none'>
             <Col style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: "20px" }}>
-                <span className='h5'><b>Offer</b></span>
+                <span className='h5'><b>Best Offer</b></span>
                 {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color:'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
             </Col>
             <ScrollableRow>
@@ -273,7 +318,15 @@ function OfferCard() {
                                 <Card.Text style={{ fontSize: '15px' }}>
                                     Price: <span class="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
                                 </Card.Text>
-                                <Button variant="" onClick={() => addToCart(product)} className='btn-outline-success' style={{ width: "120px", fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                <Button variant="" onClick={() => {
+                                    if (userId) {
+                                        addToCart(product)
+                                    } else {
+                                        notify();
+                                    }
+                                
+                                }} className='btn-outline-success' style={{ width: "120px", fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                <ToastContainer />
                             </Card.Body>
                         </OfCard>
                     </Col>
@@ -284,6 +337,7 @@ function OfferCard() {
                 show={modalShow !== false}
                 onHide={() => setModalShow(false)}
                 addToCart={addToCart}
+                userId={userId}
             />
         </Container>
     )

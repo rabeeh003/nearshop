@@ -193,9 +193,11 @@ class LocationPicker extends Component {
     const newLocation = { ...this.state.formData };
     existingData.push(newLocation);
     localStorage.setItem("allLocations", JSON.stringify(existingData));
+    localStorage.setItem("currentLocation", JSON.stringify(newLocation));
     // Reset isNameExists flag
     this.setState({ isNameExists: false });
-    this.props.onHide()
+    // this.props.onHide();
+    window.location.reload();
   };
 
 

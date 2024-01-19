@@ -36,40 +36,44 @@ function CartPage() {
         };
         fetchUserId();
     }, []);
+    
     useEffect(() => {
 
         const fetchOrder = async () => {
-            try {
-                const response = await axios.get('https://www.nearbazar.shop/api/s/orders/');
-                console.log("responce from orders : ", response);
-                let ord
-                if (selectedOption === "cart") {
-                    ord = response.data.filter(order => order.user === userId && order.status !== 'Billed' && order.status === "Cart");
-                } else {
-                    ord = response.data.filter(order => order.user === userId && order.status !== 'Billed' && order.status !== "Cart");
-                }
-                console.log("api data :", ord);
-                setOrders(ord)
-
+            if (userId !== null) {
                 try {
-                    console.log("start fech order pro");
-                    const res = await axios.get('https://www.nearbazar.shop/api/s/orderproduct/');
-                    console.log("responce from orderproducts : ", res.data);
-                    const filterd = res.data.filter(order => ord.some(orderObj => orderObj.id === order.order));
-                    console.log("filtered products :", filterd);
+                    const response = await axios.get('https://www.nearbazar.shop/api/s/orders/');
+                    console.log("responce from orders : ", response);
+                    let ord
+                    if (selectedOption === "cart") {
+                        ord = response.data.filter(order => order.user === userId && order.status !== 'Billed' && order.status === "Cart");
+                    } else {
+                        ord = response.data.filter(order => order.user === userId && order.status !== 'Billed' && order.status !== "Cart");
+                    }
+                    console.log("api data :", ord);
+                    setOrders(ord)
 
-                    setFilteredData(filterd)
+                    try {
+                        console.log("start fech order pro");
+                        const res = await axios.get('https://www.nearbazar.shop/api/s/orderproduct/');
+                        console.log("responce from orderproducts : ", res.data);
+                        const filterd = res.data.filter(order => ord.some(orderObj => orderObj.id === order.order));
+                        console.log("filtered products :", filterd);
+
+                        setFilteredData(filterd)
+
+                    } catch (error) {
+                        console.error('Error fetching data: ', error);
+                    }
 
                 } catch (error) {
                     console.error('Error fetching data: ', error);
                 }
-
-            } catch (error) {
-                console.error('Error fetching data: ', error);
             }
         }
 
         fetchOrder()
+
     }, [userId, loadUseEffect, selectedOption]);
 
     const allfilter = []
@@ -205,7 +209,6 @@ function CartPage() {
             goToCeckout()
         }
     }, [passingData, navigate])
-
     return (
         <Page className='user-select-nones'>
             <NavTab className='row px-3 w-100'>
@@ -238,7 +241,7 @@ function CartPage() {
             </NavTab>
             {orders.length > 0 ? (
                 <>
-                    <Accordion style={{width:"90%"}} defaultActiveKey={['0']} alwaysOpen>
+                    <Accordion style={{ width: "90%" }} defaultActiveKey={['0']} alwaysOpen>
                         {orders.map((shopId, idx) => {
                             const justfilter = filteredData.filter(order => order.order === shopId.id);
                             const filteredProducts = justfilter.slice().sort((a, b) => a.id - b.id);
@@ -854,14 +857,14 @@ function AcceptModel(props) {
                 console.log("messageData :", messageData);
                 await Promise.all(
                     props.product.map(async (product) => {
-                        console.log("product :",product);
+                        console.log("product :", product);
                         let price = 0
                         if (product.pro.offer_price > 0) {
-                            price = product.pro.offer_price    
-                        }else{
+                            price = product.pro.offer_price
+                        } else {
                             price = product.pro.price
                         }
-                        console.log("price : ",price);
+                        console.log("price : ", price);
                         try {
                             await axios.put(`https://www.nearbazar.shop/api/s/orderproduct/${product.id}/`, { "product_price": price });
                         } catch (error) {
