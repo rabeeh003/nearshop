@@ -8,7 +8,7 @@ function CNavs() {
     <>
         <NavBar/>
         <Bottumbar/>
-        <div style={{ height: "80px" }}></div>
+        <div style={{ height: "70px" }}></div>
         <Outlet/>
         <div style={{ height: "80px" }}></div>
     </>

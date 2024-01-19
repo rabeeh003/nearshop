@@ -49,6 +49,7 @@ function LocationsTwoType(props) {
             const updatedLocations = allSearchLocations.filter((location, index) => index !== idx);
             localStorage.setItem("allLocations", JSON.stringify(updatedLocations));
             setSearchLocation(updatedLocations);
+            localStorage.removeItem("currentLocation")
         }
     };
 
