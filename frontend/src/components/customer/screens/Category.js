@@ -4,6 +4,7 @@ import CategoryCard from '../includes/category/CategoryCard'
 import { Card, Container, Col, Row, Button } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import checkOneLocation from '../includes/Location/checkOneLocation';
 
 function Category() {
     const loc = JSON.parse(localStorage.getItem('currentLocation'));
@@ -14,6 +15,8 @@ function Category() {
     const fetchShopDetails = async (shopId) => {
         try {
             const response = await axios.get(`https://www.nearbazar.shop/api/shopsall/${shopId}`);
+            // const check = checkOneLocation(loc.lat, loc.long, response.data, 10)
+            // console.log("checked",check);
             return response.data; // Assuming the response contains shop details
         } catch (error) {
             console.error(`Error fetching shop details for shop ID ${shopId}:`, error);

@@ -8,6 +8,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NotFont from './NotFont';
 
+// import { ToastContainer, toast } from 'react-toastify';
+
 
 
 // Reviews about shop
@@ -118,7 +120,7 @@ function MyVerticallyCenteredModal(props) {
                     <PDetiles>
                         <div style={{ width: "45%" }}>
                             <ProImage>
-                                <Card.Img style={{ objectFit: 'fill' }} variant="top" src={`https://www.nearbazar.shop${product.gpro.prodect_image}`} />
+                                <Card.Img style={{ objectFit: 'fill' }} variant="top" src={product.gpro.prodect_image} alt={product.gpro.product_name}  />
                             </ProImage>
 
                         </div>
@@ -314,7 +316,7 @@ function ShopPage() {
 
         }
     }, [allData]);
-    
+
     const [orderId, setOrderId] = useState()
     const [oData, setOData] = useState({
         "name": "online",
@@ -419,6 +421,18 @@ function ShopPage() {
         console.log("onclick selectedCategory : ", selectedCategory);
     };
 
+    const loginRequard = () => toast.warn('Login is required !', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        // transition: Bounce,
+    });
+
 
     return (
         <>
@@ -475,14 +489,14 @@ function ShopPage() {
                             </Col>
                         </Row>
                         <Row className="g-4 pt-3" >
-                            {filteredProducts.map(product => (
-                                <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={""} className='d-flex' style={{ justifyContent: 'center' }}>
+                            {filteredProducts.map((product, idx) => (
+                                <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={idx} className='d-flex' style={{ justifyContent: 'center' }}>
                                     <OfCard >
                                         <div onClick={() => setModalShow({ product })}>
                                             <CardImage>
                                                 {/* <Badge style={{ position: 'absolute', bottom: 0, right: 0 }} bg="success">40% Off</Badge> */}
                                                 {/* <Badge style={{ position: 'absolute', top: 0, color: 'gray' }} bg=""><i className="fa-solid fa-store"></i>{product.seller.shop_name}</Badge> */}
-                                                <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={`https://www.nearbazar.shop${product.gpro.prodect_image}`} />
+                                                <Card.Img style={{ width: "84px", height: "80px" }} variant="top" src={product.gpro.prodect_image} alt={product.gpro.product_name} />
                                             </CardImage>
                                             <Card.Body className='text-center mt-2'>
                                                 <Card.Title style={{ fontSize: '15px' }}>{product.gpro.product_name}</Card.Title>
@@ -500,8 +514,16 @@ function ShopPage() {
                                                 </Card.Text>
                                             </Card.Body>
                                         </div>
-                                        <Button variant="" onClick={() => addToCart(product)} className='btn-outline-success' style={{ fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                        <Button variant="" onClick={() => {
+                                            if (userId !== null) {
+                                                addToCart(product)
+                                            } else {
+                                                console.log("sign is required");
+                                                loginRequard()
+                                            }
 
+                                        }} className='btn-outline-success' style={{ fontSize: '15px' }}><i className="fa-solid fa-plus pe-2"></i>Add to Cart</Button>
+                                        <ToastContainer/>
                                     </OfCard>
                                 </Col>
                             ))}
@@ -530,6 +552,7 @@ function ShopPage() {
 
 const Page = styled.div`
   max-width: 90vw;
+  padding-top: 20px;
   margin: auto;
   @media screen and (max-width: 578px) {
     max-width: 98vw;

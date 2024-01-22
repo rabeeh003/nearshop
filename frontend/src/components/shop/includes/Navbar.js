@@ -64,12 +64,12 @@ function NavBar() {
                                     <Link title='AddProdect' className='nav-link' to="addprodect"><i class="fa-regular fa-square-plus clr-white"></i></Link>
                                 </Nav>
                             </IconsDiv>
-                            <Nav onClick={() => setShowNoti(true)}><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav>
+                            {/* <Nav onClick={() => setShowNoti(true)}><Link title='Nottification' className='nav-link' style={{ fontSize: "20px" }}><i class="fa-solid fa-bell clr-white"></i></Link></Nav> */}
                             <IconsDiv>
                                 <Navbar.Text>
                                     <DropdownButton
                                         align="end"
-                                        title="Account"
+                                        title= "Account"
                                         id="dropdown-menu-align-end"
                                         variant="light"
                                     >

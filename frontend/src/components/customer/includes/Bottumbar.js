@@ -50,7 +50,7 @@ function Bottumbar() {
             </Offcanvas>
             <BtNav className='bg-green'>
                 <Link title='Home' to="/" className='nav-link'> <i class="fa-solid fa-house clr-white"></i></Link>
-                <Link title='catagory' to="/category/grocery" className='nav-link'><i class="fa-solid fa-border-all clr-white"></i></Link>
+                <Link title='catagory' to="/category/Vegetables" className='nav-link'><i class="fa-solid fa-border-all clr-white"></i></Link>
                 <Link title='cart' to="/cart" className='nav-link'><i class="fa-solid fa-cart-shopping clr-white"></i></Link>
                 <Link title='cart' onClick={handleShow} to="" className='nav-link'><i class="fa-solid fa-user clr-white"></i></Link>
             </BtNav>

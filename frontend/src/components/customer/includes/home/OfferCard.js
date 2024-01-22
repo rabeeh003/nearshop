@@ -319,7 +319,7 @@ function OfferCard() {
                                     Price: <span class="text-decoration-line-through">₹ {product.price}</span> <b> ₹ {product.offer_price}</b>
                                 </Card.Text>
                                 <Button variant="" onClick={() => {
-                                    if (userId) {
+                                    if (userId !== null) {
                                         addToCart(product)
                                     } else {
                                         notify();
