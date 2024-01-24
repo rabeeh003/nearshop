@@ -19,9 +19,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 import uuid
 from django.http import HttpResponse
-
-
-
+from django.shortcuts import get_object_or_404
 
 # customer section
 class cus_signup(CreateAPIView):
