@@ -15,6 +15,11 @@ from .models import Customer, Owner, Shop
 from rest_framework.permissions import AllowAny
 import jwt, datetime
 from math import radians, sin, cos, sqrt, atan2
+from django.conf import settings
+from django.core.mail import send_mail
+import uuid
+from django.http import HttpResponse
+
 
 
 
@@ -80,6 +85,29 @@ class shop_register(ListCreateAPIView):
     permission_classes = [AllowAny]
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+
+    def perform_create(self, serializer):
+        token = uuid.uuid4()
+        serializer.validated_data['email_token'] = token
+        shop_instance = serializer.save()
+        self.send_email_token(shop_instance.shop_mail, token)
+
+    def send_email_token(self, email, token):
+        try:
+            send_mail(
+                subject='Your account needs to be verified!',
+                message=f'Click on the link to verify https://www.nearbazar.shop/api/shop/verify_email_token/{token}/',
+                email_from=settings.EMAIL_HOST_USER,
+                recipient_list=[email, ]
+            )
+        except Exception as e:
+            return False
+
+def Verify_email_token(request, token):
+    shop_instance = get_object_or_404(Shop, email_token=token)
+    shop_instance.is_verified = True
+    shop_instance.save()
+    return HttpResponse("Your account has been verified.")
 
 class shopsall(RetrieveAPIView):
     permission_classes = [AllowAny]

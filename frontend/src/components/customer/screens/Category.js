@@ -28,9 +28,9 @@ function Category() {
         const fetchShopsByCategory = async () => {
             try {
                 const proFech = await axios.get('https://www.nearbazar.shop/api/s/shopproducts/');
-                console.log("product responce before ... ",proFech);
-                const productsResponse = checkOneLocation( proFech.data, 10);
-                console.log("product responce",productsResponse);
+                console.log("product responce before ... ", proFech);
+                const productsResponse = checkOneLocation(proFech.data, 10);
+                console.log("product responce", productsResponse);
                 const categoriesResponse = await axios.get('https://www.nearbazar.shop/api/p/gcategory/');
 
                 const filteredCategory = categoriesResponse.data.find(cat => cat.category_name === categoryName);
@@ -85,22 +85,29 @@ function Category() {
                     {/* <span style={{ backgroundColor: "#5cb85d", display: 'flex', alignItems: 'center', padding: "5px", borderRadius: "50%", color: 'white' }}><i class="fa-solid fa-arrow-right"></i></span> */}
                 </Col>
                 <Row className="g-4">
-                    {shops.map(shop => (
-
-                        <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={shop.id} className='d-flex justify-content-center'>
-                            <Link className='nav-link' to={`/${shop.shop_id}`}>
-                                <OfCard>
-                                    <CardImage>
-                                        <Card.Img variant="top" className='object-fit-fill rounded-circle' src={shop.profile_image} />
-                                    </CardImage>
-                                    <Card.Body className='text-center'>
-                                        <Card.Title style={{ fontSize: '15px' }}>{shop.shop_name}</Card.Title>
-                                        <Button variant='' className='mt-2 btn-outline-success' style={{ width: '100px', fontSize: '12px' }}>Visit</Button>
-                                    </Card.Body>
-                                </OfCard>
-                            </Link>
+                    {shops.length > 0 ? (
+                        shops.map((shop) => (
+                            <Col xs={6} sm={4} md={3} lg={2} xxl={2} key={shop.id} className='d-flex justify-content-center'>
+                                <Link className='nav-link' to={`/${shop.shop_id}`}>
+                                    <OfCard>
+                                        <CardImage>
+                                            <Card.Img variant="top" className='object-fit-fill rounded-circle' src={shop.profile_image} />
+                                        </CardImage>
+                                        <Card.Body className='text-center'>
+                                            <Card.Title style={{ fontSize: '15px' }}>{shop.shop_name}</Card.Title>
+                                            <Button variant='' className='mt-2 btn-outline-success' style={{ width: '100px', fontSize: '12px' }}>Visit</Button>
+                                        </Card.Body>
+                                    </OfCard>
+                                </Link>
+                            </Col>
+                        ))
+                    ) : (
+                        <Col xs={12} className='d-flex justify-content-center'>
+                            <div className='text-center'>
+                                <span>No shops found</span>
+                            </div>
                         </Col>
-                    ))}
+                    )}
                 </Row>
             </Container>
         </Cato >

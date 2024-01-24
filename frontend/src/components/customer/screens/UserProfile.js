@@ -6,7 +6,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import dateFormat, { masks } from "dateformat";
+import dateFormat from "dateformat";
 import Avathar from '../../../assets/images/userAvathar.gif'
 import OrderHis from '../includes/Profile/OrderHis';
 import LocationsTwoType from '../includes/Profile/LocationsTwoType';

@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
+import uuid
+
 
 # customer data
 class Customer(models.Model):    
@@ -46,6 +48,8 @@ class Shop(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     shop_owner = models.ForeignKey(Owner, to_field='mail', on_delete=models.CASCADE, default=1)
     password = models.CharField(max_length=10, default='1234')
+    email_token = models.UUIDField(default=uuid.uuid4, editable=False)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.shop_name

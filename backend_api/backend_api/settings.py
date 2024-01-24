@@ -158,6 +158,15 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+# Email verification settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "nearshop.online@gmail.com"
+EMAIL_HOST_PASSWORD = "nearshop.online@rabimail.com"
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -182,13 +191,13 @@ REST_FRAMEWORK = {
 # Jazzmin settings
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "Superkart Admin",
+    "site_title": "Nearshop Admin",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "Superkart",
+    "site_header": "Nearshop",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Superkart",
+    "site_brand": "Nearshop",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     "site_logo": "../static/images/logo.png",
@@ -209,7 +218,7 @@ JAZZMIN_SETTINGS = {
     # "welcome_sign": "Welcome to the library",
 
     # Copyright on the footer
-    "copyright": "Superkart Ltd",
+    "copyright": "Nearshop Ltd",
 
     # List of model admins to search from the search bar, search bar omitted if excluded
     # If you want to use a single search field you dont need to use a list, you can use a simple string 
