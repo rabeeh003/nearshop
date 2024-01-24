@@ -1,4 +1,4 @@
-from .views import cus_signup,cus_signin, cus_details, owner_register, shop_register, shopsall, shop_update, shop_login, owner_login, owner_mail_check, getOneShop
+from .views import cus_signup,cus_signin, cus_details, owner_register, shop_register, shopsall, shop_update, shop_login, owner_login, owner_mail_check, getOneShop, ShopListViewBasedLocation
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -15,4 +15,5 @@ urlpatterns = [
     path('shop_mail_check/', owner_mail_check.as_view(), name='ownerMailCheck'),
     path("getOneShop/<int:pk>/", getOneShop.as_view(), name='getOneShop'),
     path('owner_login/', owner_login.as_view(), name='ownerLogin'),
+    path('shops/', ShopListViewBasedLocation.as_view(), name='shop-list')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

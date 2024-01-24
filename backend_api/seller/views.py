@@ -11,7 +11,6 @@ from accounts.models import Shop
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-
 from django.shortcuts import render, get_object_or_404, redirect
 from datetime import date
 
@@ -180,3 +179,5 @@ class SellerReport(APIView):
             'orders': order_serializer.data,
             'payment_details': payment_serializer.data
         })
+
+

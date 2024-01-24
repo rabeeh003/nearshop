@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, UpdateAPIView, RetrieveAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, ListCreateAPIView, UpdateAPIView, RetrieveAPIView, RetrieveUpdateAPIView
 from .serializers import (
     CusSignup,
     CusSignin,
@@ -14,6 +14,8 @@ from rest_framework.response import Response
 from .models import Customer, Owner, Shop
 from rest_framework.permissions import AllowAny
 import jwt, datetime
+from math import radians, sin, cos, sqrt, atan2
+
 
 
 # customer section
@@ -210,3 +212,48 @@ class owner_mail_check(CreateAPIView):
             return Response(
                 {"message": "Owner with this mail does not exist."}, status=404
             )
+
+
+
+# location based filtering.
+    
+class ShopListViewBasedLocation(ListAPIView):
+    serializer_class = ShopSerializer
+
+    def haversine(self, lat1, lon1, lat2, lon2):
+        R = 6371  # Earth radius in kilometers
+
+        # Convert latitude and longitude from degrees to radians
+        lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+
+        # Differences in coordinates
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+
+        # Haversine formula
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        # Calculate the distance
+        distance = R * c
+
+        return distance
+
+    def get_queryset(self):
+        user_lat = float(self.request.query_params.get('userLat', 0))
+        user_lng = float(self.request.query_params.get('userLng', 0))
+        radius = float(self.request.query_params.get('radius', 0))
+
+        # Filter shops based on the distance
+        shops = Shop.objects.all()
+        filtered_shops = [
+            shop for shop in shops
+            if self.haversine(user_lat, user_lng, shop.lat, shop.lng) <= radius
+        ]
+
+        return filtered_shops
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

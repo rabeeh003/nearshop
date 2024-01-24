@@ -7,7 +7,8 @@ import axios from 'axios';
 import checkOneLocation from '../includes/Location/checkOneLocation';
 
 function Category() {
-    const loc = JSON.parse(localStorage.getItem('currentLocation'));
+    const loc = localStorage.getItem('currentLocation');
+    console.log("current location: " + loc);
     const { categoryName } = useParams('Vegetables');
     const [shops, setShops] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,8 +16,7 @@ function Category() {
     const fetchShopDetails = async (shopId) => {
         try {
             const response = await axios.get(`https://www.nearbazar.shop/api/shopsall/${shopId}`);
-            // const check = checkOneLocation(loc.lat, loc.long, response.data, 10)
-            // console.log("checked",check);
+            // const check = 
             return response.data; // Assuming the response contains shop details
         } catch (error) {
             console.error(`Error fetching shop details for shop ID ${shopId}:`, error);
@@ -27,14 +27,17 @@ function Category() {
     useEffect(() => {
         const fetchShopsByCategory = async () => {
             try {
-                const productsResponse = await axios.get('https://www.nearbazar.shop/api/s/shopproducts/');
+                const proFech = await axios.get('https://www.nearbazar.shop/api/s/shopproducts/');
+                console.log("product responce before ... ",proFech);
+                const productsResponse = checkOneLocation( proFech.data, 10);
+                console.log("product responce",productsResponse);
                 const categoriesResponse = await axios.get('https://www.nearbazar.shop/api/p/gcategory/');
 
                 const filteredCategory = categoriesResponse.data.find(cat => cat.category_name === categoryName);
 
                 if (filteredCategory) {
                     const categoryId = filteredCategory.id;
-                    const productsInCategory = productsResponse.data.filter(product => product.cat.id === categoryId);
+                    const productsInCategory = productsResponse.filter(product => product.cat.id === categoryId);
 
                     // Get unique shop IDs for the products in the category
                     const uniqueShopIds = Array.from(new Set(productsInCategory.map(product => product.shop_id)));
