@@ -48,6 +48,8 @@ const UserSignup = () => {
     const navigate = useNavigate();
     const [phone, setPhone] = useState('');
     const [efs, setEfs] = useState('');
+    const [nameErr, setNameErr] = useState('');
+    const [mailErr, setMailErr] = useState('');
 
     const [formData, setFormData] = useState({
         "full_name": '',
@@ -73,6 +75,11 @@ const UserSignup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setNameErr('')
+        if (formData.full_name.length < 2 || formData.full_name.length > 30){
+            setNameErr('length must be 3 characters. maximum length is 30')
+            return null
+        }
         console.log(formData)
         await axios.post('https://www.nearbazar.shop/api/signup/', formData)
             .then(responce => {
@@ -81,6 +88,9 @@ const UserSignup = () => {
             .catch(error => {
                 setEfs(error.message)
                 console.log(error)
+                if (error.response.data.email){
+                    setMailErr(error.response.data.email[0])
+                }
             })
     };
 
@@ -112,11 +122,13 @@ const UserSignup = () => {
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Full Name<span className="text-danger"> *</span></FormLabel>
                                             <FormInput type="text" id="full_name" name="full_name" value={formData.full_name} onChange={handleChange} placeholder="Enter your full name" />
+                                            {nameErr && <span style={{ color: 'red', fontSize: '13px' }}>{nameErr}</span>}
                                         </FormGroup>
 
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Mail<span className="text-danger"> *</span></FormLabel>
                                             <FormInput type="text" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your mail" />
+                                            {mailErr && <span style={{ color: 'red', fontSize: '13px' }}>{mailErr}</span>}
                                         </FormGroup>
                                         <FormGroup >
                                             <FormLabel className="form-control-label px-3">Phone number<span className="text-danger"> *</span></FormLabel>
@@ -130,7 +142,7 @@ const UserSignup = () => {
                                             />
                                         </FormGroup>
                                         <FormGroup >
-                                            <FormLabel className="form-control-label px-3">Phone number<span className="text-danger"> *</span></FormLabel>
+                                            <FormLabel className="form-control-label px-3">Phone number</FormLabel>
                                             {/* <FormInput type="text" id="phone_two" name="phone_two" value={formData.phone_two} onChange={handleChange} placeholder="Enter your Phone 2" /> */}
                                             <PhoneInput
                                                 className='mb-3'
@@ -141,7 +153,7 @@ const UserSignup = () => {
                                             />
                                         </FormGroup>
                                         <FormGroup >
-                                            <FormLabel className="form-control-label px-3">Address<span className="text-danger"> *</span></FormLabel>
+                                            <FormLabel className="form-control-label px-3">Address</FormLabel>
                                             <FormInput type="text" id="address" name="address" value={formData.address} onChange={handleChange} placeholder="Enter your Address" />
                                         </FormGroup>
                                         <div className="row d-column">

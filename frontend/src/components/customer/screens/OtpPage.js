@@ -14,6 +14,7 @@ function OtpPage() {
   const [user, setUser] = useState(null);
   const [otp, setOtp] = useState('');
   const [numErr, setNumErr] = useState('');
+  const [otpError, setOtpError] = useState('');
   const navigate = useNavigate();
 
   const sendOtp = async () => {
@@ -23,16 +24,18 @@ function OtpPage() {
       const response = await axios.post('https://www.nearbazar.shop/api/signin/', { phone_number: phone });
       console.log('checked');
       if (response.data.exists) {
-        // If the phone number is already registered
-        setNumErr('This phone number is already registered');
-      } else {
         // If the phone number is not registered
         setNumErr('');
-  
         // Assuming `auth` is your Firebase auth instance
         const recapcha = new RecaptchaVerifier(auth, "recapcha", {});
         const confirmation = await signInWithPhoneNumber(auth, phone, recapcha);
         setUser(confirmation);
+
+      } else {
+        // If the phone number is already registered
+        setNumErr('This phone number is already registered');
+        
+       
       }
     } catch (err) {
       console.log(err);
@@ -51,12 +54,14 @@ function OtpPage() {
 
   const verifyOtp = async () => {
     try {
+      setOtpError('')
       const data = await user.confirm(otp)
       console.log(data);
       navigate('/signup', { state: { passedData: phone } });
     }
     catch (err) {
       console.log(err);
+      setOtpError('Entered OTP is not correct')
     }
   }
 
@@ -94,7 +99,7 @@ function OtpPage() {
                   style={{ width: "40%" }}
                 />
               </Col>
-
+              {otpError && <p style={{ color: 'red', fontSize: '13px' }}>{otpError}</p>}
               <VerifyButton onClick={verifyOtp} className="btn btn-success" disabled={!otp}>
                 Verify
               </VerifyButton>
