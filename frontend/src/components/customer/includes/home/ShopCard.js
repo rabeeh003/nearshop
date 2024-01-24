@@ -17,6 +17,8 @@ function ShopCard() {
         const fetchShops = async () => {
             try {
                 const response = await axios.get('https://www.nearbazar.shop/api/shop_register/');
+                // const radius = 10; // Replace with your actual radius
+                // const response = await axios.get(`https://www.nearbazar.shop/api/shops/?userLat=${userLat}&userLng=${userLng}&radius=${radius}`);
                 console.log("All Shop", response.data);
                 const filteredShops = filterShops(userLat, userLng, response.data, 10);
                 console.log("nearShop", filteredShops);

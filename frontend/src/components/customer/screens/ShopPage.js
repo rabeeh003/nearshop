@@ -544,7 +544,8 @@ function ShopPage() {
                     </Container>
                 </Page>
             ) : (
-                <NotFont />
+                ""
+                // <NotFont />
             )}
         </>
     )
