@@ -190,13 +190,14 @@ function UserProfile() {
                             <Form.Label column sm="2">
                                 Number
                             </Form.Label>
-                            <Col sm="10">
-                                <Form.Control
+                            <Col sm="10" className='d-flex align-items-center'>
+                                {/* <Form.Control
                                     type="text"
                                     value={editData.phone_number}
                                     aria-label="Disabled input example"
                                     readOnly
-                                />
+                                /> */}
+                                <span>{editData.phone_number}</span>
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">

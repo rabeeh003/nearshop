@@ -844,12 +844,14 @@ function CancelModel(props) {
 function CodeModel(props) {
   console.log("props  from cancel", props);
   const [otp, setOtp] = useState('');
+  const [otpError, setOtpError] = useState('')
   const updatedData = {
     status: 'Delivered',
   }
   const codeSubmit = () => {
 
     console.log("code :", props.code, "endered :", otp);
+    setOtpError('')
     if (props.code === otp) {
       axios.put(`https://www.nearbazar.shop/api/s/orders/${props.order}/`, updatedData)
         .then(async response => {
@@ -861,6 +863,7 @@ function CodeModel(props) {
         });
     } else {
       console.log("Ender valid code");
+      setOtpError("Ender valid code")
     }
   }
   return (
@@ -887,7 +890,8 @@ function CodeModel(props) {
         />
       </Modal.Body>
       <Modal.Footer>
-        <InputGroup className='d-flex justify-content-center'>
+        <InputGroup className='d-flex flex-column align-items-center justify-content-center'>
+          {otpError && <span className='text-danger' style={{ color: 'red', fontSize: '13px' }}>{otpError}</span>}
           <Button className='btn btn-info text-white' onClick={codeSubmit}>Delivered</Button>
         </InputGroup>
       </Modal.Footer>

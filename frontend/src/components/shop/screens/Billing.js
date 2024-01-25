@@ -44,8 +44,15 @@ function Billing() {
     const [proCount, setProCount] = useState([])
     const [proPrice, setProPrice] = useState([])
     const [cType, setCType] = useState([])
+    const [nameError, setNameError] = useState('')
+    const [emtyError, setEmtyError] = useState('')
 
     const submitBill = async () => {
+        setEmtyError('')
+        if (billpro.length <= 0) {
+            setEmtyError("Products must have at least one")
+            return null
+        }
         const dataToUpdate = {};
         const propertiesToCheck = ['name', 'status', 'customer_phone', 'shop', 'total_price'];
         propertiesToCheck.forEach(property => {
@@ -96,6 +103,9 @@ function Billing() {
             })
             .catch(error => {
                 console.error('Error:', error);
+                if (error.response.data.name){
+                    setNameError(error.response.data.name[0])
+                }
             });
         console.log("end");
     }
@@ -243,6 +253,7 @@ function Billing() {
                             className="mb-3"
                         >
                             <Form.Control type="text" name='name' value={billData.name} onChange={handleInputChange} />
+                            {nameError && <Form.Text className='text-danger' style={{ color: 'red', fontSize: '13px' }}>{nameError}</Form.Text>}
                         </FloatingLabel>
                     </Col>
                     <Col sm={5} xl={4}>
@@ -266,6 +277,7 @@ function Billing() {
                             <HeadTest>Price</HeadTest>
                             <HeadTest>Remove</HeadTest>
                         </Col>
+                        {emtyError && <p className='text-danger text-center pt-3' style={{ color: 'red', fontSize: '13px' }}>{emtyError}</p>}
                         {billpro.map((item, index) => (
                             <div key={item.id} className="d-flex pt-2" style={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
                                 <div>{index + 1}</div>
