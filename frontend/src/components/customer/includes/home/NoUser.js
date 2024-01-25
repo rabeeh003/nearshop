@@ -2,7 +2,10 @@ import React from 'react';
 import "./NoUser.css";
 import { Col, Container, Row } from 'react-bootstrap';
 import styled from 'styled-components';
-import gify from "../../../../assets/images/sl.webp"
+import gify from "../../../../assets/images/homeshop.png"
+import card1 from "../../../../assets/images/usercard.gif"
+import card2 from "../../../../assets/images/sl.webp"
+import card3 from "../../../../assets/images/ownercard.gif"
 import { Link } from 'react-router-dom';
 
 const NoUser = () => {
@@ -28,20 +31,24 @@ const NoUser = () => {
                 <Row className='my-5'>
                     <Col xs='12' lg="4" className='my-3 d-flex align-items-center justify-content-center' >
                         <CARD  >
-                            <h1 className="title">Account For customer</h1>
-                            <p className="subtitle">Introducing the first ever 5G enabled tablet. You've got a tablet that
-                                let's you play harder and work smarter.</p>
+                            <div style={{height:'300px'}} className="d-flex text-align-center justify-content-center image-wrapper m-auto">
+                                <img width={"100%"} src={card1} alt="" />
+                            </div>
+                            <h1 className="text-dark title">Account For customer</h1>
+                            <p className="text-dark subtitle">Discover the finest local offers with our app, facilitating seamless shopping experiences. Compare prices, order effortlessly, and enjoy doorstep delivery from your favorite shops, enhancing your shopping convenience.</p>
                             <div className='d-flex justify-content-between align-items-center'>
-                            <Link className='nav-link w-100' to={'/login'}><BTN className="btn">Login</BTN></Link>
-                            <Link className='nav-link w-100' to={'/signup'}><BTN className="btn">Register</BTN></Link>
+                                <Link className='nav-link w-100' to={'/login'}><BTN className="btn">Login</BTN></Link>
+                                <Link className='nav-link w-100' to={'/signup'}><BTN className="btn">Register</BTN></Link>
                             </div>
                         </CARD>
                     </Col>
                     <Col xs='12' lg="4" className='my-3 d-flex align-items-center justify-content-center' >
                         <CARD >
-                            <h1 className="title">Account For Shop</h1>
-                            <p className="subtitle">Introducing the first ever 5G enabled tablet. You've got a tablet that
-                                let's you play harder and work smarter.</p>
+                        <div style={{height:'300px'}} className="d-flex text-align-center justify-content-center image-wrapper m-auto">
+                                <img width={"100%"} src={card2} alt="" />
+                            </div>
+                            <h1 className="text-dark title">Account For Shop</h1>
+                            <p className="text-dark subtitle">Elevate your business with our user-friendly billing software. Analyze growth, export insightful reports, manage orders efficiently, and craft enticing offers for customers. Experience streamlined operations for enhanced shop performance.</p>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <Link className='nav-link w-100' to={'/shop'}><BTN className="btn">Login</BTN></Link>
                                 {/* <BTN className="btn">Register</BTN> */}
@@ -50,12 +57,14 @@ const NoUser = () => {
                     </Col>
                     <Col xs='12' lg="4" className='my-3 d-flex align-items-center justify-content-center'>
                         <CARD >
-                            <h1 className="title">Account For Owner</h1>
-                            <p className="subtitle">Introducing the first ever 5G enabled tablet. You've got a tablet that
-                                let's you play harder and work smarter.</p>
+                        <div style={{height:'300px'}} className="d-flex text-align-center justify-content-center image-wrapper m-auto">
+                                <img width={"100%"} src={card3} alt="" />
+                            </div>
+                            <h1 className="text-dark title">Account For Owner</h1>
+                            <p className="text-dark subtitle">Empower shop owners with our comprehensive management dashboard. Take control, analyze shop performance, and efficiently manage multiple outlets. Elevate your business strategy with centralized management capabilities.</p>
                             <div className='d-flex justify-content-between align-items-center'>
-                            <Link className='nav-link w-100' to={'/owner'}><BTN className="btn">Login</BTN></Link>
-                            <Link className='nav-link w-100' to={'/owner/signup'}><BTN className="btn">Register</BTN></Link>
+                                <Link className='nav-link w-100' to={'/owner'}><BTN className="btn">Login</BTN></Link>
+                                <Link className='nav-link w-100' to={'/owner/signup'}><BTN className="btn">Register</BTN></Link>
                             </div>
                         </CARD>
                     </Col>
@@ -70,7 +79,7 @@ const CARD = styled.div`
   width: 100%;
   max-width: 500px;
   min-height: 250px;
-  background: rgba( 111, 111, 111, 0.20 );
+  background: rgba( 225, 255, 255, 0.20 );
   box-shadow: 0 8px 32px 0 rgba( 131, 138, 135, 0.37 );
   backdrop-filter: blur( 18px );
   -webkit-backdrop-filter: blur( 7px );
